@@ -18,11 +18,14 @@ XHTML / OPF:
   * landmark-unique                  -> distinct aria-label on each <nav>
   * heading-order                    -> the "Contents"/"List of ..." headings
                                         are emitted as <h6> after an <h2>
-  * epub-toc-order                   -> LaTeXML omits unnumbered (\chapter*)
-                                        chapters and the bibliography from its
-                                        TOC, so the TOC no longer matches the
-                                        reading order; the missing entries are
-                                        re-inserted in document order
+  * epub-toc-order                   -> two separate causes: LaTeXML omits
+                                        unnumbered (\chapter*) chapters and the
+                                        bibliography from its TOC, and ACE
+                                        cannot resolve same-document fragment
+                                        links ("#Ch1"). The missing entries are
+                                        re-inserted in document order and the
+                                        TOC links are qualified with the file
+                                        name.
 
 Usage:  python3 tools/fix_epub_a11y.py docs/thesis.epub [docs/index.html ...]
 """
@@ -95,13 +98,28 @@ def fix_toc_order(text):
     ol_start += len('<ol class="ltx_toclist">')
     body = text[ol_start:ol_end]
 
-    present = set(re.findall(r'<li class="ltx_tocentry[^"]*"><a href="#([^"]+)"', body))
+    # The region up to </nav> ends with the list's own </ol>. Split it off so
+    # that appended entries land *inside* the <ol>; otherwise they become <li>
+    # elements with no list parent (ACE "listitem" violation). Anything that
+    # already leaked out past </ol> is pulled back in, so re-running this on an
+    # already-patched file repairs it instead of duplicating entries.
+    close = body.rfind("</ol>")
+    if close < 0:
+        return text
+    escaped = body[close + len("</ol>"):]
+    body = body[:close] + escaped
+    closing = "</ol>"
+
+    # hrefs may already be document-qualified ("thesis.xhtml#Ch1") from a
+    # previous run, so match an optional file part before the fragment.
+    entry_re = r'<li class="ltx_tocentry[^"]*"><a href="[^"#]*#([^"]+)"'
+    present = set(re.findall(entry_re, body))
     # Split the existing list into top-level <li> blocks keyed by their target.
     pieces = re.split(r'(?=<li class="ltx_tocentry ltx_tocentry_(?:chapter|appendix)")', body)
     lead = pieces[0] if pieces and not pieces[0].lstrip().startswith("<li") else ""
     blocks = []
     for p in pieces[1:] if lead else pieces:
-        m = re.match(r'<li class="ltx_tocentry[^"]*"><a href="#([^"]+)"', p.lstrip())
+        m = re.match(entry_re, p.lstrip())
         if m:
             blocks.append((m.group(1), p))
 
@@ -114,15 +132,44 @@ def fix_toc_order(text):
         elif sid not in present:
             rebuilt.append(TOC_ENTRY % (sid, title))
             added.append(title)
-    if not added:
+    if not added and not escaped.strip():
         return text
-    print("  toc-order: added %s" % ", ".join(added))
-    return text[:ol_start] + lead + "".join(rebuilt) + text[ol_end:]
+    if added:
+        print("  toc-order: added %s" % ", ".join(added))
+    if escaped.strip():
+        print("  toc-order: moved %d stray entry/entries back inside <ol>"
+              % len(re.findall(r"<li\b", escaped)))
+    return text[:ol_start] + lead + "".join(rebuilt) + closing + text[ol_end:]
 
 
-def patch_xhtml(text):
+def qualify_toc_hrefs(text, self_name):
+    """Turn same-document TOC fragments into document-qualified references.
+
+    ACE resolves a TOC link as path.join(dirname(navDoc), hrefBeforeHash), so a
+    bare "#Ch1" collapses to the *directory* and never matches the harvested
+    "<dir>/thesis.xhtml#Ch1". Every entry then reports as an unresolvable id and
+    epub-toc-order fails on the first one. Writing the file name into the href
+    is equivalent for a reading system and lets the check resolve.
+    """
+    if not self_name:
+        return text
+    start = text.find("ltx_list_toc")
+    if start < 0:
+        return text
+    end = text.find("</nav>", start)
+    if end < 0:
+        return text
+    head, nav, tail = text[:start], text[start:end], text[end:]
+    nav, n = re.subn(r'(<a\s[^>]*href=")#', r"\1" + self_name + "#", nav)
+    if n:
+        print("  toc-href: qualified %d links with %s" % (n, self_name))
+    return head + nav + tail
+
+
+def patch_xhtml(text, self_name=None):
     """Fix language, nav semantics and heading order in a LaTeXML XHTML file."""
     text = fix_toc_order(text)
+    text = qualify_toc_hrefs(text, self_name)
 
     # --- <html lang="en" xml:lang="en"> ------------------------------------
     def add_lang(m):
@@ -196,7 +243,10 @@ def patch_epub(path):
                 data = zin.read(info.filename)
                 low = info.filename.lower()
                 if low.endswith(".xhtml") or low.endswith(".html"):
-                    new = patch_xhtml(data.decode("utf-8")).encode("utf-8")
+                    new = patch_xhtml(
+                        data.decode("utf-8"),
+                        self_name=os.path.basename(info.filename),
+                    ).encode("utf-8")
                     if new != data:
                         changed.append(info.filename)
                     data = new
