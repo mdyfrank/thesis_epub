@@ -1,0 +1,196 @@
+%Todo
+%Table
+%Colors
+%Check heading structure of tableofcontents and listoffigures etc.
+
+
+
+
+\documentclass[12pt,reqno,oneside]{amsbook}
+
+
+%%\usepackage[english]{babel}  %Language needs to be specified for accessibility; currently this is not working well with latexml
+
+% latexml must be loaded before biblatex so that \iflatexml is defined here.
+% \iflatexml is false under pdflatex/lualatex and true under LaTeXML.
+\usepackage{latexml}
+\iflatexml\else
+  % PDF build: use biblatex + biber (full-featured).
+  \usepackage[backend=biber,style=numeric]{biblatex}
+  \addbibresource{thesis.bib}
+\fi
+
+% Math
+\usepackage{amsmath, amssymb, amsthm}
+
+% If you are including computer code the following package is useful.  It is similar to the verbatim package
+\usepackage{listings} 
+
+\usepackage{setspace}
+
+%Graphics
+\usepackage{graphicx}
+
+%LatexML (already loaded above, before biblatex, so \iflatexml is available)
+
+% Layout
+\usepackage{geometry}
+
+
+\usepackage{multirow}
+\usepackage{svg}
+\usepackage{subcaption}
+\usepackage{threeparttable}
+\usepackage[normalem]{ulem}
+\usepackage{enumitem}
+\useunder{\uline}{\ul}{}
+
+\geometry{margin=1in}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+% Hyperref
+\usepackage[pdfusetitle]{hyperref}
+
+\usepackage{booktabs}
+\usepackage{pifont}
+
+
+\usepackage[most]{tcolorbox}
+\usepackage{diagbox} 
+
+\usepackage{tabularx}
+\usepackage{lipsum} % for dummy text
+
+\newtcolorbox{promptbox}{
+  colback=gray!15,    % background
+  colframe=gray!15,   % same as background (no visible border)
+  boxrule=0pt,        % remove border line
+  left=0mm, right=0mm, top=0mm, bottom=0mm
+}
+
+\begin{document}
+
+% Title metadata.  Make changes here to fit your needs
+\newcommand{\thetitle}{Integrating Graph Learning and LLM Reasoning for Personalized Recommendation}
+
+%Edit the following
+\newcommand{\institution}{University of Illinois Chicago} 
+\newcommand{\degree}{Doctor of Philosophy}
+\newcommand{\programname}{Computer Science}
+\newcommand{\committee}{Philip S. Yu, Chair, Advisor \\ Name \\ Name\\ Name, Outside Members Need Affiliation Here}
+\newcommand{\theauthor}{Mingdai Yang}
+\newcommand{\priordegrees}{B.Eng., The Chinese University of Hong Kong, Shenzhen, 2019\\ M.S., The University of Chicago, 2020}
+\newcommand{\graduationyear}{2026}
+
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+% Leave the following for metadata
+\author{\theauthor}
+\title{\thetitle}
+\date{\today}
+
+\frontmatter
+
+% Custom title page
+% Take care in making substantial changes to this as it needs to still work with latexml
+\begin{titlepage}
+    \centering
+	{{\Large {\textbf{\thetitle}}}  \par}
+    \vspace{2cm}
+    {BY\par}
+    \vspace{0.5cm}
+    {\theauthor}\\
+    {\priordegrees}\\
+    \vspace{2cm}
+	DISSERTATION\\
+	\vspace{1cm}
+	Submitted as partial fulfillment of the requirements\\ \vspace{0.2cm}
+	for the degree of {\degree} in {\programname} \\ \vspace{0.2cm}
+	in the Graduate College of the \\  \vspace{0.2cm}
+	University of Illinois Chicago, {\graduationyear}\\
+	\vspace{1cm}
+	Chicago, Illinois
+		
+	\raggedright
+    \vfill
+    Defense Committee: \\
+    \committee \\
+\end{titlepage}
+
+\setcounter{page}{2} %This is UIC requirement, the title page is (i)
+
+%The following is best practice if distributing both an inacccessible PDF and accessible Epub file.
+\chapter*{Accessibility Statement}
+\iflatexml
+\noindent
+This document is in an accessible EPUB format. A PDF version of this document is available at [URL] or can be obtained by contacting [contact details].
+\else
+\noindent
+An accessible EPUB version of this document is available at [URL] or can be obtained by contacting [contact details].
+\fi
+
+
+\chapter*{Acknowledgment}
+[To be done after confirming the committee members.]
+
+\input{sections/other/3_preface}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+% \chapter*{List of Abbreviations}
+
+\input{sections/other/4_summary}
+
+
+%% Text
+
+\mainmatter
+
+\doublespacing %other options are \onehalfspacing or \singlespacing
+\input{sections/1_Introduction/index}
+% \chapter{Introduction}
+% \section{Dissertation Outline}
+% In the digital era, recommender systems (RecSys) play a crucial role in helping users discover relevant items across online platforms. By modeling historical user–item interactions, RecSys learns user preferences and provides personalized recommendations. However, these interactions are inherently sparse due to limited user exploration and the extremely large candidate item space. Such sparsity remains a fundamental challenge that limits recommendation accuracy and robustness, especially when relying solely on observed interactions.
+
+% To better capture collaborative signals, graph learning has become a dominant paradigm in RecSys, where users and items are organized into a bipartite interaction structure for information propagation. While graph-based models effectively leverage interaction data, modeling only pairwise connections remains insufficient under sparse settings. To address this limitation, this thesis explores the integration of complementary information sources into recommendation.
+% Inspired by the idea of leveraging multiple forms of knowledge simultaneously, we investigate two primary directions, as well as their integration, to enhance personalized recommendation.
+
+% First, we introduce additional relations and attributes into graph learning. Beyond conventional bipartite graphs that model only pairwise user–item interactions, we study hypergraph learning to capture higher-order relations and complex dependencies among multiple entities. Hypergraphs connect multiple nodes within a single hyperedge, allowing the incorporation of side information and structured relations beyond direct interactions. By modeling richer structural patterns, we enhance representation learning and alleviate sparsity issues in RecSys.
+
+% Second, we incorporate prior knowledge from large language models (LLMs) into recommendation. Traditional embedding-based graph models rely on fixed-length vector representations, which may fail to preserve the full semantic richness of textual descriptions and world knowledge. Recent advances in LLMs demonstrate strong capabilities in understanding semantic relations and functional roles of items derived from large-scale text corpora. In this thesis, we leverage LLMs to inject semantic priors and reasoning ability into RecSys, while retaining graph models as efficient tools for interaction modeling. Graph learning captures collaborative and structural patterns, whereas LLM reasoning contributes high-level semantic understanding, forming a complementary framework for personalization.
+
+% This thesis explores the challenges and opportunities of integrating graph learning and LLM reasoning to enhance RecSys. Compared with direct user–item interactions that provide explicit preference signals, auxiliary relations, structured side information, and LLM-based prior knowledge can be heterogeneous, multi-sourced, and partially misaligned with recommendation objectives. By addressing these challenges properly, we demonstrate significant improvements in recommendation performance. The detailed introduction for the work presented is as follows.
+
+
+
+\input{sections/2_UPRTH/index}
+\input{sections/3_IHP/index}
+\input{sections/4_GLTA/index}
+\input{sections/5_ERLSC/index}
+\input{sections/6_AgentDR/index}
+\input{sections/7_conclusion/index}
+\appendix
+
+\input{sections/other/appendix}
+
+
+\backmatter
+\singlespacing
+
+\iflatexml
+  % EPUB/HTML build: LaTeXML's biblatex support is limited, so use classic BibTeX.
+  \bibliographystyle{plain}
+  \bibliography{thesis}
+\else
+  \printbibliography
+\fi
+
+
+\end{document}

@@ -1,0 +1,27 @@
+# LaTeX build artifacts (regenerated on build)
+*.aux
+*.bbl
+*.bbl-SAVE-ERROR
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Backups and scratch/helper files
+*.bak
+_*.py
+_*.tex
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# NOTE: figure PDFs under sections/**/figures are SOURCE and are intentionally
+# NOT ignored — LaTeXML needs them to build the EPUB/HTML.

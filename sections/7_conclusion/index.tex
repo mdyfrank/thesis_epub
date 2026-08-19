@@ -1,0 +1,37 @@
+\chapter{Conclusion}
+
+This dissertation investigates how to enhance personalized RecSys by integrating graph learning with semantic knowledge and reasoning capabilities from LLMs. Traditional RecSys primarily rely on user–item interaction data, which often suffers from sparsity and limited semantic understanding. To address these limitations, this dissertation explores two complementary directions: modeling richer relational structures through hypergraph learning and incorporating semantic knowledge from LLMs. By combining structural collaborative signals with semantic reasoning, the proposed approaches improve recommendation performance while maintaining scalability and robustness. The main contributions of this dissertation are summarized as follows:
+
+\begin{itemize}[left=0pt]
+
+\item We develop a unified multitask pretraining framework UPRTH for recommendation based on task hypergraphs.
+It models diverse auxiliary tasks as hyperedge prediction problems and employs a transitional attention mechanism to selectively transfer useful knowledge, enabling effective integration of heterogeneous relational signals and alleviating data sparsity.
+
+\item We introduce instruction-based hypergraph pretraining framework IHP to incorporate semantic task guidance into hypergraphs for recommendation.
+By encoding textual instructions with a pretrained language model and injecting them into hypergraph convolution, IHP aligns structural relations with semantic task descriptions and improves cross-domain knowledge transfer in recommendation.
+
+\item We propose a graph–language alignment framework GLTA to integrate semantic knowledge from LLMs into recommendation models.
+It aligns graph-based user and item representations with token embeddings from pretrained language models, allowing recommendation models to inherit semantic knowledge while preserving the efficiency and determinism of ID-based item prediction.
+
+\item We design an LLM-guided relational modeling method ERLSC to capture substitute and complementary item relations.
+It leverages LLMs to infer functional relations between items and integrates these signals into hypergraph convolution through adaptive hyperedge weighting, enabling recommendation models to emphasize semantically meaningful item groups.
+
+\item We propose an LLM-agent framework for dynamic recommendation AgentDR. It treats the LLM as a high-level decision maker that coordinates multiple recommendation tools such as graph-based CF, and performs reasoning over item relations to refine candidate items, improving recommendation quality while maintaining scalability.
+
+\end{itemize}
+
+Besides the five works presented above, I have also contributed to several additional publications in the field of RecSys as the first author. In particular, CFAG~\cite{cfag} formulates the ranking-based group identification (GI) problem and addresses it by jointly modeling item interactions and group participation within a social tripartite graph. GTGS~\cite{gtgs} further introduces a transitional hypergraph convolution layer that leverages users’ preferences over items as prior knowledge when modeling group preferences for the GI task. PCL~\cite{pcl} proposes a continual learning framework for RecSys, where position-wise prompts are used as external memory to preserve previously learned knowledge during sequential user modeling.
+
+Taken together, these works outline the progression of my PhD research. My early work focuses on graph representation learning to model complex relations in RecSys that involve entities beyond the traditional user–item setting, such as groups in the GI task~\cite{cfag, gtgs}. Building upon this foundation, I then investigate how knowledge can be transferred across multiple relations and tasks through pretraining and finetuning paradigms for recommendation~\cite{uprth, ihp, pcl}. Finally, motivated by recent advances in LLMs, my research explores how to effectively incorporate the rich world knowledge encoded in LLMs to further enhance personalization and reasoning in RecSys~\cite{glta, agentdr}.
+
+Looking ahead, an important yet underexplored direction is the development of user-owned recommendation agents. Unlike existing RecSys that operate within a single platform or dataset, a user-owned agent could aggregate information across multiple online services and reason about the most suitable choices for the user.
+Technically, earlier models lacked the capability to effectively integrate and reason over heterogeneous information sources at scale.
+From an ecosystem perspective, modern RecSys are largely developed by individual service providers whose primary objectives focus on business metrics such as user engagement and conversion, making platform-independent recommendation less aligned with existing incentives.
+
+Recent advances in LLMs may begin to change this situation. Their ability to reason over diverse information sources makes it possible to build agents that assist users across platforms. At the same time, the cost of developing and deploying intelligent agents continues to decrease, and tools for building such systems are becoming increasingly accessible. These trends suggest that users may eventually be able to build or customize their own recommendation agents.
+If effective methods can be developed to support such user-owned agents, they may enable a new paradigm of recommendation that is more personalized and transparent, while also mitigating practical concerns associated with platform-centric RecSys, such as data privacy risks and information cocoons.
+
+Ultimately, user-owned recommendation agents may represent a meaningful step toward giving users greater control over how information is filtered and recommended in the digital ecosystem. 
+It is our hope that the ideas explored in this dissertation will inspire future research toward recommendation systems that not only understand user preferences, but also reason about information in a way that better serves users in an increasingly complex digital ecosystem.
+
+
