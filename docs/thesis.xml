@@ -28,7 +28,7 @@
 <!--  %**** thesis.tex Line 100 **** -->  <titlepage>
     <p><text font="bold" fontsize="144%">Integrating Graph Learning and LLM Reasoning for Personalized Recommendation</text></p>
     <p>BY</p>
-    <p>Mingdai Yang<break/>B.Eng., The Chinese University of Hong Kong, Shenzhen, 2019<break/>M.S., The University of Chicago, 2020<break/></p>
+    <p>Mingdai Yang<break/>B.Eng., The Chinese University of Hong Kong (Shenzhen), 2019<break/>M.S., The University of Chicago, 2020<break/></p>
     <p>DISSERTATION<break/></p>
     <p>Submitted as partial fulfillment of the requirements<break/></p>
     <p>for the degree of Doctor of Philosophy in Computer Science <break/></p>
