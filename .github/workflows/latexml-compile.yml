@@ -24,6 +24,15 @@ jobs:
           docs/thesis.xml
           latexmlc --dest=docs/thesis.epub thesis.tex
 
+      # LaTeXML has no hook for EPUB package metadata or for the ARIA roles on
+      # its generated TOC/LOF/LOT navs, so those ACE failures are patched here.
+      - name: Patch accessibility metadata LaTeXML cannot emit
+        run: |
+          if ! command -v python3 >/dev/null 2>&1; then
+            apt-get update && apt-get install -y --no-install-recommends python3
+          fi
+          python3 tools/fix_epub_a11y.py docs/thesis.epub docs/index.html
+
       - name: Commit and Push HTML output
         run: |
           # Configure Git user

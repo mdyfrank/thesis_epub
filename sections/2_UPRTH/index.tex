@@ -337,15 +337,15 @@ As aforementioned, UPRTH applies alignment loss in pretraining and BPR loss in f
 \hline
 \multicolumn{2}{l|}{Dataset}       & \multicolumn{2}{c}{XMarket-CN}             & \multicolumn{2}{c}{XMarket-MX}             & \multicolumn{2}{c}{Steam}                  \\ \hline
 \multicolumn{2}{l|}{$(\mathcal{L}_{\text{Pretrain}}$, $\mathcal{L}_{\text{Finetune}})$}         & R@10            & \multicolumn{1}{c}{N@10} & R@10            & \multicolumn{1}{c}{N@10} & R@10            & \multicolumn{1}{c}{N@10} \\ \hline
-\multicolumn{2}{l|}{(BPR, BPR)}       & 0.0527          & 0.0284                   & 0.0707          & {\ul 0.0439}             & 0.1053          & 0.0527                   \\
+\multicolumn{2}{l|}{(BPR, BPR)}       & 0.0527          & 0.0284                   & 0.0707          & \uline{0.0439}             & 0.1053          & 0.0527                   \\
 \multicolumn{2}{l|}{(BPR$_{\text{pos}}$, BPR$_{\text{pos}}$)} & 0.0231          & 0.0114                   & 0.0632          & 0.0354                   & 0.1106          & 0.0564                   \\
 \multicolumn{2}{l|}{(AU, AU)}         & 0.0460          & 0.0238                   & 0.0159          & 0.0084                   & 0.1152          & 0.0568                   \\
 \multicolumn{2}{l|}{(Align., Align.)} & 0.0373          & 0.0237                   & 0.0110          & 0.0059                   & 0.0180          & 0.0069                   \\ \hline
 \multicolumn{2}{l|}{(BPR, BPR$_{\text{pos}}$)}    & 0.0519          & 0.0283                   & 0.0633          & 0.0384                   & 0.1205          & 0.0601                   \\
 \multicolumn{2}{l|}{(BPR, AU)}        & 0.0574          & 0.0284                   & 0.0643          & 0.0407                   & 0.1158          & 0.0575                   \\
 \multicolumn{2}{l|}{(BPR, Align.)}    & 0.0575          & 0.0281                   & 0.0317          & 0.0125                   & 0.1062          & 0.0543                   \\ \hline
-\multicolumn{2}{l|}{(BPR$_{\text{pos}}$, BPR)}    & {\ul 0.0623}    & 0.0301                   & 0.0704          & 0.0419                   & {\ul 0.1338}    & {\ul 0.0669}             \\
-\multicolumn{2}{l|}{(AU, BPR)}        & 0.0623          & {\ul 0.0346}             & {\ul 0.0712}    & 0.0418                   & 0.1075          & 0.0545                   \\
+\multicolumn{2}{l|}{(BPR$_{\text{pos}}$, BPR)}    & \uline{0.0623}    & 0.0301                   & 0.0704          & 0.0419                   & \uline{0.1338}    & \uline{0.0669}             \\
+\multicolumn{2}{l|}{(AU, BPR)}        & 0.0623          & \uline{0.0346}             & \uline{0.0712}    & 0.0418                   & 0.1075          & 0.0545                   \\
 \multicolumn{2}{l|}{(Align., BPR)} & \textbf{0.0801} & \textbf{0.0427}          & \textbf{0.0822} & \textbf{0.0579}          & \textbf{0.1721} & \textbf{0.0795}          \\ \hline
 \end{tabular}%
 }

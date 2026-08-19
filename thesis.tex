@@ -43,7 +43,10 @@
 \usepackage{threeparttable}
 \usepackage[normalem]{ulem}
 \usepackage{enumitem}
-\useunder{\uline}{\ul}{}
+% NOTE: do not use \useunder{\uline}{\ul}{} here. LaTeXML has no binding for
+% \useunder, so \ul stays undefined and every {\ul ...} cell is rendered as red
+% error text in the EPUB (56 WCAG colour-contrast failures). Use \uline{...}
+% directly instead -- it works identically under pdflatex and LaTeXML.
 
 \geometry{margin=1in}
 
