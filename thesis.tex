@@ -38,7 +38,7 @@
 
 
 \usepackage{multirow}
-\usepackage{svg}
+\iflatexml\else\usepackage{svg}\fi % svg needs shell-escape/Inkscape; skip under LaTeXML (no \includesvg is used)
 \usepackage{subcaption}
 \usepackage{threeparttable}
 \usepackage[normalem]{ulem}
