@@ -12,7 +12,6 @@
 <?latexml package="threeparttable"?>
 <?latexml package="ulem" options="normalem"?>
 <?latexml package="enumitem"?>
-<?latexml RelaxNGSchema="LaTeXML"?>
 <?latexml package="hyperref" options="pdfusetitle"?>
 <?latexml package="booktabs"?>
 <?latexml package="pifont"?>
@@ -20,16 +19,13 @@
 <?latexml package="diagbox"?>
 <?latexml package="tabularx"?>
 <?latexml package="lipsum"?>
+<?latexml RelaxNGSchema="LaTeXML"?>
 <document xmlns="http://dlmf.nist.gov/LaTeXML" xmlns:svg="http://www.w3.org/2000/svg">
   <resource src="LaTeXML.css" type="text/css"/>
   <resource src="ltx-book.css" type="text/css"/>
   <resource src="ltx-listings.css" type="text/css"/>
   <resource src="ltx-ulem.css" type="text/css"/>
-  <para xml:id="p1">
-    <ERROR class="undefined">\useunder</ERROR>
-    <p><text class="ltx_ulem_uline"/><ERROR class="undefined">\ul</ERROR></p>
-  </para>
-  <titlepage>
+<!--  %**** thesis.tex Line 100 **** -->  <titlepage>
     <p><text font="bold" fontsize="144%">Integrating Graph Learning and LLM Reasoning for Personalized Recommendation</text></p>
     <p>BY</p>
     <p>Mingdai Yang<break/>B.Eng., The Chinese University of Hong Kong, Shenzhen, 2019<break/>M.S., The University of Chicago, 2020<break/></p>
@@ -39,7 +35,7 @@
     <p>in the Graduate College of the <break/></p>
     <p>University of Illinois Chicago, 2026<break/></p>
     <p>Chicago, Illinois</p>
-    <p class="ltx_align_left">Defense Committee: <break/>Philip S. Yu, Chair, Advisor <break/>Name <break/>Name<break/>Name, Outside Members Need Affiliation Here<break/></p>
+    <p class="ltx_align_left">Defense Committee: <break/><!--  %**** thesis.tex Line 125 **** -->Philip S. Yu, Chair, Advisor <break/>Name <break/>Name<break/>Name, Outside Members Need Affiliation Here<break/></p>
   </titlepage>
   <title>Integrating Graph Learning and LLM Reasoning for Personalized Recommendation</title>
   <creator role="author">
@@ -84,7 +80,8 @@
     <TOC lists="lot" scope="global">
       <title>List of Tables</title>
     </TOC>
-<!--  %“chapter*–List of Abbreviations˝ -->  </chapter>
+<!--  %**** thesis.tex Line 150 **** 
+     %“chapter*–List of Abbreviations˝ -->  </chapter>
   <chapter xml:id="Chx4">
     <title>Summary</title>
     <para xml:id="Chx4.p1">
@@ -5586,7 +5583,7 @@ Given that no linear transformation is included in hypergraph encoders, and the 
             <tag role="refnum">2.5</tag>
             <tag role="typerefnum">Table 2.5</tag>
           </tags>
-          <inline-block depth="43.5pt" height="46.5pt" width="241.5pt" xscale="0.614597447336501" xtranslate="-75.7pt" yscale="0.614597447336501" ytranslate="28.2pt">
+          <inline-block depth="45.8pt" height="49.0pt" width="241.5pt" xscale="0.647559984363842" xtranslate="-65.7pt" yscale="0.647559984363842" ytranslate="25.8pt">
             <tabular class="ltx_guessed_headers" vattach="middle">
               <tbody>
                 <tr>
@@ -5627,7 +5624,7 @@ Given that no linear transformation is included in hypergraph encoders, and the 
                   <td align="center" border="t">0.0527</td>
                   <td align="center" border="t">0.0284</td>
                   <td align="center" border="t">0.0707</td>
-                  <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.0439</td>
+                  <td align="center" border="t"><text class="ltx_ulem_uline">0.0439</text></td>
                   <td align="center" border="t">0.1053</td>
                   <td align="center" border="t">0.0527</td>
                 </tr>
@@ -5711,18 +5708,18 @@ Given that no linear transformation is included in hypergraph encoders, and the 
                         </XMApp>
                       </XMath>
                     </Math>, BPR)</td>
-                  <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.0623</td>
+                  <td align="center" border="t"><text class="ltx_ulem_uline">0.0623</text></td>
                   <td align="center" border="t">0.0301</td>
                   <td align="center" border="t">0.0704</td>
                   <td align="center" border="t">0.0419</td>
-                  <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.1338</td>
-                  <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.0669</td>
+                  <td align="center" border="t"><text class="ltx_ulem_uline">0.1338</text></td>
+                  <td align="center" border="t"><text class="ltx_ulem_uline">0.0669</text></td>
                 </tr>
                 <tr>
                   <td align="left" border="r" thead="row">(AU, BPR)</td>
                   <td align="center">0.0623</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0346</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0712</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0346</text></td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0712</text></td>
                   <td align="center">0.0418</td>
                   <td align="center">0.1075</td>
                   <td align="center">0.0545</td>
@@ -8972,7 +8969,7 @@ In contrast, a typical graph model GCN <cite class="ltx_citemacro_cite">[<bibre
               <tag role="refnum">3.2</tag>
               <tag role="typerefnum">Table 3.2</tag>
             </tags>
-            <inline-block depth="41.3pt" height="44.0pt" width="345.0pt" xscale="0.536998700083289" xtranslate="-148.7pt" yscale="0.536998700083289" ytranslate="36.8pt">
+            <inline-block depth="44.0pt" height="46.9pt" width="345.0pt" xscale="0.572655528321044" xtranslate="-128.7pt" yscale="0.572655528321044" ytranslate="33.9pt">
               <tabular class="ltx_guessed_headers" vattach="middle">
                 <tbody>
                   <tr>
@@ -9004,8 +9001,8 @@ In contrast, a typical graph model GCN <cite class="ltx_citemacro_cite">[<bibre
                     <td align="center" border="r t">0.1846</td>
                     <td align="center" border="t">0.0956</td>
                     <td align="center" border="t">0.1111</td>
-                    <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.0818</td>
-                    <td align="center" border="r t"><ERROR class="undefined">\ul</ERROR>0.0869</td>
+                    <td align="center" border="t"><text class="ltx_ulem_uline">0.0818</text></td>
+                    <td align="center" border="r t"><text class="ltx_ulem_uline">0.0869</text></td>
                     <td align="center" border="t">0.0661</td>
                     <td align="center" border="t">0.0828</td>
                     <td align="center" border="t">0.0497</td>
@@ -9017,7 +9014,7 @@ In contrast, a typical graph model GCN <cite class="ltx_citemacro_cite">[<bibre
                     <td align="center">0.2935</td>
                     <td align="center">0.1637</td>
                     <td align="center" border="r">0.1808</td>
-                    <td align="center"><ERROR class="undefined">\ul</ERROR>0.0960</td>
+                    <td align="center"><text class="ltx_ulem_uline">0.0960</text></td>
                     <td align="center">0.1108</td>
                     <td align="center">0.0810</td>
                     <td align="center" border="r">0.0856</td>
@@ -9078,7 +9075,7 @@ In contrast, a typical graph model GCN <cite class="ltx_citemacro_cite">[<bibre
                     <td align="center">0.1388</td>
                     <td align="center" border="r">0.1583</td>
                     <td align="center">0.0889</td>
-                    <td align="center"><ERROR class="undefined">\ul</ERROR>0.1187</td>
+                    <td align="center"><text class="ltx_ulem_uline">0.1187</text></td>
                     <td align="center">0.0757</td>
                     <td align="center" border="r">0.0854</td>
                     <td align="center">0.0401</td>
@@ -9098,12 +9095,12 @@ In contrast, a typical graph model GCN <cite class="ltx_citemacro_cite">[<bibre
                     <td align="center" border="r t">0.0600</td>
                     <td align="center" border="t">0.0741</td>
                     <td align="center" border="t">0.0871</td>
-                    <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.0633</td>
-                    <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.0670</td>
+                    <td align="center" border="t"><text class="ltx_ulem_uline">0.0633</text></td>
+                    <td align="center" border="t"><text class="ltx_ulem_uline">0.0670</text></td>
                   </tr>
                   <tr>
                     <td align="left" border="r" thead="row">GCC</td>
-                    <td align="center"><ERROR class="undefined">\ul</ERROR>0.2585</td>
+                    <td align="center"><text class="ltx_ulem_uline">0.2585</text></td>
                     <td align="center">0.3185</td>
                     <td align="center">0.1933</td>
                     <td align="center" border="r">0.2117</td>
@@ -9119,15 +9116,15 @@ In contrast, a typical graph model GCN <cite class="ltx_citemacro_cite">[<bibre
                   <tr>
                     <td align="left" border="r" thead="row">GraphMAE</td>
                     <td align="center">0.2574</td>
-                    <td align="center"><ERROR class="undefined">\ul</ERROR>0.3220</td>
-                    <td align="center"><ERROR class="undefined">\ul</ERROR>0.1984</td>
-                    <td align="center" border="r"><ERROR class="undefined">\ul</ERROR>0.2178</td>
+                    <td align="center"><text class="ltx_ulem_uline">0.3220</text></td>
+                    <td align="center"><text class="ltx_ulem_uline">0.1984</text></td>
+                    <td align="center" border="r"><text class="ltx_ulem_uline">0.2178</text></td>
                     <td align="center">0.0678</td>
                     <td align="center">0.1020</td>
                     <td align="center">0.0557</td>
                     <td align="center" border="r">0.0678</td>
-                    <td align="center"><!--  %**** index.tex Line 275 **** --><ERROR class="undefined">\ul</ERROR>0.0768</td>
-                    <td align="center"><ERROR class="undefined">\ul</ERROR>0.0920</td>
+                    <td align="center"><text class="ltx_ulem_uline"><!--  %**** index.tex Line 275 **** -->0.0768</text></td>
+                    <td align="center"><text class="ltx_ulem_uline">0.0920</text></td>
                     <td align="center">0.0585</td>
                     <td align="center">0.0627</td>
                   </tr>
@@ -9405,24 +9402,26 @@ In contrast, instructions provide explicit information about certain tasks, whic
             <tag role="refnum">3.4</tag>
             <tag role="typerefnum">Table 3.4</tag>
           </tags>
-          <inline-block depth="22.8pt" height="25.2pt" width="207.0pt" xscale="0.492019194061514" xtranslate="-106.9pt" yscale="0.492019194061514" ytranslate="24.8pt">
+          <inline-block depth="23.9pt" height="26.5pt" width="207.0pt" xscale="0.516578062781906" xtranslate="-96.9pt" yscale="0.516578062781906" ytranslate="23.6pt">
             <tabular class="ltx_guessed_headers" vattach="middle">
+              <thead>
+                <tr>
+                  <td align="left" border="r t" thead="column row">Dataset</td>
+                  <td align="center" border="t" colspan="2" thead="column">Goodreads-P</td>
+                  <td align="center" border="t" colspan="2" thead="column">Goodreads-H</td>
+                  <td align="center" border="t" colspan="2" thead="column">Amazon</td>
+                </tr>
+                <tr>
+                  <td align="left" border="r t" thead="column row">Metric</td>
+                  <td align="center" border="t" thead="column">R@10</td>
+                  <td align="center" border="t" thead="column">N@10</td>
+                  <td align="center" border="t" thead="column">R@10</td>
+                  <td align="center" border="t" thead="column">N@10</td>
+                  <td align="center" border="t" thead="column">R@10</td>
+                  <td align="center" border="t" thead="column">N@10</td>
+                </tr>
+              </thead>
               <tbody>
-                <tr>
-                  <td align="left" border="r t" thead="row">Dataset</td>
-                  <td align="center" border="t" colspan="2">Goodreads-P</td>
-                  <td align="center" border="t" colspan="2">Goodreads-H</td>
-                  <td align="center" border="t" colspan="2">Amazon</td>
-                </tr>
-                <tr>
-                  <td align="left" border="r t" thead="row">Metric</td>
-                  <td align="center" border="t">R@10</td>
-                  <td align="center" border="t">N@10</td>
-                  <td align="center" border="t">R@10</td>
-                  <td align="center" border="t">N@10</td>
-                  <td align="center" border="t">R@10</td>
-                  <td align="center" border="t">N@10</td>
-                </tr>
                 <tr>
                   <td align="left" border="r t" thead="row">w/o PLM</td>
                   <td align="center" border="t">0.2717</td>
@@ -9444,7 +9443,7 @@ In contrast, instructions provide explicit information about certain tasks, whic
                 <tr>
                   <td align="left" border="r" thead="row">GTR <cite class="ltx_citemacro_cite">[<bibref bibrefs="gtr" separator="," yyseparator=","/>]</cite></td>
                   <td align="center">0.2764</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.2226</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.2226</text></td>
                   <td align="center">0.1020</td>
                   <td align="center">0.0900</td>
                   <td align="center">0.0793</td>
@@ -9452,9 +9451,9 @@ In contrast, instructions provide explicit information about certain tasks, whic
                 </tr>
                 <tr>
                   <td align="left" border="r" thead="row">S-BERT <cite class="ltx_citemacro_cite">[<bibref bibrefs="sentenceBERT" separator="," yyseparator=","/>]</cite></td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.2765</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.2765</text></td>
                   <td align="center">0.2218</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.1024</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.1024</text></td>
                   <td align="center">0.0903</td>
                   <td align="center"><text font="bold">0.0831</text></td>
                   <td align="center"><text font="bold">0.0698</text></td>
@@ -9464,7 +9463,7 @@ In contrast, instructions provide explicit information about certain tasks, whic
                   <td align="center">0.2764</td>
                   <td align="center"><text font="bold">0.2227</text></td>
                   <td align="center">0.1023</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0909</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0909</text></td>
                   <td align="center">0.0808</td>
                   <td align="center">0.0675</td>
                 </tr>
@@ -9474,8 +9473,8 @@ In contrast, instructions provide explicit information about certain tasks, whic
                   <td align="center" border="b">0.2189</td>
                   <td align="center" border="b"><text font="bold">0.1032</text></td>
                   <td align="center" border="b"><text font="bold">0.0915</text></td>
-                  <td align="center" border="b"><ERROR class="undefined">\ul</ERROR>0.0814</td>
-                  <td align="center" border="b"><ERROR class="undefined">\ul</ERROR>0.0692</td>
+                  <td align="center" border="b"><text class="ltx_ulem_uline">0.0814</text></td>
+                  <td align="center" border="b"><text class="ltx_ulem_uline">0.0692</text></td>
                 </tr>
               </tbody>
             </tabular>
@@ -9769,28 +9768,30 @@ Nonetheless, they are worse than IHP, which better captures dependencies between
             <tag role="refnum">3.5</tag>
             <tag role="typerefnum">Table 3.5</tag>
           </tags>
-          <inline-block depth="28.2pt" height="31.7pt" width="241.5pt" xscale="0.695933097026996" xtranslate="-52.8pt" yscale="0.695933097026996" ytranslate="13.1pt">
+          <inline-block depth="29.9pt" height="33.6pt" width="241.5pt" xscale="0.738499564395202" xtranslate="-42.8pt" yscale="0.738499564395202" ytranslate="11.2pt">
             <tabular class="ltx_guessed_headers" vattach="middle">
+              <thead>
+                <tr>
+                  <td align="left" border="r t" thead="column row">Dataset</td>
+                  <td align="center" border="t" colspan="2" thead="column">Goodreads-P</td>
+                  <td align="center" border="t" colspan="2" thead="column">Goodreads-H</td>
+                  <td align="center" border="t" colspan="2" thead="column">Amazon</td>
+                </tr>
+                <tr>
+                  <td align="left" border="r t" thead="column row">Metric</td>
+                  <td align="center" border="t" thead="column">R@10</td>
+                  <td align="center" border="t" thead="column">N@10</td>
+                  <td align="center" border="t" thead="column">R@10</td>
+                  <td align="center" border="t" thead="column">N@10</td>
+                  <td align="center" border="t" thead="column">R@10</td>
+                  <td align="center" border="t" thead="column">N@10</td>
+                </tr>
+              </thead>
               <tbody>
-                <tr>
-                  <td align="left" border="r t" thead="row">Dataset</td>
-                  <td align="center" border="t" colspan="2">Goodreads-P</td>
-                  <td align="center" border="t" colspan="2">Goodreads-H</td>
-                  <td align="center" border="t" colspan="2">Amazon</td>
-                </tr>
-                <tr>
-                  <td align="left" border="r t" thead="row">Metric</td>
-                  <td align="center" border="t">R@10</td>
-                  <td align="center" border="t">N@10</td>
-                  <td align="center" border="t">R@10</td>
-                  <td align="center" border="t">N@10</td>
-                  <td align="center" border="t">R@10</td>
-                  <td align="center" border="t">N@10</td>
-                </tr>
                 <tr>
                   <td align="left" border="r t" thead="row">GraphSage</td>
                   <td align="center" border="t">0.2415</td>
-                  <td align="center" border="t"><ERROR class="undefined">\ul</ERROR>0.1988</td>
+                  <td align="center" border="t"><text class="ltx_ulem_uline">0.1988</text></td>
                   <td align="center" border="t">0.0305</td>
                   <td align="center" border="t">0.0210</td>
                   <td align="center" border="t">0.0330</td>
@@ -9811,15 +9812,15 @@ Nonetheless, they are worse than IHP, which better captures dependencies between
                   <td align="center">0.1960</td>
                   <td align="center">0.0589</td>
                   <td align="center">0.0483</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0929</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0520</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0929</text></td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0520</text></td>
                 </tr>
                 <tr>
                   <td align="left" border="r" thead="row">GraphMAE</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.2620</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.2620</text></td>
                   <td align="center">0.1981</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0606</td>
-                  <td align="center"><ERROR class="undefined">\ul</ERROR>0.0503</td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0606</text></td>
+                  <td align="center"><text class="ltx_ulem_uline">0.0503</text></td>
                   <td align="center">0.0869</td>
                   <td align="center">0.0494</td>
                 </tr>
@@ -11068,7 +11069,7 @@ We use history books and groceries as items with their corresponding description
               <tag role="refnum">4.2</tag>
               <tag role="typerefnum">Table 4.2</tag>
             </tags>
-            <inline-block depth="29.7pt" height="32.3pt" width="345.0pt" xscale="0.506452090302721" xtranslate="-168.1pt" yscale="0.506452090302721" ytranslate="30.2pt">
+            <inline-block depth="31.3pt" height="33.9pt" width="345.0pt" xscale="0.532511345817318" xtranslate="-151.4pt" yscale="0.532511345817318" ytranslate="28.6pt">
               <tabular class="ltx_guessed_headers" vattach="middle">
                 <tbody>
                   <tr>
@@ -11132,7 +11133,7 @@ We use history books and groceries as items with their corresponding description
                     <td align="right">0.0150</td>
                     <td align="right">0.0268</td>
                     <td align="right" border="r">0.0290</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0527</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0527</text></td>
                     <td align="right">0.0451</td>
                     <td align="right">0.0467</td>
                     <td align="right">0.0469</td>
@@ -11144,7 +11145,7 @@ We use history books and groceries as items with their corresponding description
                     <td align="right">0.2379</td>
                     <td align="right" border="r">0.2483</td>
                     <td align="right">0.0217</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0156</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0156</text></td>
                     <td align="right">0.0310</td>
                     <td align="right" border="r">0.0315</td>
                     <td align="right">0.0516</td>
@@ -11155,21 +11156,21 @@ We use history books and groceries as items with their corresponding description
                   <tr>
                     <td align="left" border="r" thead="row">RLMRec-Con</td>
                     <td align="right">0.2062</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.1676</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.2441</td>
-                    <td align="right" border="r"><ERROR class="undefined">\ul</ERROR>0.2542</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0227</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.1676</text></td>
+                    <td align="right"><text class="ltx_ulem_uline">0.2441</text></td>
+                    <td align="right" border="r"><text class="ltx_ulem_uline">0.2542</text></td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0227</text></td>
                     <td align="right">0.0142</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0348</td>
-                    <td align="right" border="r"><ERROR class="undefined">\ul</ERROR>0.0358</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0348</text></td>
+                    <td align="right" border="r"><text class="ltx_ulem_uline">0.0358</text></td>
                     <td align="right">0.0499</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0460</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0488</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0492</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0460</text></td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0488</text></td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0492</text></td>
                   </tr>
                   <tr>
                     <td align="left" border="r" thead="row">RLMRec-Gen</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.2062</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.2062</text></td>
                     <td align="right">0.1653</td>
                     <td align="right">0.2407</td>
                     <td align="right" border="r">0.2424</td>
@@ -13274,7 +13275,7 @@ All methods are evaluated under the full-ranking setting, where each test user i
               <tag role="refnum">5.2</tag>
               <tag role="typerefnum">Table 5.2</tag>
             </tags>
-<!--  %**** index.tex Line 125 **** -->            <inline-block depth="30.0pt" height="32.5pt" width="345.0pt" xscale="0.510668872661612" xtranslate="-165.3pt" yscale="0.510668872661612" ytranslate="29.9pt">
+<!--  %**** index.tex Line 125 **** -->            <inline-block depth="31.9pt" height="34.6pt" width="345.0pt" xscale="0.542810168193243" xtranslate="-145.3pt" yscale="0.542810168193243" ytranslate="28.0pt">
               <tabular class="ltx_guessed_headers" vattach="middle">
                 <tbody>
                   <tr>
@@ -13300,17 +13301,17 @@ All methods are evaluated under the full-ranking setting, where each test user i
                   </tr>
                   <tr>
                     <td align="left" border="r t" thead="row">LightGCN</td>
-                    <td align="right" border="t"><ERROR class="undefined">\ul</ERROR>0.0894</td>
+                    <td align="right" border="t"><text class="ltx_ulem_uline">0.0894</text></td>
                     <td align="right" border="t">0.0959</td>
-                    <td align="right" border="t"><ERROR class="undefined">\ul</ERROR>0.0786</td>
+                    <td align="right" border="t"><text class="ltx_ulem_uline">0.0786</text></td>
                     <td align="right" border="r t">0.0804</td>
-                    <td align="right" border="t"><ERROR class="undefined">\ul</ERROR>0.2489</td>
-                    <td align="right" border="t"><ERROR class="undefined">\ul</ERROR>0.2692</td>
+                    <td align="right" border="t"><text class="ltx_ulem_uline">0.2489</text></td>
+                    <td align="right" border="t"><text class="ltx_ulem_uline">0.2692</text></td>
                     <td align="right" border="t">0.2141</td>
                     <td align="right" border="r t">0.2195</td>
                     <td align="right" border="t">0.1118</td>
                     <td align="right" border="t">0.1199</td>
-                    <td align="right" border="t"><ERROR class="undefined">\ul</ERROR>0.0910</td>
+                    <td align="right" border="t"><text class="ltx_ulem_uline">0.0910</text></td>
                     <td align="right" border="t">0.0930</td>
                   </tr>
                   <tr>
@@ -13336,7 +13337,7 @@ All methods are evaluated under the full-ranking setting, where each test user i
                     <td align="right" border="r">0.0696</td>
                     <td align="right">0.2405</td>
                     <td align="right">0.2524</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.2167</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.2167</text></td>
                     <td align="right" border="r">0.2199</td>
                     <td align="right">0.1074</td>
                     <td align="right">0.1172</td>
@@ -13368,21 +13369,21 @@ All methods are evaluated under the full-ranking setting, where each test user i
                     <td align="right">0.1963</td>
                     <td align="right">0.1698</td>
                     <td align="right" border="r">0.1739</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.1206</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.1319</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.1206</text></td>
+                    <td align="right"><text class="ltx_ulem_uline">0.1319</text></td>
                     <td align="right">0.0887</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.0941</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.0941</text></td>
                   </tr>
                   <tr>
                     <td align="left" border="r" thead="row">HCCF</td>
                     <td align="right">0.0827</td>
-                    <td align="right"><ERROR class="undefined">\ul</ERROR>0.1025</td>
+                    <td align="right"><text class="ltx_ulem_uline">0.1025</text></td>
                     <td align="right">0.0783</td>
-                    <td align="right" border="r"><ERROR class="undefined">\ul</ERROR>0.0845</td>
+                    <td align="right" border="r"><text class="ltx_ulem_uline">0.0845</text></td>
                     <td align="right">0.2167</td>
                     <td align="right">0.2624</td>
                     <td align="right">0.1986</td>
-                    <td align="right" border="r"><ERROR class="undefined">\ul</ERROR>0.2272</td>
+                    <td align="right" border="r"><text class="ltx_ulem_uline">0.2272</text></td>
                     <td align="right">0.1133</td>
                     <td align="right">0.1214</td>
                     <td align="right">0.0839</td>
@@ -13841,13 +13842,12 @@ Building on this framework, we highlight the main contributions of our work as f
           <tabular class="ltx_guessed_headers" vattach="middle">
             <thead>
               <tr>
-                <td border="tt" thead="row"/>
+                <td align="left" border="tt" rowspan="2" thead="column row">Method</td>
                 <td align="center" border="tt" thead="column">Full Ranking</td>
                 <td align="center" border="tt" thead="column">Text Feature</td>
                 <td align="center" border="tt" thead="column">Generative</td>
               </tr>
               <tr>
-                <td thead="row"/>
                 <td align="center" thead="column">Evaluation</td>
                 <td align="center" thead="column">Handling</td>
                 <td align="center" thead="column">Reasoning</td>
@@ -17891,6 +17891,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
 <!--  %–“color–red˝ ** Do you want to add the prompts for VDCG evaluation too? we have room˝ 
      %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p2">
           <picture height="84.25" tex="\hbox to433.62pt{\vbox to60.89pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{58.04524pt}%&#10;\pgfsys@curveto{0.0pt}{59.61665pt}{1.27385pt}{60.8905pt}{2.84526pt}{60.8905pt}%&#10;\pgfsys@lineto{430.77473pt}{60.8905pt}\pgfsys@curveto{432.34615pt}{60.8905pt}{%&#10;433.62pt}{59.61665pt}{433.62pt}{58.04524pt}\pgfsys@lineto{433.62pt}{2.84526pt}%&#10;\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}%&#10;\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.273%&#10;85pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{58.04524pt}\pgfsys@curveto{0.0pt}{59.61665pt}{1.27385pt}%&#10;{60.8905pt}{2.84526pt}{60.8905pt}\pgfsys@lineto{430.77473pt}{60.8905pt}%&#10;\pgfsys@curveto{432.34615pt}{60.8905pt}{433.62pt}{59.61665pt}{433.62pt}{58.045%&#10;24pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{4%&#10;32.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{27.94525pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;Summarize the user's preference based on the historical items this user %&#10;purchased under \emph{Electronics} on \emph{Amazon}.\\[3.6999pt]&#10;{[Historical Items]}\\&#10;\{item\_descriptions\}\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p2.pic1">
             <svg:svg height="84.25" overflow="visible" version="1.1" viewBox="0 0 600 84.25" width="600">
@@ -17982,6 +17983,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
 <!--  %“medskip 
      %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p3">
           <picture height="100.86" tex="\hbox to433.62pt{\vbox to72.89pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{70.04524pt}%&#10;\pgfsys@curveto{0.0pt}{71.61665pt}{1.27385pt}{72.8905pt}{2.84526pt}{72.8905pt}%&#10;\pgfsys@lineto{430.77473pt}{72.8905pt}\pgfsys@curveto{432.34615pt}{72.8905pt}{%&#10;433.62pt}{71.61665pt}{433.62pt}{70.04524pt}\pgfsys@lineto{433.62pt}{2.84526pt}%&#10;\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}%&#10;\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.273%&#10;85pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{70.04524pt}\pgfsys@curveto{0.0pt}{71.61665pt}{1.27385pt}%&#10;{72.8905pt}{2.84526pt}{72.8905pt}\pgfsys@lineto{430.77473pt}{72.8905pt}%&#10;\pgfsys@curveto{432.34615pt}{72.8905pt}{433.62pt}{71.61665pt}{433.62pt}{70.045%&#10;24pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{4%&#10;32.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{33.94525pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;According to the historical items purchased by a user, generate \emph{20} %&#10;\emph{substitutes} of these items under \emph{Electronics} on \emph{Amazon}.\\%&#10;[3.6999pt]&#10;{[Historical Items]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;The output must be one list of item titles in length of \emph{20}, separated %&#10;by lines.\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p3.pic1">
             <svg:svg height="100.86" overflow="visible" version="1.1" viewBox="0 0 600 100.86" width="600">
@@ -18096,6 +18098,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
 <!--  %“medskip 
      %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p4">
           <picture height="202.91" tex="\hbox to433.62pt{\vbox to146.64pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{143.79524pt}%&#10;\pgfsys@curveto{0.0pt}{145.36665pt}{1.27385pt}{146.6405pt}{2.84526pt}{146.6405%&#10;pt}\pgfsys@lineto{430.77473pt}{146.6405pt}\pgfsys@curveto{432.34615pt}{146.640%&#10;5pt}{433.62pt}{145.36665pt}{433.62pt}{143.79524pt}\pgfsys@lineto{433.62pt}{2.8%&#10;4526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0%&#10;.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{%&#10;1.27385pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{143.79524pt}\pgfsys@curveto{0.0pt}{145.36665pt}{1.27385%&#10;pt}{146.6405pt}{2.84526pt}{146.6405pt}\pgfsys@lineto{430.77473pt}{146.6405pt}%&#10;\pgfsys@curveto{432.34615pt}{146.6405pt}{433.62pt}{145.36665pt}{433.62pt}{143.%&#10;79524pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt%&#10;}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{70.82025pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;Under \emph{Electronics} on \emph{Amazon}, according to the descriptions of %&#10;items in three groups A, B and C, evaluate which group the target item is most%&#10; relevant to.\\[3.6999pt]&#10;{[Group A]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;{[Group B]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;{[Group C]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;{[Target Item]}\\&#10;\{target\_item\_description\}\\[3.6999pt]&#10;The output must be one single character in \{A, B, C\} denoting the most %&#10;relevant group.\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p4.pic1">
             <svg:svg height="202.91" overflow="visible" version="1.1" viewBox="0 0 600 202.91" width="600">
@@ -18221,6 +18224,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
         </table>
 <!--  %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p5">
           <picture height="169.7" tex="\hbox to433.62pt{\vbox to122.64pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{119.79524pt}%&#10;\pgfsys@curveto{0.0pt}{121.36665pt}{1.27385pt}{122.6405pt}{2.84526pt}{122.6405%&#10;pt}\pgfsys@lineto{430.77473pt}{122.6405pt}\pgfsys@curveto{432.34615pt}{122.640%&#10;5pt}{433.62pt}{121.36665pt}{433.62pt}{119.79524pt}\pgfsys@lineto{433.62pt}{2.8%&#10;4526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0%&#10;.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{%&#10;1.27385pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{119.79524pt}\pgfsys@curveto{0.0pt}{121.36665pt}{1.27385%&#10;pt}{122.6405pt}{2.84526pt}{122.6405pt}\pgfsys@lineto{430.77473pt}{122.6405pt}%&#10;\pgfsys@curveto{432.34615pt}{122.6405pt}{433.62pt}{121.36665pt}{433.62pt}{119.%&#10;79524pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt%&#10;}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{58.82025pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;Given the two groups of items under \emph{Electronics} on \emph{Amazon}, %&#10;evaluate which group is more relevant to the target item.\\[3.6999pt]&#10;{[Group 1]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;{[Group 2]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;{[Target Item]}\\&#10;\{target\_item\_description\}\\[3.6999pt]&#10;The output must be one single number in \{1, 2\} denoting the more relevant %&#10;group.\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p5.pic1">
             <svg:svg height="169.7" overflow="visible" version="1.1" viewBox="0 0 600 169.7" width="600">
@@ -18336,6 +18340,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
         </table>
 <!--  %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p6">
           <picture height="103.97" tex="\hbox to433.62pt{\vbox to75.14pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{72.29524pt}%&#10;\pgfsys@curveto{0.0pt}{73.86665pt}{1.27385pt}{75.1405pt}{2.84526pt}{75.1405pt}%&#10;\pgfsys@lineto{430.77473pt}{75.1405pt}\pgfsys@curveto{432.34615pt}{75.1405pt}{%&#10;433.62pt}{73.86665pt}{433.62pt}{72.29524pt}\pgfsys@lineto{433.62pt}{2.84526pt}%&#10;\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}%&#10;\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.273%&#10;85pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{72.29524pt}\pgfsys@curveto{0.0pt}{73.86665pt}{1.27385pt}%&#10;{75.1405pt}{2.84526pt}{75.1405pt}\pgfsys@lineto{430.77473pt}{75.1405pt}%&#10;\pgfsys@curveto{432.34615pt}{75.1405pt}{433.62pt}{73.86665pt}{433.62pt}{72.295%&#10;24pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{4%&#10;32.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{35.07025pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;According to the historical items purchased by a user under \emph{Electronics}%&#10; on \emph{Amazon}, evaluate if this user exhibits clear substitute/complement %&#10;patterns or not.\\[3.6999pt]&#10;{[Historical Items]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;The output must be one single word in \{Yes, No\}.\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p6.pic1">
             <svg:svg height="103.97" overflow="visible" version="1.1" viewBox="0 0 600 103.97" width="600">
@@ -18449,6 +18454,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
         </table>
 <!--  %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p7">
           <picture height="136.49" tex="\hbox to433.62pt{\vbox to98.64pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{95.79524pt}%&#10;\pgfsys@curveto{0.0pt}{97.36665pt}{1.27385pt}{98.6405pt}{2.84526pt}{98.6405pt}%&#10;\pgfsys@lineto{430.77473pt}{98.6405pt}\pgfsys@curveto{432.34615pt}{98.6405pt}{%&#10;433.62pt}{97.36665pt}{433.62pt}{95.79524pt}\pgfsys@lineto{433.62pt}{2.84526pt}%&#10;\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}%&#10;\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.273%&#10;85pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{95.79524pt}\pgfsys@curveto{0.0pt}{97.36665pt}{1.27385pt}%&#10;{98.6405pt}{2.84526pt}{98.6405pt}\pgfsys@lineto{430.77473pt}{98.6405pt}%&#10;\pgfsys@curveto{432.34615pt}{98.6405pt}{433.62pt}{97.36665pt}{433.62pt}{95.795%&#10;24pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{4%&#10;32.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{46.82025pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;According to the user profile, rank top-\emph{20} items this user may prefer %&#10;from the candidate item list, from higher to lower probability.\\[3.6999pt]&#10;{[User Profile]}\\&#10;\{user\_profile\}\\[3.6999pt]&#10;{[Candidate Item List in format of (ID, description)]}\\&#10;\{(item\_IDs, item\_descriptions)\}\\[3.6999pt]&#10;The output must be a list of candidate item IDs with length of \emph{20}, with%&#10; items separated by lines.\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p7.pic1">
             <svg:svg height="136.49" overflow="visible" version="1.1" viewBox="0 0 600 136.49" width="600">
@@ -18572,6 +18578,7 @@ The output list <Math mode="inline" tex="\mathbf{\hat{r}}^{dual}" text="(hat@(r)
         </table>
 <!--  %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S3.SS7.p8">
           <picture height="136.49" tex="\hbox to433.62pt{\vbox to98.64pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{95.79524pt}%&#10;\pgfsys@curveto{0.0pt}{97.36665pt}{1.27385pt}{98.6405pt}{2.84526pt}{98.6405pt}%&#10;\pgfsys@lineto{430.77473pt}{98.6405pt}\pgfsys@curveto{432.34615pt}{98.6405pt}{%&#10;433.62pt}{97.36665pt}{433.62pt}{95.79524pt}\pgfsys@lineto{433.62pt}{2.84526pt}%&#10;\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}%&#10;\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.273%&#10;85pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{95.79524pt}\pgfsys@curveto{0.0pt}{97.36665pt}{1.27385pt}%&#10;{98.6405pt}{2.84526pt}{98.6405pt}\pgfsys@lineto{430.77473pt}{98.6405pt}%&#10;\pgfsys@curveto{432.34615pt}{98.6405pt}{433.62pt}{97.36665pt}{433.62pt}{95.795%&#10;24pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{4%&#10;32.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{46.82025pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;Rank top-\emph{20} items from the candidate item list based on their %&#10;similarity to the target item list, from higher to lower similarity.\\[3.6999%&#10;pt]&#10;{[Target Item List ordered by priority]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;{[Candidate Item List in format of (ID, description)]}\\&#10;\{(item\_IDs, item\_descriptions)\}\\[3.6999pt]&#10;The output must be a list of candidate item IDs with length of \emph{20}, with%&#10; items separated by lines.\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S3.SS7.p8.pic1">
             <svg:svg height="136.49" overflow="visible" version="1.1" viewBox="0 0 600 136.49" width="600">
@@ -19152,6 +19159,7 @@ We acknowledge that LLM-based agents generally have higher inference latency tha
         </para>
 <!--  %background 
      %same as background (no visible border) 
+     %**** thesis.tex Line 75 **** 
      %remove border line -->        <para class="ltx_noindent" xml:id="Ch6.S4.SS3.p2">
           <picture height="181.67" tex="\hbox to433.62pt{\vbox to131.29pt{\pgfpicture\makeatletter\hbox{\thinspace%&#10;\lower 0.0pt\hbox to0.0pt{\pgfsys@beginscope\pgfsys@invoke{ }\definecolor{%&#10;pgfstrokecolor}{rgb}{0,0,0}\pgfsys@color@rgb@stroke{0}{0}{0}\pgfsys@invoke{ }%&#10;\pgfsys@color@rgb@fill{0}{0}{0}\pgfsys@invoke{ }\pgfsys@setlinewidth{\the%&#10;\pgflinewidth}\pgfsys@invoke{ }\nullfont\hbox to0.0pt{{}{}{}{}%&#10;\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}{}{}{}\definecolor[named]{%&#10;pgffillcolor}{rgb}{0.925,0.925,0.925}\pgfsys@color@gray@fill{0.925}%&#10;\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}%&#10;}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}%&#10;\pgfsys@moveto{0.0pt}{2.84526pt}\pgfsys@lineto{0.0pt}{128.44524pt}%&#10;\pgfsys@curveto{0.0pt}{130.01665pt}{1.27385pt}{131.2905pt}{2.84526pt}{131.2905%&#10;pt}\pgfsys@lineto{430.77473pt}{131.2905pt}\pgfsys@curveto{432.34615pt}{131.290%&#10;5pt}{433.62pt}{130.01665pt}{433.62pt}{128.44524pt}\pgfsys@lineto{433.62pt}{2.8%&#10;4526pt}\pgfsys@curveto{433.62pt}{1.27385pt}{432.34615pt}{0.0pt}{430.77473pt}{0%&#10;.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{%&#10;1.27385pt}{0.0pt}{2.84526pt}\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }%&#10;\pgfsys@invoke{ }\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }{}{}{}{}{}%&#10;{}{}{}\definecolor[named]{pgffillcolor}{rgb}{0.925,0.925,0.925}%&#10;\pgfsys@color@gray@fill{0.925}\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}{{}{}{{}}}{{}%&#10;{}{{}}}{}{}{{}{}{{}}}{{}{}{{}}}{}{}\pgfsys@moveto{0.0pt}{2.84526pt}%&#10;\pgfsys@lineto{0.0pt}{128.44524pt}\pgfsys@curveto{0.0pt}{130.01665pt}{1.27385%&#10;pt}{131.2905pt}{2.84526pt}{131.2905pt}\pgfsys@lineto{430.77473pt}{131.2905pt}%&#10;\pgfsys@curveto{432.34615pt}{131.2905pt}{433.62pt}{130.01665pt}{433.62pt}{128.%&#10;44524pt}\pgfsys@lineto{433.62pt}{2.84526pt}\pgfsys@curveto{433.62pt}{1.27385pt%&#10;}{432.34615pt}{0.0pt}{430.77473pt}{0.0pt}\pgfsys@lineto{2.84526pt}{0.0pt}%&#10;\pgfsys@curveto{1.27385pt}{0.0pt}{0.0pt}{1.27385pt}{0.0pt}{2.84526pt}%&#10;\pgfsys@closepath\pgfsys@fill\pgfsys@invoke{ }\pgfsys@invoke{ }%&#10;\pgfsys@endscope\pgfsys@beginscope\pgfsys@invoke{ }\pgfsys@fill@opacity{1.0}%&#10;\pgfsys@invoke{ }{{{}}{{}}{{}}{{}}{{}}{{}}{{}}\pgfsys@beginscope\pgfsys@invoke%&#10;{ }\pgfsys@transformcm{1.0}{0.0}{0.0}{1.0}{2.84526pt}{63.14525pt}%&#10;\pgfsys@invoke{ }\hbox{{\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}{%&#10;rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}\hbox{%&#10;\minipage[b]{427.92947pt}\color[rgb]{0,0,0}\definecolor[named]{pgfstrokecolor}%&#10;{rgb}{0,0,0}\pgfsys@color@gray@stroke{0}\pgfsys@color@gray@fill{0}%&#10;\ignorespaces\ignorespaces\small\begin{tabularx}{433.62pt}[]{X}\hline\cr\hline%&#10;\cr{[Instruction]}\\&#10;Given the same category, rate how well each item from the recommended list %&#10;matches the target item based on relevance, usefulness, and user interest.\\[3%&#10;.6999pt]&#10;{[Category]}\\&#10;\{item\_category\}\\[3.6999pt]&#10;{[Target Item]}\\&#10;\{item\_description\}\\[3.6999pt]&#10;{[Recommended List]}\\&#10;\{item\_descriptions\}\\[3.6999pt]&#10;The output must be a list of integers. Each score must be between 0 (very %&#10;unrelated) and 9 (exact match).\\&#10;\hline\cr\hline\cr\end{tabularx}\endminipage}}}\pgfsys@invoke{ }%&#10;\pgfsys@endscope}\pgfsys@invoke{ }\pgfsys@endscope{}{}{}\hss}%&#10;\pgfsys@discardpath\pgfsys@invoke{ }\pgfsys@endscope\hss}}\endpgfpicture}}" width="600" xml:id="Ch6.S4.SS3.p2.pic1">
             <svg:svg height="181.67" overflow="visible" version="1.1" viewBox="0 0 600 181.67" width="600">
@@ -19296,13 +19304,13 @@ These ratings are treated as relevance scores to compute the DCG <cite class="l
             <tabular class="ltx_guessed_headers" vattach="middle">
               <tbody>
                 <tr>
-                  <td border="tt" thead="row"/>
+                  <td align="left" border="tt" thead="row">Dataset</td>
                   <td align="center" border="tt" colspan="4">Instacart</td>
                   <td align="center" border="tt" colspan="4">Electronics</td>
                   <td align="center" border="tt" colspan="4">Sports</td>
                 </tr>
                 <tr>
-                  <td thead="row"/>
+                  <td align="left" thead="row">Metric</td>
                   <td align="right" border="t">R@10</td>
                   <td align="right" border="t">R@20</td>
                   <td align="right" border="t">N@10</td>
@@ -19627,13 +19635,13 @@ Similarly, language-only methods such as BM25 and LLMRank achieve competitive VD
             <tabular class="ltx_guessed_headers" vattach="middle">
               <tbody>
                 <tr>
-                  <td border="tt" thead="row"/>
+                  <td align="left" border="tt" thead="row">Dataset</td>
                   <td align="center" border="tt" colspan="2">Instacart</td>
                   <td align="center" border="tt" colspan="2">Electronics</td>
                   <td align="center" border="tt" colspan="2">Sports</td>
                 </tr>
                 <tr>
-                  <td thead="row"/>
+                  <td align="left" thead="row">Metric</td>
                   <td align="center" border="t">V@5</td>
                   <td align="center" border="t">V@10</td>
                   <td align="center" border="t" class="ltx_nopad_l">V@5</td>
@@ -19924,13 +19932,13 @@ The results demonstrate that the proposed reasoning modules consistently provide
               <tabular class="ltx_guessed_headers" vattach="middle">
                 <thead>
                   <tr>
-                    <td border="tt" thead="row"/>
+                    <td align="left" border="tt" thead="column row">Dataset</td>
                     <td align="center" border="tt" colspan="2" thead="column">Instacart</td>
                     <td align="center" border="tt" colspan="2" thead="column">Electronics</td>
                     <td align="center" border="tt" colspan="2" thead="column">Sports</td>
                   </tr>
                   <tr>
-                    <td thead="row"/>
+                    <td align="left" thead="column row">Metric</td>
                     <td align="center" border="t" thead="column">N@10</td>
                     <td align="center" border="t" thead="column">N@20</td>
                     <td align="center" border="t" class="ltx_nopad_l" thead="column">N@10</td>
