@@ -25,33 +25,63 @@
   <resource src="ltx-book.css" type="text/css"/>
   <resource src="ltx-listings.css" type="text/css"/>
   <resource src="ltx-ulem.css" type="text/css"/>
-<!--  %**** thesis.tex Line 100 **** -->  <titlepage>
+  <titlepage>
     <p><text font="bold" fontsize="144%">Integrating Graph Learning and LLM Reasoning for Personalized Recommendation</text></p>
     <p>BY</p>
-    <p>Mingdai Yang<break/>B.Eng., The Chinese University of Hong Kong (Shenzhen), 2019<break/>M.S., The University of Chicago, 2020<break/></p>
+    <p>Mingdai Yang<break/>B.Eng., The Chinese University of Hong Kong, Shenzhen, 2019<break/>M.S., The University of Chicago, 2020<break/></p>
     <p>DISSERTATION<break/></p>
     <p>Submitted as partial fulfillment of the requirements<break/></p>
     <p>for the degree of Doctor of Philosophy in Computer Science <break/></p>
     <p>in the Graduate College of the <break/></p>
     <p>University of Illinois Chicago, 2026<break/></p>
     <p>Chicago, Illinois</p>
-    <p class="ltx_align_left">Defense Committee: <break/><!--  %**** thesis.tex Line 125 **** -->Philip S. Yu, Chair, Advisor <break/>Name <break/>Name<break/>Name, Outside Members Need Affiliation Here<break/></p>
+    <p class="ltx_align_left">Defense Committee: <break/>Philip S. Yu, Chair and Advisor (Department of Computer Science)
+<break/>Xinhua Zhang (Department of Computer Science)
+<break/>Sourav Medya (Department of Computer Science)
+<break/>Zhiwei Liu (Microsoft AI)
+<break/>Liangwei Yang (Salesforce Research)<break/></p>
   </titlepage>
   <title>Integrating Graph Learning and LLM Reasoning for Personalized Recommendation</title>
   <creator role="author">
-    <personname><!--  %Leave the following for metadata -->Mingdai Yang</personname>
+    <personname><!--  %Leave the following for metadata -->Mingdai Yang<!--  %**** thesis.tex Line 100 **** --></personname>
   </creator>
-  <date name="Date:" role="creation">August 19, 2026</date>
+  <date name="Date:" role="creation">August 21, 2026</date>
 <!--  %This is UIC requirement, the title page is (i) -->  <chapter xml:id="Chx1">
     <title>Accessibility Statement</title>
     <para class="ltx_noindent" xml:id="Chx1.p1">
-      <p>This document is in an accessible EPUB format. A PDF version of this document is available at [URL] or can be obtained by contacting [contact details].</p>
+      <p>An accessible EPUB version of this document is available at <ref class="ltx_url" font="typewriter" href="https://github.com/mdyfrank/thesis_epub/blob/main/docs/thesis.epub">https://github.com/mdyfrank/thesis_epub/blob/main/docs/thesis.epub</ref>.</p>
     </para>
   </chapter>
   <chapter xml:id="Chx2">
     <title>Acknowledgment</title>
     <para xml:id="Chx2.p1">
-      <p>[To be done after confirming the committee members.]</p>
+      <p>I am sincerely thankful to my advisor, Prof. Philip S. Yu, for his constant support and
+guidance during my time at the University of Illinois Chicago. His dedication to fostering a
+culture of innovation and curiosity has greatly enriched my research experience. Working under
+his mentorship has been an invaluable opportunity that has shaped both my professional growth
+and my personal perspective.</p>
+    </para>
+    <para xml:id="Chx2.p2">
+      <p><!--  %**** thesis.tex Line 150 **** -->I am deeply grateful to my committee members, Prof. Xinhua Zhang, Prof. Sourav Medya,
+Dr. Zhiwei Liu, and Dr. Liangwei Yang, for their dedication, generous time, and thoughtful
+feedback throughout their service.</p>
+    </para>
+    <para xml:id="Chx2.p3">
+      <p>I would also like to express my gratitude to my managers, Dr. Edward W. Huang and
+Dr. Yan Gao, and to my mentors, Dr. Jiangshu Du, Dr. Nurendra Choudhary, and Dr. Fan Yang,
+for their guidance and encouragement during my internships at Amazon. Their insights and
+steady support played a significant role in my development in this field.</p>
+    </para>
+    <para xml:id="Chx2.p4">
+      <p>My thanks also go to my collaborators, Dr. Chen Wang, Dr. Xiaolong Liu, Weizhi Zhang,
+Yibo Wang, Prof. Hao Peng, Prof. Danai Koutra, and Prof. Jia Liu, for the opportunity to work
+and exchange ideas together. The shared experiences, thought-provoking discussions, and
+moments of discovery have been among the most memorable and impactful parts of this journey.</p>
+    </para>
+    <para xml:id="Chx2.p5">
+      <p>Lastly, and most importantly, I would like to thank my parents, Hong Fu and Lin Yang, for
+their unwavering support and their belief in my decisions, and to thank my grandmother,
+Zhen Tang, the very first teacher in my life.</p>
     </para>
   </chapter>
   <chapter xml:id="Chx3">
@@ -80,8 +110,7 @@
     <TOC lists="lot" scope="global">
       <title>List of Tables</title>
     </TOC>
-<!--  %**** thesis.tex Line 150 **** 
-     %“chapter*–List of Abbreviations˝ -->  </chapter>
+<!--  %“chapter*–List of Abbreviations˝ -->  </chapter>
   <chapter xml:id="Chx4">
     <title>Summary</title>
     <para xml:id="Chx4.p1">
