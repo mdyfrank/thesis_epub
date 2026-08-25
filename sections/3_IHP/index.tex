@@ -1,17 +1,18 @@
-\chapter{Hypergraph Pretraining Guided by Text Prompt with PLM}~\label{chpt:ihp}
+\chapter{Hypergraph Pretraining Guided by PLM-Encoded Textual Prompts}~\label{chpt:ihp}
 (This chapter was previously published as ``Instruction-based Hypergraph Pretraining"~\cite{ihp} in \textit{Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval}, pp. 501 - 511. 2024. [doi:10.1145/3626772.3657715])
-\section{Introduction}
 
-The burgeoning field of graph-based deep learning has witnessed remarkable advancements, with applications spanning diverse domains such as social networks, bioinformatics, and RecSys. 
+\section{Introduction}
+Chapter~\ref{chpt:uprth} shows that hypergraphs offer a flexible structure for unifying heterogeneous relations in recommendation, where the relevance of each pretext task is inferred purely from structural signals, and this chapter extends that idea to cross-domain settings by introducing plain-text instructions that describe task semantics explicitly and injecting them into hypergraph pretraining.
+The burgeoning field of graph-based deep learning has witnessed remarkable advancements, with applications spanning diverse domains such as social networks, bioinformatics, and RecSys.
 GNNs have emerged as powerful tools for capturing intricate relationships and dependencies within graph-structured datasets. 
 To transfer knowledge from large and diverse datasets to a downstream task with limited data, pretraining has been widely explored to augment the adaptability of GNNs~\cite{gptgnn, gcc}. 
 However, pretraining also presents several critical issues.
 Self-supervised learning for pretraining graph models~\cite{gcc, weihua20} addresses the lack of labeled data in the pretext stage, but the training objective gap between the constructed pretext and dedicated downstream tasks hinders the efficient transfer of pretrained knowledge~\cite{gppt}. 
 Moreover, when labeled data is available during the pretraining stage, the data distribution discrepancy between pretraining and downstream datasets degrades the performance~\cite{afec}. 
-In addition, pretrained can suffer from catastrophic forgetting~\cite{forgetting}, resulting in poor generalization ability, especially within small-scale downstream datasets.
+In addition, pretraining can suffer from catastrophic forgetting~\cite{forgetting}, resulting in poor generalization ability, especially within small-scale downstream datasets.
 
 
-Prompt learning, which has been prevalently engaged in Pretrained Language Models (PLMs)~\cite{promptsurveynlp, gpt3}, has shown remarkable success in dealing with the aforementioned pertaining issues. 
+Prompt learning, which has been prevalently engaged in Pretrained Language Models (PLMs)~\cite{promptsurveynlp, gpt3}, has shown remarkable success in dealing with the aforementioned pretraining issues.
 Nonetheless, it is far from straightforward to apply prompts in graphs.  
 In contrast with PLMs, the format of instructions as plain text does not naturally align with the graph-structure data.
 On the one hand, from a static perspective, graph prompts are supposed to be applied for a certain part of the graph to guide the model depending on specific graph queries. Some
@@ -22,7 +23,7 @@ Nevertheless, dyadic edges in traditional graphs can only propagate information 
 Therefore, we believe that the hypergraph, where each hyperedge is able to connect multiple nodes~\cite{feng19, ZhouHS06} simultaneously, is a better structure for prompt-based pretraining in graph-based tasks.
 
  
-However, it is challenging to design the prompt for hypergraph pertaining. 
+However, it is challenging to design the prompt for hypergraph pretraining.
 Most pioneering works in prompt-based graph pretraining design prompt functions with learnable prompt vectors, which are initialized randomly~\cite{allinone, graphprompt} or based on pretrained node representations~\cite{gppt}. 
 Such prompts are not related to semantic instructions for specific tasks, and the effectiveness heavily depends on the quality and diversity of the finetuning data in downstream tasks. 
 The learnable prompt vectors can bring uncertainty in outcomes and the risk of poor generalization, particularly when finetuning data is biased or scarce. 
@@ -50,10 +51,10 @@ Meanwhile, this adaptation to the unseen graph structure requires no extensive c
 \end{figure}
  
 
-In this paper, we propose a novel framework called Instruction-based Hypergraph Pretraining (IHP). 
+In this chapter, we propose a novel framework called Instruction-based Hypergraph Pretraining (IHP).
 In this framework, high-order relations are represented as hyperedges, and the dependencies among nodes are captured under the guidance of instructions.
-We show an example of how to integrate instructions into hypergraph pretraining in Fig.~\ref{fig:overview}. 
-If three history enthusiasts read a history book about the French Revolution, we can use one hyperedge to connect them and prompt the hyperedge with instruction through pertaining. 
+We show an example of how to integrate instructions into hypergraph pretraining in Figure~\ref{fig:overview}.
+If three history enthusiasts read a history book about the French Revolution, we can use one hyperedge to connect them and prompt the hyperedge with instruction through pretraining.
 In the following downstream task of promoting poetry from the Renaissance period to readers, the model can accordingly locate the readers similar to these three history enthusiasts as the target audiences according to the instruction. 
 To learn node representations under the guidance of instructions, we design a Prompt Hypergraph Convolution (PHC) layer. 
 This PHC layer endows the framework with the ability to be prompted by text-based instructions through hyperedges. 
@@ -64,34 +65,42 @@ In the downstream task, we freeze the prompt transformation process and update t
 Node representations are updated with different adaptation intensities to achieve a balance between retraining prior knowledge and adapting efficiently for downstream tasks. The main contributions of this work are summarized as follows.
 \begin{itemize}[left=0pt]
 \item We design a novel instruction-based pretraining framework based on hypergraphs. To the best of our knowledge, this is the first pretraining framework to leverage instructions to capture high-order relations for graph tasks like cross-domain recommendation.
-\item  We proposed a novel PHC layer to prompt text-based instructions into hyperedges. This PHC layer allows instruction information to participate in information propagation during hypergraph convolution, enhancing the flexibility of the hypergraph learning and the generalization of the pretrained model.
-\item We conduct extensive experiments on three real-world datasets. The marked enhancement observed in the performance of IHP underscores its preeminence.
+\item  We propose a PHC layer that injects text-based instructions into hyperedges, enabling semantic task information to guide higher-order relational learning. This PHC layer allows instruction information to participate in information propagation during hypergraph convolution, enhancing the flexibility of the hypergraph learning and the generalization of the pretrained model.
+\item We conduct extensive experiments on three real-world datasets. The consistent improvements observed in the performance of IHP verify its effectiveness.
 \end{itemize}
 
-\section{Problem Formulation}
+\section{Related Work}
+\subsection{Prompt Learning on Graphs}
+Pretraining has been widely adopted to transfer knowledge from large graphs to downstream tasks with limited data~\cite{gptgnn, gcc, graphmae}. Since a gap usually exists between the pretext objective and the downstream objective, prompt learning has been introduced to graphs following its success in language models~\cite{promptsurveynlp, gpt3}. GPPT~\cite{gppt} reformulates node classification as link prediction and inserts learnable prompt vectors into pretrained representations, GraphPrompt~\cite{graphprompt} unifies pretraining and downstream tasks through a shared subgraph similarity template, and All-in-One~\cite{allinone} aligns multiple task types with a unified prompt graph. These methods rely on randomly initialized or representation-based prompt vectors that carry no explicit task semantics, and most of them freeze all parameters except the prompts during finetuning, which restricts their ability to represent unseen nodes.
+
+\subsection{Instructions as Semantic Guidance}
+Instruction-based prompts describe task requirements in plain text and therefore convey explicit guidance that learnable vectors cannot express~\cite{instructor, graphgpt}. Sentence encoders such as Sentence-BERT~\cite{sentenceBERT} and MiniLM~\cite{minilm} map such text into dense embeddings that downstream models can consume directly. In recommendation, textual side information has also been used to relieve sparsity when preferences are transferred across domains~\cite{WangFGCH19}. Different from these works, we encode instructions that describe both node attributes and task semantics, and inject them into hyperedges so that they participate in information propagation instead of serving as static input features.
+
+\section{Preliminaries}
+\subsection{Problem Formulation}
 Let the graph for the pretraining task be $G=(V, E)$ where $V$ and $E$ are sets of nodes and edges, respectively. 
 Similarly, let the graph for the downstream task be $G'=(V', E')$, and the two instruction sets be $I_p$ and $I_d$ for the pretraining task and the downstream task. Our target is to pretrain the representations of the overlapping nodes, which are defined as target nodes $\mathcal{V}_\text{t}=V\cap V'$. 
-Given the target node set $\mathcal{V}_\text{t}$, we define the nodes other than target nodes in the pretraining task as pretraining context nodes $\mathcal{V}_\text{c}=V\setminus V_t$ in the pretraining task, and the unseen nodes in the downstream task as downstream context nodes $\mathcal{V}_\text{c}'=V'\setminus V_t$. 
+Given the target node set $\mathcal{V}_\text{t}$, we define the nodes other than target nodes in the pretraining task as pretraining context nodes $\mathcal{V}_\text{c}=V\setminus \mathcal{V}_\text{t}$ in the pretraining task, and the unseen nodes in the downstream task as downstream context nodes $\mathcal{V}_\text{c}'=V'\setminus \mathcal{V}_\text{t}$.
 
-Although the proposed framework is applicable to general graph learning tasks, we focus on the recommendation scenario in this thesis. Under a cross-domain recommendation setting, the target nodes correspond to the overlapping users shared across domains, while the context nodes represent domain-specific items. Specifically, $\mathcal{V}_c$ denotes source-domain items used during pretraining, and $\mathcal{V}_c'$ denotes target-domain items introduced during finetuning. We further denote the textual descriptions of source-domain items and target-domain items as $\mathcal{A}$ and $\mathcal{A}'$, respectively, and use $\mathcal{T}$ to represent domain-related task descriptions. Our objective is to pretrain user representations by modeling their interactions with source-domain items, and subsequently adapt these representations through finetuning on target-domain items to achieve accurate recommendation performance in the downstream task.
+Although the proposed framework is applicable to general graph learning tasks, we focus on the recommendation scenario in this dissertation. Under a cross-domain recommendation setting, the target nodes correspond to the overlapping users shared across domains, while the context nodes represent domain-specific items. Specifically, $\mathcal{V}_c$ denotes source-domain items used during pretraining, and $\mathcal{V}_c'$ denotes target-domain items introduced during finetuning. We further denote the textual descriptions of source-domain items and target-domain items as $\mathcal{A}$ and $\mathcal{A}'$, respectively, and use $\mathcal{T}$ to represent domain-related task descriptions. Our objective is to pretrain user representations by modeling their interactions with source-domain items, and subsequently adapt these representations through finetuning on target-domain items to achieve accurate recommendation performance in the downstream task.
 
-\section{Proposed framework: IHP}
+\section{Proposed Framework: IHP}
 In this section, we present the proposed IHP framework with the illustration demonstrated in Figure~\ref{fig:IHP}. 
 We start by introducing all the embeddings to be pretrained in this framework. 
 Thereafter, we define two types of hypergraphs and explain how to construct corresponding hyperedges in these hypergraphs. 
-Specifically, we adopt a PHC layer to prompt instructions into hyperedges during hypergraph learning in the pretraining and fine-tuning stages. 
+Specifically, we adopt a PHC layer to prompt instructions into hyperedges during hypergraph learning in the pretraining and finetuning stages. 
 We apply an instruction-based finetuning paradigm to update both seen and unseen
 nodes in the downstream task.
 
-\begin{figure*}[h]
+\begin{figure}[h]
   \centering
     \includegraphics[width=0.95\linewidth]{sections/3_IHP/figures/framework.pdf}
   \caption{The illustration of IHP with the proposed Prompt and PHC layers.}
   \label{fig:IHP}
-\end{figure*}
+\end{figure}
 
 \subsection{Embedding Layer}
-We maintain an embedding layer $\mathbf{E}\in \mathbb{R}^{(|{\mathcal{V}_\text{t}}|+|\mathcal{V}_\text{c}|)\times d}$ during pretraining, where $d$ is the feature dimension and columns represent all trainable node embeddings. 
+We maintain an embedding layer $\mathbf{E}\in \mathbb{R}^{(|{\mathcal{V}_\text{t}}|+|\mathcal{V}_\text{c}|)\times d}$ during pretraining, where $d$ is the feature dimension and rows represent all trainable node embeddings.
 The initial target node embeddings are denoted as $\mathbf{E}_\text{t}$, and the initial context node embeddings are denoted as $\mathbf{E}_\text{c}$. 
 Since target nodes exist in pretraining and downstream tasks, prior knowledge learned from the pretraining tasks can be preserved in $\mathbf{E}_\text{t}$ and then leveraged in the downstream tasks.
 
@@ -102,8 +111,8 @@ According to the type of nodes in the graph, we construct two hypergraphs based 
 
 
 \begin{itemize}[left=0pt]
-    \item \textbf{Target Hypergraph}. The target hypergraph $\mathcal{H}_\mathbf{t}$ consists of target nodes $\mathcal{V}_\mathbf{t}$ and hyperedges $\mathcal{E}_\mathbf{t}$. Each target-target hyperedge is used to connect a target node with its one-hop target node neighbors. For each group of target nodes connected to one context node, a target-context hyperedge is used to connect them in the hypergraph. Its incidence matrix is denoted as $\mathbf{H}_\text{t}$.
-    \item \textbf{Context Hypergraph}. Similar to the target hypergraph, the context hypergraph $\mathcal{H}_\mathbf{c}$ consists of context nodes $\mathcal{V}_\mathbf{c}$ and hyperedges $\mathcal{E}_\mathbf{c}$. Each context-context hyperedge is used to connect a context node with its one-hop context node neighbors. A context-target hyperedge is used to connect each group of context nodes to one target node simultaneously in the hypergraph. Its incidence matrix is denoted as $\mathbf{H}_\text{c}$.
+    \item \textbf{Target Hypergraph}. The target hypergraph $\mathcal{H}_\text{t}$ consists of target nodes $\mathcal{V}_\text{t}$ and hyperedges $\mathcal{E}_\text{t}$. Each target-target hyperedge is used to connect a target node with its one-hop target node neighbors. For each group of target nodes connected to one context node, a target-context hyperedge is used to connect them in the hypergraph. Its incidence matrix is denoted as $\mathbf{H}_\text{t}$.
+    \item \textbf{Context Hypergraph}. Similar to the target hypergraph, the context hypergraph $\mathcal{H}_\text{c}$ consists of context nodes $\mathcal{V}_\text{c}$ and hyperedges $\mathcal{E}_\text{c}$. Each context-context hyperedge is used to connect a context node with its one-hop context node neighbors. A context-target hyperedge is used to connect each group of context nodes to one target node simultaneously in the hypergraph. Its incidence matrix is denoted as $\mathbf{H}_\text{c}$.
 \end{itemize}
 
 In other words, we use the two hypergraphs to ensure the distinction between the target nodes and the context nodes.
@@ -119,11 +128,11 @@ This design prevents the over-smoothing issue~\cite{oversmooth1, oversmooth2} am
 
 
 \subsection{Prompt Hypergraph Convolution}
-In hypergraph learning, hypergraph convolution is prevalently used for information propagation across nodes in hypergraphs. 
+In hypergraph learning, hypergraph convolution is prevalently used for information propagation across nodes in hypergraphs, as formulated in Section~\ref{sec_uprth:hgconv}.
 Nonetheless, current hypergraph convolution methods focus on the direct aggregation of structural information from neighbors connected by hyperedge. 
 To integrate the information from instructions into the hypergraph convolution process, we devise a novel Prompt Hypergraph Convolution layer. First, we construct the hyperedge information based on connected nodes. 
 This step is denoted as \textit{hyperedge initialization} of the PHC layer. 
-Then, a \textit{information prompting} step is proposed to endow the fusion of hyperedge information from resources other than the hypergraph structure, such as instructions. 
+Then, an \textit{information prompting} step is proposed to endow the fusion of hyperedge information from resources other than the hypergraph structure, such as instructions.
 Finally, fused information is aggregated to update the node embeddings in the \textit{node update} step. 
 To be more concrete, we present the calculation details of a PHC layer in the target hypergraph. 
 The illustration is in Figure~\ref{fig:IHP}(c).
@@ -133,9 +142,9 @@ In the target hypergraph $\mathcal{H}_\text{t}$, target nodes are connected by t
 Therefore, we initialize the representation of a hyperedge by aggregating embeddings of all nodes connected by this hyperedge. 
 The initialized representation of a hyperedge $\epsilon\in \mathcal{E}_\text{t}$ is formulated as follows:
 \begin{equation}\label{eq:initial}
-    \mathbf{h}_\epsilon^{(l)} = \frac{1}{|\mathcal{N}_\epsilon|}\sum_{v\in\mathcal{N}_\epsilon}\mathbf{e}_{t}^{(l)},
+    \mathbf{h}_\epsilon^{(l)} = \frac{1}{|\mathcal{N}_\epsilon|}\sum_{v\in\mathcal{N}_\epsilon}\mathbf{e}_{v}^{(l)},
 \end{equation}
-where $\mathbf{h}_\epsilon^{(l)}$ represents initialized embedding of the hyperedge $\epsilon$, $\mathcal{N}_\epsilon$ is the set of target nodes connected by this hyperedge, and $\mathbf{e}_{t}^{(l)}$ is the embedding of those target nodes as input of the $l$-th PHC layer.
+where $\mathbf{h}_\epsilon^{(l)}$ represents initialized embedding of the hyperedge $\epsilon$, $\mathcal{N}_\epsilon$ is the set of target nodes connected by this hyperedge, and $\mathbf{e}_{v}^{(l)}$ is the embedding of those target nodes as input of the $l$-th PHC layer.
 We use mean-pooling as the information aggregation method to aggregate structural information from nodes to hyperedges.
 
 \subsubsection{Information Prompting}
@@ -144,7 +153,7 @@ With the prompt embedding of a hyperedge $\epsilon$ denoted as $\mathbf{p}_\epsi
 \begin{equation}\label{eq:info prompt}
     \mathbf{q}_\epsilon^{(l)} = \mathbf{h}_\epsilon^{(l)} + \gamma\mathbf{p}_{\epsilon}^{(l)},
 \end{equation}
-where $\mathbf{q}_\epsilon^{(l)}$ is the fused hyperedge embedding, and $\gamma$ is a scalar hyperparameter to control the prompting intensity. 
+where $\mathbf{q}_\epsilon^{(l)}$ is the fused hyperedge embedding, and $\gamma$ is a scalar hyperparameter to control the prompting intensity. The target hypergraph and the context hypergraph each carry their own prompting intensity, which are tuned independently.
 
 With instructions accessible, the prompt embedding can be obtained based on text information from instructions, as shown in Figure~\ref{fig:IHP}(b) and~\ref{fig:IHP}(c).
 If the instruction information is not available, the flexibility of this PHC layer allows other information to be prompted to the hyperedge. 
@@ -153,7 +162,7 @@ Hence, we can adopt prompt embeddings from the target node embeddings for a cont
 The target node embeddings $\mathbf{E}_\text{t}^{(l+1)}$ are output by the $l$-th PHC layer applied on the target hypergraph, after node update in Eq.~(\ref{eq:node update}).
 
 
-\subsubsection{Node update} We update the target node embedding by aggregating the fused embeddings from all its connected hyperedges.
+\subsubsection{Node Update} We update the target node embedding by aggregating the fused embeddings from all its connected hyperedges.
 For a target node $v_t$, the aggregation step is formulated as follows:
 \begin{equation}\label{eq:node update}
     \mathbf{e}_t^{(l+1)} = \frac{1}{|\mathcal{N}_t|}\sum_{\epsilon\in\mathcal{N}_t}\mathbf{q}^{(l)}_{\epsilon},
@@ -162,7 +171,7 @@ where $\mathbf{e}_{t}^{(l+1)}$ denotes the output target node embedding, $\mathc
 
 \subsubsection{PHC in Matrix Form}
 To offer a holistic view of convolution, we formulate the matrix form of prompt hypergraph convolution (equivalent to Eq.~(\ref{eq:initial})-(\ref{eq:node update})) as:
-\begin{equation}\label{thc}
+\begin{equation}\label{eq:phc}
 \begin{aligned}
     \mathbf{E}_{\text{t}}^{(l+1)} &= \text{PHC}(\mathbf{E}_\text{t}^{(l)},\mathbf{H}_\text{t},\gamma\mathbf{P}^{(l)})\\
     &= \mathbf{D}^{-1}\mathbf{H}_\text{t}\cdot
@@ -181,7 +190,7 @@ Instructions can be formulated from task descriptions, node descriptions, or a c
 
 We show an example of leveraging the concatenation of task and node descriptions as instructions in Figure~\ref{fig:IHP}. 
 Given that target-context hyperedges are context nodes in the original graph, we concatenate the node descriptions $\mathcal{A}_c$ and the descriptions $\mathcal{T}_c$ of tasks related to these nodes as instructions $\mathcal{I}_c$, where $|\mathcal{I}_c|=|\mathcal{E}_{t,c}|$. 
-In this paper, descriptions of context nodes are obtained from the dataset, and the task descriptions are manually created for different tasks. 
+In this chapter, descriptions of context nodes are obtained from the dataset, and the task descriptions are manually created for different tasks. 
 For instance, if target nodes are readers and context nodes are history books in pretraining, the task description can be formulated as 'promote history books to readers.' 
 
 After the construction of instructions, a pretrained sentence transformer~\cite{minilm} is deployed to encode the instructions as text embeddings $\mathbf{C}\in \mathbb{R}^{|\mathcal{I}_c|\times d'}$, which are frozen in both pretraining and downstream tasks. A linear layer is applied to adaptively learn the transformation from text embeddings to prompt embeddings:
@@ -201,10 +210,10 @@ where $\mathbf{e}_{t}$ and $\mathbf{e}_{c}$ are the final embeddings of the targ
 We remove the superscripts for simplicity.
 Then, we adopt the pairwise BPR loss~\cite{BPR} to optimize the prediction:
 \begin{equation}
-    \mathcal{L}_{bpr}=\sum\limits_{(u,v,v^-)\in \mathcal{D}} -\log\sigma(\hat{y}_{u,v}-\hat{y}_{u,v^-}) + \lambda_\Theta\|\Theta\|^2_2,
+    \mathcal{L}_{\text{bpr}}=\sum\limits_{(u,v,v^-)\in \mathcal{D}} -\log\sigma(y_{u,v}-y_{u,v^-}) + \lambda_\Theta\|\Theta\|^2_2,
 \end{equation}
-where $\mathcal{D}=\{(u,v,v^-)|v\in G^{+}_{u}, v^-\in G\backslash G^{+}_{u}\}$ is the training data, and positive set $G^{+}_{u}$ contains all nodes connected to node $u$. 
-All parameters $\Theta$ in the pretraining is regularized by $\lambda_\Theta$. 
+where $\mathcal{D}=\{(u,v,v^-)|v\in G^{+}_{u}, v^-\in V\backslash G^{+}_{u}\}$ is the training data, and positive set $G^{+}_{u}$ contains all nodes connected to node $u$.
+All parameters $\Theta$ in the pretraining are regularized by $\lambda_\Theta$.
 Adam~\cite{Adam} is used as the optimizer.
 
 \subsubsection{Instruction-based finetuning}
@@ -228,7 +237,7 @@ Our framework is efficient in both space and time complexity.
 Node embeddings $\mathbf{E}$, prompt transformation matrix $\mathbf{W}_\text{p}$ and prompt transformation bias $\mathbf{b}_\text{p}$ are the only learnable parameters in IHP. 
 Given the size of pretrained text embeddings as $\mathcal{O}(|V|)$ for pretraining and $\mathcal{O}(|V'|)$ for finetuning, the total space complexity is $\mathcal{O}(|V|d+|V|d'+d'd)$ for pretraining and $\mathcal{O}(|V'|d+|V'|d'+d'd)$ for finetuning, where $\forall x\in\{d,d'\},\forall y\in\{|V|,|V'|\}, x\ll y$. 
 The time complexity depends on the interaction between hyperedges and nodes and the number of PHC layers $L$. 
-For the four types of hyperedges constructed in IHP, the number of interactions is $\mathcal{O}(|E|)$ for pretraining and $\mathcal{O}(|E'|)$ for fine-tuning. 
+For the four types of hyperedges constructed in IHP, the number of interactions is $\mathcal{O}(|E|)$ for pretraining and $\mathcal{O}(|E'|)$ for finetuning. 
 Therefore, the time complexity is only $\mathcal{O}(L|E|d+d'd)$ for pretraining and $\mathcal{O}(L|E'|d)$ for finetuning, where $\forall x\in\{d,d'\},\forall y\in\{|E|,|E'|\}, L\ll x\ll y$. 
 In contrast, a typical graph model GCN~\cite{GCN16} needs $\mathcal{O}(L|V|d^2+L|E|d+|V|d)$ time with $|V|$ nodes and $|E|$ edges.
 
@@ -297,7 +306,7 @@ Improv.      & 7.63\%       & 4.99\% & 10.31\% & 7.93\% & 7.49\%       & 11.07\%
 
 \section{Experiment}
 
-\subsection{Experimental Setup}
+\subsection{Experiment Settings}
 \subsubsection{Datasets}     
 
 
@@ -315,14 +324,14 @@ We regard users as target nodes and items as context nodes in all the datasets.
 Thus recommendation methods, including LightGCN~\cite{LightGCN}, SGL~\cite{sgl}, HCCF~\cite{hccf} and DHCF~\cite{dhcf}, are applied as strong baselines to prediction interactions between users and items, besides baseline models designed for general graph tasks, such as DirectAU~\cite{auloss} and GraphFormers~\cite{graphformer}. 
 As a pretraining framework, we also compare IHP with the following pretraining baselines:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{AttriMask}~\cite{weihua20}. This method applies GNN to obtained node embeddings and then adds a linear model to predict masked attributes during pretraining. We use node categories as the masked attributes, so it is not suitable for Goodreads-P, where all pretraining nodes are comics.
+    \item \textbf{AttriMask}~\cite{weihua20}. This method applies GNN to obtained node embeddings and then adds a linear model to predict masked attributes during pretraining. We use node categories as the masked attributes, so it is not suitable for Goodreads-P, where all pretraining context nodes are poetry books.
     \item \textbf{GCC}~\cite{gcc}. This self-supervised pretraining framework leverages contrastive learning with random walks to capture structure information in graphs.
     \item \textbf{GraphMAE}~\cite{graphmae}. This method applies a masked graph autoencoder for generative self-supervised graph pretraining.
 \end{itemize}
 For the pretraining baselines, we use the same finetuning stage as IHP, which is shown in Figure~\ref{fig:IHP}(a), with no instructions and instruction prompting intensity $\gamma=0$.
 
 \subsubsection{Evaluation metric}
-We evaluate the pretraining framework by ranking the test downstream items with all non-interacted users during finetuning. Recall$@ \{10,20\}$ and NDCG$@\{10,20\}$ are adopted as evaluation metrics. 
+We evaluate the pretraining framework by ranking all non-interacted downstream items for each test user during finetuning. Recall$@ \{10,20\}$ and NDCG$@\{10,20\}$ are adopted as evaluation metrics.
 
 \subsubsection{Implementations}
 For all the datasets, the pretraining learning rate is set to $0.1$. The regularization parameter $\lambda_\Theta$ is set to 1e-7. 
@@ -372,7 +381,7 @@ MiniLM~\cite{minilm}  & \textbf{0.2782} & 0.2189 & \textbf{0.1032} & \textbf{0.0
 \subsubsection{PLMs as text encoders.} 
 To quantify the contribution of PLMs as the text encoder in our framework, we compare the link prediction performance of IHP with different PLMs and without PLM in Table~\ref{tab:PLM}. 
 For the variant of IHP without PLM, we randomly initialize the text embedding as the input of the prompt layer. 
-It is apparent that employing PLM to encode instructions leads to significant enhancement in all the datasets. 
+It is apparent that employing PLM to encode instructions leads to a clear improvement in all the datasets.
 The results also imply that the benefits of different PLMs depend on the data distribution of the certain dataset. 
 In IHP, we use MiniLM as the sentence encoder because of its stable performance in all the datasets.
 
@@ -382,11 +391,11 @@ In addition to node descriptions, the instructions in IHP also contain task desc
 In Figure~\ref{fig:task_info}, we demonstrate the performance of IHP with different ways of leveraging task information as a part of the instruction. 
 In addition to concatenating node descriptions and task information for text encoding, we investigate three other variants of IHP: (N) Without text-based task information, only node descriptions are encoded as text embeddings and then concatenated to a learnable task vector for each task before prompt transformation; 
 (S1) Node descriptions and task information are encoded by the PLM separately and then concatenated for prompt transformation;
-(S2) Same with S1, but the encoded task embeddings skip both prompt transformation and hypergraph convolution. 
+(S2) Same as S1, but the encoded task embeddings skip both prompt transformation and hypergraph convolution.
 Instead, they are concatenated to corresponding node embeddings after PHC layers for the final prediction.
 
-We observe that IHP performs the best on three datasets. 
-This justifies the superiority of IHP4, which simultaneously encodes node and task information inside instructions. 
+We observe that IHP performs best on all three datasets.
+This justifies the design of IHP, which simultaneously encodes node and task information inside instructions.
 The poor performance of N verifies the limitation of learnable vectors compared to text-based task descriptions in instruction construction. 
 S1 allows task information to participate in information propagation through PHC layers, which results in better performance than S2 in Goodreads datasets. 
 When tasks become diverse in Amazon, S2 allocating task information to corresponding nodes can more accurately capture dependencies among nodes. 
@@ -412,20 +421,20 @@ However, separately encoding node descriptions and task information ignores the 
 
 \subsubsection{Instruction-based finetuning settings.} 
 The prior knowledge is preserved in target node embeddings $\mathbf{E}_\text{t}$ and parameters of prompt layer $\Theta_\text{p}$ in the pretraining stage and transferred to the downstream tasks. 
-Hence, we conducted an ablation study to investigate the influence of different fine-tuning settings on downstream performance. 
+Hence, we conducted an ablation study to investigate the influence of different finetuning settings on downstream performance. 
 For instruction-based finetuning in IHP, we freeze the prompt layer and update the target node embeddings with context node embeddings during downstream tasks. 
-We compare IHP with the other four variants of fine-tuning settings: 
-(i) IHP-TR with $\mathbf{E}_\text{t}$ randomly initialized in fine-tuning; 
-(ii) IHP-TF with pretrained $\mathbf{E}_\text{t}$ frozen in fine-tuning; 
-(iii) IHP-PR with $\Theta_\text{p}$ randomly initialized in fine-tuning; 
-(iv) IHP-PU with pretrained $\Theta_\text{p}$ updated by the objective in fine-tuning.
+We compare IHP with the other four variants of finetuning settings: 
+(i) IHP-TR with $\mathbf{E}_\text{t}$ randomly initialized in finetuning; 
+(ii) IHP-TF with pretrained $\mathbf{E}_\text{t}$ frozen in finetuning; 
+(iii) IHP-PR with $\Theta_\text{p}$ randomly initialized in finetuning; 
+(iv) IHP-PU with pretrained $\Theta_\text{p}$ updated by the objective in finetuning.
 
 The comparison between the performance of IHP and its variants in Figures~\ref{fig:target} and~\ref{fig:prompt} confirms the advantage of our instruction-based finetuning paradigm. 
 Freezing target node embeddings reduces the flexibility and limits the adaptability to downstream data for the pretraining framework. 
 This issue becomes more pronounced with the growing discrepancy between pretrained and downstream data. 
 As shown in Figure~\ref{fig:target}, IHP-TF with frozen target node embeddings can hardly adapt to the downstream instrument data from the pretrained item data from diverse categories in Amazon. 
 Additionally, updating the prompt layer scarcely improves the downstream performance, compared with using randomly initialized parameters in Figure~\ref{fig:prompt}. 
-On the contrary, IHP with a frozen prompt layer maintains the consistency of the model's response to instructions during pretraining and fine-tuning and thus archives a better performance.
+On the contrary, IHP with a frozen prompt layer maintains the consistency of the model's response to instructions during pretraining and finetuning and thus achieves a better performance.
 
 
 \begin{figure}[]
@@ -446,7 +455,7 @@ On the contrary, IHP with a frozen prompt layer maintains the consistency of the
   \label{fig:target}
 \end{figure}
 
-\begin{figure*}[h]
+\begin{figure}[h]
     \begin{subfigure}{0.3\textwidth}
     \includegraphics[width=\textwidth]{sections/3_IHP/figures/forgetting/Goodreads-PRecall_coldstart.pdf}
     \end{subfigure}
@@ -464,7 +473,7 @@ On the contrary, IHP with a frozen prompt layer maintains the consistency of the
         % The curve represents the performance, and the bars denote the ratios of the edges added from pretraining in finetuning.
         }
   \label{fig:forgetting}
-\end{figure*}
+\end{figure}
 
 \begin{figure}[]
     \begin{subfigure}{0.3\textwidth}
@@ -532,9 +541,9 @@ IHP        & \textbf{0.2622} & \textbf{0.2002} & \textbf{0.0998} & \textbf{0.078
 
 
 \subsection{Adaptation Intensity Analysis}
-To maintain the balance between retaining prior knowledge and adapting for various downstream tasks, we deploy the adaptation intensity coefficient $\lambda_\text{t}$ to differentiate the learning rates of target and context node embeddings during fine-tuning. 
+To maintain the balance between retaining prior knowledge and adapting for various downstream tasks, we deploy the adaptation intensity coefficient $\lambda_\text{t}$ to differentiate the learning rates of target and context node embeddings during finetuning. 
 We demonstrate the impact of this coefficient on three datasets in Figure~\ref{fig:decay}. 
-It becomes obvious that the performance is always suboptimal when the learning rates of target and context node embeddings remain the same, i.e., $\lambda_\text{t}=1$. For the two Goodreads datasets, a small $\lambda_\text{t}$ prevents the framework from forgetting the prior knowledge during fine-tuning. 
+It becomes obvious that the performance is always suboptimal when the learning rates of target and context node embeddings remain the same, i.e., $\lambda_\text{t}=1$. For the two Goodreads datasets, a small $\lambda_\text{t}$ prevents the framework from forgetting the prior knowledge during finetuning. 
 For Amazon, a large $\lambda_\text{t}$ is required to endow the model with the higher adaptivity to the downstream data. 
 
 We believe the difference of $\lambda_\text{t}$ in Goodreads and Amazon results from the discrepancy between the pretraining and downstream data in each dataset. 
@@ -547,10 +556,10 @@ Pretraining context nodes connected by $E_\text{s}$ are also added to the downst
 In this way, the model is finetuned directly with the original pretraining data.
 
 The results are demonstrated in Figure~\ref{fig:forgetting}. The curve represents the performance, and the bars denote the ratios of the edges added from pretraining in finetuning.
-In the two Goodreads datasets, We observe that the downstream performance is generally improved with the pretraining data added to the downstream task. 
+In the two Goodreads datasets, we observe that the downstream performance is generally improved with the pretraining data added to the downstream task. 
 In Amazon, on the contrary, the performance is degraded after adding the pretraining data when $\lambda_\text{t}=1$. 
 The reason is that all the pretraining and downstream context nodes are books in Goodreads, so the discrepancy between the pretraining and downstream data in Goodreads is minor compared to the discrepancy in Amazon, where pretraining and downstream context nodes are items in more diverse categories. 
-That explains why a small $\lambda_\text{t}$ is necessary to prevent the framework from forgetting the prior knowledge in Goodreads, while a large $\lambda_\text{t}$ can help the pretrain model faster adapt to the significantly different downstream data in Amazon.
+That explains why a small $\lambda_\text{t}$ is necessary to prevent the framework from forgetting the prior knowledge in Goodreads, while a large $\lambda_\text{t}$ can help the pretrained model adapt faster to the considerably different downstream data in Amazon.
 
 \section{Chapter Summary}
 In this chapter, we propose a novel graph pretraining framework IHP, which applies text-based instructions to overcome the discrepancy between pretraining and downstream recommendation tasks.

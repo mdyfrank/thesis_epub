@@ -1,0 +1,119 @@
+\chapter*{Vita}
+
+% Left-aligned label inside the fixed-width label box used by the lists below.
+\providecommand{\vitalabel}[1]{\textbf{#1}\hfil}
+
+% Section heading of the Vita.  \Needspace reserves room for the heading
+% together with the first entries of the list that follows, so a heading is
+% never stranded at the foot of a page, and \nobreak stops a break landing
+% immediately after it.  Under LaTeXML there are no pages, so the reservation is
+% skipped and only the heading itself is emitted.
+\providecommand{\vitasection}[1]{%
+  \par
+  \iflatexml\else\Needspace*{5\baselineskip}\fi
+  \noindent\textbf{#1}\par\nobreak}
+
+\noindent
+\textbf{\theauthor}
+
+\vspace{1em}
+
+\vitasection{EDUCATION}
+\begin{list}{}{%
+  \setlength{\leftmargin}{1.6in}%
+  \setlength{\labelwidth}{1.4in}%
+  \setlength{\labelsep}{0.2in}%
+  \setlength{\itemsep}{0.4em}%
+  \setlength{\topsep}{0.5em}%
+  \setlength{\parsep}{0pt}%
+  \let\makelabel\vitalabel}
+\item[Ph.D., 2026] Computer Science, University of Illinois Chicago, Chicago, Illinois.
+\item[M.S., 2020] Computer Science, The University of Chicago, Chicago, Illinois.
+\item[B.Eng., 2019] Computer Science and Engineering, The Chinese University of Hong Kong, Shenzhen, China.
+\end{list}
+
+\vspace{0.6em}
+
+\vitasection{RESEARCH EXPERIENCE}
+\begin{list}{}{%
+  \setlength{\leftmargin}{1.6in}%
+  \setlength{\labelwidth}{1.4in}%
+  \setlength{\labelsep}{0.2in}%
+  \setlength{\itemsep}{0.4em}%
+  \setlength{\topsep}{0.5em}%
+  \setlength{\parsep}{0pt}%
+  \let\makelabel\vitalabel}
+\item[2021--2026] Research Assistant, Big Data and Social Computing Laboratory, Department of Computer Science, University of Illinois Chicago. Advisor: Prof.~Philip S. Yu. Research on graph learning, hypergraph pretraining, and LLM-based agents for recommender systems.
+\item[2025] Applied Scientist Intern, Stores Economics and Science, Amazon, Palo Alto, California. Project on dynamic recommendation with implicit item-item relations via LLM-based agents.
+\item[2024] Applied Scientist Intern, Central Machine Learning, Amazon, Seattle, Washington. Projects on prompt-based continual learning for universal customer representation learning, and on integrating a graph neural network into a transformer-based sequential recommendation model.
+\item[2019--2021] Research Assistant, YLAB, The University of Chicago. Advisor: Prof.~Yanjing Li. Simulation and evaluation of a hybrid optical-electrical deep neural network accelerator.
+\item[2018--2019] Research Assistant, Shenzhen Research Institute of Big Data, The Chinese University of Hong Kong, Shenzhen. Advisor: Prof.~Xiaoguang Han. Depth inpainting for 3D point scene completion from a single depth image.
+\item[2017--2018] Research Assistant, Shenzhen Institute of Artificial Intelligence and Robotics for Society, The Chinese University of Hong Kong, Shenzhen. Advisor: Prof.~Ning Ding. Virtual prototyping of a wheel-based cable inspection climbing robot.
+\end{list}
+
+\vspace{0.6em}
+
+\vitasection{TEACHING EXPERIENCE}
+\begin{list}{}{%
+  \setlength{\leftmargin}{1.6in}%
+  \setlength{\labelwidth}{1.4in}%
+  \setlength{\labelsep}{0.2in}%
+  \setlength{\itemsep}{0.4em}%
+  \setlength{\topsep}{0.5em}%
+  \setlength{\parsep}{0pt}%
+  \let\makelabel\vitalabel}
+\item[2021--2024] Teaching Assistant, Department of Computer Science, University of Illinois Chicago, for CS 111 Program Design I, CS 112 Program Design I in the Context of Biological Problems, CS 151 Mathematical Foundations of Computing, and CS 362 Computer Design.
+\end{list}
+
+\vspace{0.6em}
+
+\vitasection{PUBLICATIONS}
+\begin{list}{}{%
+  \setlength{\leftmargin}{0.3in}%
+  \setlength{\labelwidth}{0in}%
+  \setlength{\labelsep}{0in}%
+  \setlength{\itemindent}{-0.3in}%
+  \setlength{\itemsep}{0.45em}%
+  \setlength{\topsep}{0.5em}%
+  \setlength{\parsep}{0pt}%
+  \let\makelabel\vitalabel}
+
+\item[] \textbf{Yang, M.}, Choudhary, N., Du, J., Huang, E. W., Yu, P. S., Subbian, K., and Koutra, D.: AgentDR: Dynamic recommendation with implicit item-item relations via LLM-based agents. In \textit{Proceedings of the ACM Web Conference 2026}, pages 6230--6241, 2026.
+
+\item[] \textbf{Yang, M.}, Liu, Z., Zhang, W., Wang, Y., Peng, H., and Yu, P. S.: Personalized recommendation tool learning via autonomous language agents. In \textit{Proceedings of the 20th ACM Conference on Recommender Systems (RecSys '26)}, to appear, 2026.
+
+\item[] Wang, C., \textbf{Yang, M.}, Liu, Z., Li, P., Pang, L., Wen, Q., and Yu, P. S.: AGP: Auto-guided prompt refinement for personalized reranking in recommender systems. In \textit{Companion Proceedings of the Nineteenth ACM International Conference on Web Search and Data Mining}, pages 154--158, 2026.
+
+\item[] Zhang, J., Peng, H., \textbf{Yang, M.}, and Yu, P. S.: Enhanced pre-training for recommendation via hypergraph structural entropy. \textit{ACM Transactions on Information Systems}, 44(2):39:1--39:48, 2026.
+
+\item[] \textbf{Yang, M.}, Liu, Z., Yang, L., Liu, X., Wang, C., Peng, H., and Yu, P. S.: Training large recommendation models via graph-language tokens alignment. In \textit{Companion Proceedings of the ACM Web Conference 2025}, pages 1470--1474, 2025.
+
+\item[] \textbf{Yang, M.}, Yang, F., Guo, Y., Xu, S., Zhou, T., Chen, Y., Shao, S., Liu, J., and Gao, Y.: PCL: Prompt-based continual learning for user modeling in recommender systems. In \textit{Companion Proceedings of the ACM Web Conference 2025}, pages 1475--1479, 2025.
+
+\item[] \textbf{Yang, M.}, Liu, Z., Yang, L., Liu, X., Wang, C., Peng, H., and Yu, P. S.: Instruction-based hypergraph pretraining. In \textit{Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval}, pages 501--511, 2024.
+
+\item[] \textbf{Yang, M.}, Liu, Z., Yang, L., Liu, X., Wang, C., Peng, H., and Yu, P. S.: Unified pretraining for recommendation via task hypergraphs. In \textit{Proceedings of the 17th ACM International Conference on Web Search and Data Mining}, pages 891--900, 2024.
+
+\item[] Liu, X., Yang, L., Liu, Z., \textbf{Yang, M.}, Wang, C., Peng, H., and Yu, P. S.: Knowledge graph context-enhanced diversified recommendation. In \textit{Proceedings of the 17th ACM International Conference on Web Search and Data Mining}, pages 462--471, 2024.
+
+\item[] Wang, C., Fan, Z., Yang, L., \textbf{Yang, M.}, Liu, X., Liu, Z., and Yu, P. S.: Pre-training with transferable attention for addressing market shifts in cross-market sequential recommendation. In \textit{Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining}, pages 2970--2979, 2024.
+
+\item[] Wang, C., Yang, L., Liu, Z., Liu, X., \textbf{Yang, M.}, Liang, Y., and Yu, P. S.: Collaborative alignment for recommendation. In \textit{Proceedings of the 33rd ACM International Conference on Information and Knowledge Management}, pages 2315--2325, 2024.
+
+\item[] \textbf{Yang, M.}, Liu, Z., Yang, L., Liu, X., Wang, C., Peng, H., and Yu, P. S.: Group identification via transitional hypergraph convolution with cross-view self-supervised learning. In \textit{Proceedings of the 32nd ACM International Conference on Information and Knowledge Management}, pages 2969--2979, 2023.
+
+\item[] \textbf{Yang, M.}, Liu, Z., Yang, L., Liu, X., Wang, C., Peng, H., and Yu, P. S.: Ranking-based group identification via factorized attention on social tripartite graph. In \textit{Proceedings of the Sixteenth ACM International Conference on Web Search and Data Mining}, pages 769--777, 2023.
+
+\item[] Yang, L., Liu, Z., Wang, C., \textbf{Yang, M.}, Liu, X., Ma, J., and Yu, P. S.: Graph-based alignment and uniformity for recommendation. In \textit{Proceedings of the 32nd ACM International Conference on Information and Knowledge Management}, pages 4395--4399, 2023.
+
+\item[] Liu, X., Yang, L., Liu, Z., Li, X., \textbf{Yang, M.}, Wang, C., and Yu, P. S.: Group-aware interest disentangled dual-training for personalized recommendation. In \textit{IEEE International Conference on Big Data}, pages 393--402, 2023.
+
+\item[] Liu, X., Yang, L., Wang, C., \textbf{Yang, M.}, Liu, Z., and Yu, P. S.: Multi-view graph convolution for participant recommendation. In \textit{IEEE International Conference on Big Data}, pages 5647--5656, 2023.
+
+\item[] \textbf{Yang, M.}, Jokar, M. R., Qiu, J., Lou, Q., Liu, Y., Udupa, A., Chong, F. T., Dallesasse, J. M., Feng, M., Goddard, L. L., Hu, X. S., and Li, Y.: A hybrid optical-electrical analog deep learning accelerator using incoherent optical signals. In \textit{GLSVLSI '21: Great Lakes Symposium on VLSI 2021}, pages 271--276, 2021.
+
+\item[] Han, X., Zhang, Z., Du, D., \textbf{Yang, M.}, Yu, J., Pan, P., Yang, X., Liu, L., Xiong, Z., and Cui, S.: Deep reinforcement learning of volume-guided progressive view inpainting for 3D point scene completion from a single depth image. In \textit{IEEE Conference on Computer Vision and Pattern Recognition}, pages 234--243, 2019.
+
+\item[] Zheng, M., \textbf{Yang, M.}, Yuan, X., and Ding, N.: A light-weight wheel-based cable inspection climbing robot: From simulation to reality. In \textit{IEEE International Conference on Robotics and Biomimetics}, pages 1365--1370, 2018.
+
+\end{list}

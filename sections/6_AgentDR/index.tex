@@ -1,7 +1,9 @@
-\chapter{Dynamic Recommendation with Item-Item relations via LLM-based Agents}~\label{chpt:agentdr}
+\chapter{Dynamic Recommendation with Item-Item Relations via LLM-based Agents}~\label{chpt:agentdr}
 (This chapter was previously published as ``AgentDR: Dynamic recommendation with implicit item-item relations via LLM-based agents"~\cite{agentdr} in \textit{Proceedings of the ACM on Web Conference 2026}, pp. 6230 - 6241. 2026. [doi:10.1145/3774904.3792304])
+
 \section{Introduction}
-RecSys provide personalized suggestions to assist users in information discovery and decision-making~\cite{cfag, uprth, gtgs, Loveland25-CF}. However, traditional ID-based RecSys~\cite{LightGCN, sasrec, enmf} solely based on user-item interactions are constrained by overlooking the rich semantic information contained in textual context. Even when LLMs are employed to encode textual features into embeddings~\cite{llmrec, rlmrec, Zhu_2025_CVPR}, these fixed-length representations inherently struggle to preserve the full semantic richness of textual information for recommendation~\cite{0007XCW25, NEURIPS2024_2db8ce96}. There are several attempts to harness the commonsense reasoning and knowledge utilization capabilities of LLMs by directly applying them as RecSys, reformulating recommendation tasks as language modeling problems~\cite{p5, llmrank, m6rec, Zhongmou25-Linkgpt}. However, an inherent gap remains because LLMs are optimized for next-token prediction in natural language rather than learning collaborative and sequential patterns from interactions, limiting their efficiency in user behavior modeling.
+Chapter~\ref{chpt:erlsc} uses LLM-inferred substitute and complementary relations to refine structural signals inside a single recommendation model, so the final performance still depends on one trained model, whereas this chapter retains the same relational knowledge and moves it to the decision level, where an LLM agent coordinates several recommendation tools and reasons over item relations at inference time without additional training.
+RecSys provide personalized suggestions to assist users in information discovery and decision-making~\cite{cfag, gtgs, Loveland25-CF}. However, traditional ID-based RecSys~\cite{LightGCN, sasrec, enmf} solely based on user-item interactions are constrained by overlooking the rich semantic information contained in textual context. Even when LLMs are employed to encode textual features into embeddings~\cite{llmrec, rlmrec, Zhu_2025_CVPR}, these fixed-length representations inherently struggle to preserve the full semantic richness of textual information for recommendation~\cite{0007XCW25, NEURIPS2024_2db8ce96}. There are several attempts to harness the commonsense reasoning and knowledge utilization capabilities of LLMs by directly applying them as RecSys, reformulating recommendation tasks as language modeling problems~\cite{p5, llmrank, m6rec, Zhongmou25-Linkgpt}. However, an inherent gap remains because LLMs are optimized for next-token prediction in natural language rather than learning collaborative and sequential patterns from interactions, limiting their efficiency in user behavior modeling.
 
 \begin{figure}[]
     \centering
@@ -12,7 +14,7 @@ RecSys provide personalized suggestions to assist users in information discovery
 
 Given the limitations of using LLMs solely as feature encoders or standalone recommenders, recent studies have investigated leveraging LLMs as interactive agents for recommendation~\cite{agentcf, agent4rec, recagent}. Rather than relying only on direct prompting with user interaction histories, these agent-based approaches integrate memory modules to preserve long-term context and better harness collaborative signals throughout the recommendation process. 
 % During training, the agent memories are dynamically updated based on observed behavioral patterns through a reflection mechanism, allowing the agent to iteratively refine its internal representation of user preferences. 
-While LLM-based agents alleviate the representational constraints of static numerical embeddings and enable adaptive modeling of user behavior over time, they also inherit key limitations from the generative nature of LLMs. As illustrated in Fig.~\ref{fig_agentdr:motiv}, two primary drawbacks arise in previous agent-based works when directly applying LLMs for recommendation: (i) the tendency to hallucinate non-existent items that are not part of the product catalog, and (ii) the high inference cost and token length constraints, which make them impractical for large-scale item ranking. Moreover, longer input and output sequences further increase the risk of hallucination due to attention bottlenecks and heightened generation uncertainty~\cite{hallulength1}.
+While LLM-based agents alleviate the representational constraints of static numerical embeddings and enable adaptive modeling of user behavior over time, they also inherit key limitations from the generative nature of LLMs. As illustrated in Figure~\ref{fig_agentdr:motiv}, two primary drawbacks arise in previous agent-based works when directly applying LLMs for recommendation: (i) the tendency to hallucinate non-existent items that are not part of the product catalog, and (ii) the high inference cost and token length constraints, which make them impractical for large-scale item ranking. Moreover, longer input and output sequences further increase the risk of hallucination due to attention bottlenecks and heightened generation uncertainty~\cite{hallulength1}.
 
 As a result, when applied to recommendation scenarios, existing LLM-based agents~\cite{agentcf, iagent, agent4rec} typically evaluate performance by checking whether the ground-truth item, which is the next item that the user actually interacted, is correctly ranked against a small set of negative candidates. These negative candidates are items randomly sampled from the catalog that the user did not interact with during the observation window, serving as distractors in the ranking process. However, this setup is fundamentally misaligned with most real-world recommendation scenarios, where systems must select the most relevant items from massive catalogs that often contain thousands of items. Restricting the candidate set to such a small range can artificially inflate performance, overlook the complexity of large-scale ranking, and hinder the system’s ability to identify truly relevant items in open-ended domains.
 
@@ -30,7 +32,7 @@ Building on this framework, we highlight the main contributions of our work as f
     \item \textbf{Comprehensive Evaluation.} Extensive experiments verify the effectiveness of our approach in full-ranking performance on three public datasets. Besides recall and NDCG, we propose a LLM-based metric to jointly assess the semantic relevance and ordering correctness of the predicted ranking lists.
 \end{itemize}
 
-\section{Related Works}
+\section{Related Work}
 
 \begin{table}
 \centering
@@ -64,35 +66,38 @@ AgentDR
 \end{table}
 
 
+\subsection{LLM-based Agents}
 LLM-based agents have recently demonstrated strong capabilities in using memory and reflection to learn from past experiences and simulate human-like behaviors~\cite{gao2025, ZhongGGYW24, ShinnCGNY23, ZhaoTZC024, ShiJQY24, LiDWCF24}. In the context of recommendation, LLM-based agents have been used to investigate social phenomena such as information cocoons and filter bubble effect by simulating user behaviors~\cite{recagent, agent4rec}.
 %Agent4Rec~\cite{agent4rec} reproduces the filter bubble effect and uncovers its underlying causal mechanisms. 
+\subsection{Agents for Recommendation}
 Given that agent-based frameworks can offer deeper insights into user behavior by leveraging the reasoning capabilities of LLMs, there is a growing interest in applying LLM-based agents to enhance recommendation performance~\cite{recmind, interecagent, agentcf, iagent}. 
 % RecMind~\cite{recmind} leverages historical data to build user agents for few-shot recommendation. InteRecAgent~\cite{interecagent} connects LLM capabilities with tools for conversational recommendation. AgentCF~\cite{agentcf} employs collaborative reflection to update memory of both user and item agents. User instructions and reviews are also leveraged to flexibly express user preferences beyond just product attributes in iAgent~\cite{iagent}.
 Nonetheless, since hallucination~\cite{hallu1, hallu2} and token limitation remain two challenges when applying these agents to rank all items in the datasets for each user, most prior works~\cite{agentcf, recmind, interecagent, agent4rec, recagent, iagent} lack of full-ranking ability. The batch-ranking task in these works is fundamentally misaligned with most real-world scenarios, where RecSys are required to rank relevant items from massive catalogs. And these works focus on predicting user behaviors based on user-item interactions, a signal that traditional recommendation models~\cite{LightGCN, sasrec, simplex} are already well-equipped to capture and exploit. Different from these works, our framework combines the strengths of LLMs and traditional recommenders to achieve personalized full-ranking. Comparison between different approaches is summarized in Table~\ref{tab_agentdr:salesman}.
 
 
+\section{Preliminaries}
+\subsection{Problem Formulation}
+Following the notation introduced in Chapter~\ref{chpt:uprth}, let $\mathcal{I}$ and $\mathcal{U}$ denote the complete item pool and the set of users in the dataset, respectively. Specifically, each user $u \in \mathcal{U}$ is associated with a behavior sequence $\mathbf{s} = (i_1, i_2, \dots, i_n)$, where $i_j \in \mathcal{I}$ denotes the $j$-th item interacted with by user $u$. Furthermore, each item $i \in \mathcal{I}$ is accompanied by its corresponding textual description. For simplicity, we use $\text{desc}(\mathbf{s})$ to denote the list of textual descriptions for all items from item sequences $\mathbf{s}$.
+Given a user's historical interaction sequence $\mathbf{s}_{[:-k]}$ and the corresponding item description list, the goal is to predict the next item $i_{n-k+1} \in \mathcal{I}$ that the user is likely to interact with.
+This is commonly framed as a ranking task: each user agent is expected to assign higher scores to items that better match the user's preferences, as inferred from both behavioral patterns and textual semantics. The final output is a ranked list of $\mathcal{I}$ tailored to this user $u$. For clarity, the subscript $u$ will be omitted in subsequent sections, given that each user agent functions independently.
+
+\subsection{Recommendation Tools}~\label{sec:rectools}
+AgentDR is an agent-based framework compatible with different recommendation methods as tools under the minimal assumption that they produce a full-ranking list of items. These recommendation methods are treated as tools and collectively form the tool set $\mathcal{T}$. For a broad coverage of recommendation modeling strategies, we utilize three types of recommendation tools to perform recommendation tasks within AgentDR: (i) a graph-based model with output ranking score list $\hat{\mathbf{r}}_{G}$; (ii) a sequential recommendation model with output ranking score list $\hat{\mathbf{r}}_{S}$; and (iii) a MF-based model with output ranking score list $\hat{\mathbf{r}}_{M}$. All these output lists are in $\mathbb{R}^{1\times|\mathcal{I}|}$. The three model instances used in this work are elaborated in Section~\ref{sec:toolselect}. These models are pretrained on the first $(n-k)$ items, denoted as $\mathbf{s}_{[:-k]}$.
+
 \section{Proposed Framework: AgentDR}
 
-\begin{figure*}[]
+\begin{figure}[]
     \centering
-    \includegraphics[scale=0.48]{sections/6_AgentDR/figures/framework3.pdf}
+    \includegraphics[width=\textwidth]{sections/6_AgentDR/figures/framework3.pdf}
     \caption{The framework of AgentDR.
     % : Each user agent is equipped with two memory modules: RecTool memory to store tool suitability, and intent memory to track user intent. Ranking results from recommendation tools are aggregated based on RecTool memory. The aggregated result is further refined by the dual S\&C and general ranking modules.
     }\label{fig_agentdr:framework}
-\end{figure*}
+\end{figure}
 
-\subsection{Preliminaries}
-\subsubsection{Problem Formulation}
-Let $\mathcal{I}$ and $\mathcal{U}$ denote the complete item pool and the set of users in the dataset, respectively. Specifically, each user $u \in \mathcal{U}$ is associated with a behavior sequence $\mathbf{s} = (i_1, i_2, \dots, i_n)$, where $i_j \in \mathcal{I}$ denotes the $j$-th item interacted with by user $u$. Furthermore, each item $i \in \mathcal{I}$ is accompanied by its corresponding textual description. For simplicity, we use $\text{desc}(\mathbf{s})$ to denote the list of textual descriptions for all items from item sequences $\mathbf{s}$.
-Given a user's historical interaction sequence $\mathbf{s}_{[:-k]}$ and the corresponding item description list, the goal is to predict the next item $i_{k+1} \in \mathcal{I}$ that the user is likely to interact with. 
-This is commonly framed as a ranking task: each user agent is expected to assign higher scores to items that better match the user's preferences, as inferred from both behavioral patterns and textual semantics. The final output is a ranked list of $\mathcal{I}$ tailored to this user $u$. For clarity, the subscript $u$ will be omitted in subsequent sections, given that each user agent functions independently.
-
-\subsubsection{Recommendation Tools}~\label{sec:rectools}
-AgentDR is an agent-based framework compatible with different recommendation methods as tools under the minimal assumption that they produce a full-ranking list of items. These recommendation methods are treated as tools and collectively form the tool set $\mathcal{T}$. For a broad coverage of recommendation modeling strategies, we utilize three types of recommendation tools to perform recommendation tasks within AgentDR: (i) a graph-based model with output ranking score list $\hat{\mathbf{r}}_{G}$; (ii) a sequential recommendation model with output ranking score list $\hat{\mathbf{r}}_{S}\in\mathbb{R}$; and (iii) a MF-based model with output ranking score list $\hat{\mathbf{r}}_{M}$. All these output lists are in $\mathbb{R}^{1\times|\mathcal{I}|}$. The three model instances used in this work are elaborated in Sec.~\ref{sec:toolselect}. These models are pretrained on the first $(n-k)$ items, denoted as $\mathbf{s}_{[:-k]}$.
-
-\subsubsection{Framework Overview} The overall framework of AgentDR is depicted in Fig.~\ref{fig_agentdr:framework}. Each user agent is equipped with a profile and two memory modules (Sec.~\ref{sec:profile_mem}). 
+\subsection{Framework Overview}
+The overall framework of AgentDR is depicted in Figure~\ref{fig_agentdr:framework}. Each user agent is equipped with a profile and two memory modules (Section~\ref{sec:profile_mem}). 
 % The agent memory is optimized in the first stage and then used for ranking refinement in the second stage. 
-The agent optimization begins with prompting the LLM to generate potential substitutes and complements for each user (Sec.~\ref{sec:scgen}). Next, the agent memory is optimized by distinct reflection mechanisms. The RecTool memory is optimized through personalized tool selection (Sec.~\ref{sec_tool_select}), while the intent memory is optimized via user intent discrimination (Sec.~\ref{sec:intent_compare}). Finally, the top items from the aggregated rankings of multiple tools are refined by dual S\&C reranking module (Sec.~\ref{sec:dualrerank}).
+The agent optimization begins with prompting the LLM to generate potential substitutes and complements for each user (Section~\ref{sec:scgen}). Next, the agent memory is optimized by distinct reflection mechanisms. The RecTool memory is optimized through personalized tool selection (Section~\ref{sec_tool_select}), while the intent memory is optimized via user intent discrimination (Section~\ref{sec:intent_compare}). Finally, the top items from the aggregated rankings of multiple tools are refined by dual S\&C reranking module (Section~\ref{sec:dualrerank}).
 
 \subsection{User Profile and Memory}\label{sec:profile_mem}
 \subsubsection{User Profile Summarization}~\label{sec:userprof}
@@ -100,12 +105,12 @@ Explicit user profiles are usually unavailable in most public real-world dataset
 \begin{equation}\label{eq_agentdr:gen_prof}
         y_{\text{prof}} = \text{LLM}_\text{prof}(\text{desc}(\mathbf{s})),
 \end{equation}
-where $\text{LLM}_\text{prof}(\cdot)$ represents the LLM prompted to transform these texts into a coherent user profile. Due to limited space, the details of all prompts used in AgentDR are shown in Appendix~\ref{app:prompts}.
+where $\text{LLM}_\text{prof}(\cdot)$ represents the LLM prompted to transform these texts into a coherent user profile. Due to limited space, the details of all prompts used in AgentDR are shown in Section~\ref{app:prompts}.
 
 \subsubsection{User Agent Memory}
 In contrast to static user profiles, memories are employed to enable user agents to dynamically maintain context in response to agent optimization based on consecutive user behaviors. 
 % The relationship between user profiles and agent memory is analogous to the distinction between fixed one-hot feature vectors and trainable embeddings in traditional models. 
-We equip each user agent with two compact memory modules: \textit{RecTool} memory and \textit{intent} memory. RecTool memory $\mathbf{m}^{rec}\in\mathbb{R}^{1\times |\mathcal{T}|}$ is a list of weights reflecting the suitability of each recommendation tool for each user, where $|\mathcal{T}|$ is the number of recommendation tools. For LightGCN, SASRec and SimpleX deployed in this paper, we denote their weights in memory as $m_G$, $m_S$ and $m_M$, respectively. Similarly, intent memory $\mathbf{m}^{int}\in\mathbb{R}^{1\times 3}$ contains three weights $m_{sub}$, $m_{com}$ and $m_{reg}$ , denoting the user's intent toward substitutes, complements, and other regular items, respectively. In AgentDR, RecTool memory is optimized by tool comparison and ranking comparison modules, detailed in Sec.~\ref{sec:tool_compare} and~\ref{sec:rank_compare}. Intent memory is optimized by a intent discrimination module in Sec.~\ref{sec:intent_compare}.
+We equip each user agent with two compact memory modules: \textit{RecTool} memory and \textit{intent} memory. RecTool memory $\mathbf{m}^{rec}\in\mathbb{R}^{1\times |\mathcal{T}|}$ is a list of weights reflecting the suitability of each recommendation tool for each user, where $|\mathcal{T}|$ is the number of recommendation tools. For LightGCN, SASRec and SimpleX deployed in this chapter, we denote their weights in memory as $m_G$, $m_S$ and $m_M$, respectively. Similarly, intent memory $\mathbf{m}^{int}\in\mathbb{R}^{1\times 3}$ contains three weights $m_{sub}$, $m_{com}$ and $m_{reg}$ , denoting the user's intent toward substitutes, complements, and other regular items, respectively. In AgentDR, RecTool memory is optimized by tool comparison and ranking comparison modules, detailed in Section~\ref{sec:tool_compare} and~\ref{sec:rank_compare}. Intent memory is optimized by a intent discrimination module in Section~\ref{sec:intent_compare}.
 
 \subsection{Substitute and Complement Generation}~\label{sec:scgen}
 A key challenge in enhancing personalization through substitution and complementarity is that such relationships are usually implicit in most datasets. Annotating these pairwise relationships with LLMs across a large number of items demands substantial computational resource, as it involves $\mathcal{O}(|\mathcal{I}|^2)$ LLM inference calls. To mitigate computational overhead, AgentDR is designed to refine the top-ranked items from recommendation tools based on the substitutes and complements of the user’s latest preferences. The first step in this process involves generating potential substitutes and complements based on the user’s historical behaviors. Specifically, we prompt the LLM to generate a list of substitutes and a list of complements corresponding to the user’s recent interests:
@@ -143,12 +148,12 @@ To obtain a comprehensive ranked list from all tools, a weighted sum is computed
 \begin{equation}~\label{eq_agentdr:aggrank}
     \hat{\mathbf{r}} = \sum_{t\in\mathcal{T}}m_t\hat{\mathbf{r}}_t = m_G\hat{\mathbf{r}}_{G} +m_S\hat{\mathbf{r}}_{S} + m_M\hat{\mathbf{r}}_{M},
 \end{equation}
-where $\hat{\mathbf{r}}\in\mathbb{R}^{1\times|\mathcal{I}|}$ is the aggregated ranked item list. This simple yet effective rank-level ensemble strategy allows the agent to adaptively combine tools based on user-specific preferences. It also remains flexible and can be replaced by more complex list-wise combination mechanisms based on backpropagation. We implement and compare different ensemble strategies for ranking comparison and aggregation in Sec.~\ref{sec:ensemble}.
+where $\hat{\mathbf{r}}\in\mathbb{R}^{1\times|\mathcal{I}|}$ is the aggregated ranked item list. This simple yet effective rank-level ensemble strategy allows the agent to adaptively combine tools based on user-specific preferences. It also remains flexible and can be replaced by more complex list-wise combination mechanisms based on backpropagation. We implement and compare different ensemble strategies for ranking comparison and aggregation in Section~\ref{sec:ensemble}.
 
 \subsection{Intent Discrimination}~\label{sec:intent_compare}
 Understanding whether a user’s next interaction is driven by substitutes, complements, or general interest is crucial for tailoring recommendations that match their intent. Traditional ID-based recommenders struggle to distinguish these patterns, as they require nuanced semantic and functional reasoning that goes beyond co-occurrence statistics. With reasoning ability of LLMs, user agents can allocate attention to the most relevant pathway while ensuring coverage of diverse user behaviors, ultimately improving ranking robustness and relevance.
 \subsubsection{Substitution and Complementarity}
-Based on implicit item-item relationships, we first distinguish the user's potential intent between substitutes and complements. Given the substitute list $y_{\text{gen}}^{sub}$ and the complement list $y_{\text{gen}}^{com}$ generated in Sec.~\ref{sec:scgen}, we prompt the LLM to access the user's interest in substitute or complements by comparing the generated lists with the ground-truth preferences:
+Based on implicit item-item relationships, we first distinguish the user's potential intent between substitutes and complements. Given the substitute list $y_{\text{gen}}^{sub}$ and the complement list $y_{\text{gen}}^{com}$ generated in Section~\ref{sec:scgen}, we prompt the LLM to access the user's interest in substitute or complements by comparing the generated lists with the ground-truth preferences:
 \begin{equation}~\label{eq_agentdr:scdcm}
      \mathbf{z}_{\text{dcm}} = \text{LLM}_\text{dcm}(y_{\text{gen}}^{sub}, y_{\text{gen}}^{com}, \text{desc}(\mathbf{s}_{[-k:]})),
 \end{equation}
@@ -162,14 +167,14 @@ In addition, a separate module is employed to assess the user's general interest
 where the output $z_{\text{dcm}}^{reg}$ of prompt function $\text{LLM}_\text{dcm}^{reg}(\cdot)$ is a binary indicator that equals 1 if the ground-truth user preferences do not exhibit clear substitute or complement patterns otherwise 0. This additional assessment ensures coverage of a broader spectrum of user behaviors, particularly in scenarios where the user’s preferences are not driven by substitution or complementarity. Identifying such general interest prevents the agent from overfitting to relational reasoning. This mitigates the risk of forcing item-item relational interpretations where they do not apply.
 
 \subsubsection{General Reranking}\label{sec:genrerank}
-To account for general interests of users, a reranking module is introduced to refine the recommendations based on the semantic similarity between the candidate items and the users' general preferences. For each user, the general preferences have been summarized from historical items as user profile in Sec.~\ref{sec:userprof}. Then the LLM is prompted to rerank the top items based on the user profile $y_{\text{prof}}$, denoted as function $\text{LLM}^{reg}_{\text{rank}}(\cdot)$:
+To account for general interests of users, a reranking module is introduced to refine the recommendations based on the semantic similarity between the candidate items and the users' general preferences. For each user, the general preferences have been summarized from historical items as user profile in Section~\ref{sec:userprof}. Then the LLM is prompted to rerank the top items based on the user profile $y_{\text{prof}}$, denoted as function $\text{LLM}^{reg}_{\text{rank}}(\cdot)$:
 \begin{equation}~\label{eq_agentdr:gen_rerank}
     y_{\text{rank}}^{reg} = \text{LLM}^{reg}_{\text{rank}}(f_\text{top}(\hat{\mathbf{r}},k'), \text{desc}(f_\text{top}(\hat{\mathbf{r}},k')),y_{\text{prof}}),
 \end{equation}
 where $f_\text{top}(\hat{\mathbf{r}},k')$ is the top $k'$ items in the aggregated ranked list $\hat{\mathbf{r}}$, and $y_{\text{rank}}^{reg}$ is the reranked list containing $k'$ item IDs.
 
 \subsubsection{Intent Memory Update}
-Similar to RecTool memory update in Eq.~\ref{eq_agentdr:toolcpr}, the corresponding intent $m_{int}\in \{m_{sub}, m_{com}, m_{reg}\}$ is updated based on $z_{\text{dcm}}^{int}\in \{z_{\text{dcm}}^{sub}, z_{\text{dcm}}^{com}, z_{\text{dcm}}^{reg}\}$ by a learning rate $\gamma$:
+Similar to RecTool memory update in Eq.~(\ref{eq_agentdr:toolcpr}), the corresponding intent $m_{int}\in \{m_{sub}, m_{com}, m_{reg}\}$ is updated based on $z_{\text{dcm}}^{int}\in \{z_{\text{dcm}}^{sub}, z_{\text{dcm}}^{com}, z_{\text{dcm}}^{reg}\}$ by a learning rate $\gamma$:
 \begin{equation}\label{eq_agentdr:intentdcm}
     m_{int} \leftarrow  m_{int} + \gamma\cdot z_{\text{dcm}}^{int}.
 \end{equation}
@@ -189,18 +194,18 @@ This strategy completely eliminates the impact of hallucination on the ranking t
 
 Subsequently, to account for individual variation in user intent, we personalize the combination of the two reranked ID lists using a ranking fusion function $f_{\text{fuse}}(\cdot)$. This function takes the two ID lists and the corresponding intent weights as input:
 \begin{equation}\label{eq_agentdr:fuse}
-    \mathbf{\hat{r}}^{dual} = f_{\text{fuse}}((m_{sub}, y_{\text{rank}}^{sub}), ( m_{com}, y_{\text{rank}}^{com})),
+    \hat{\mathbf{r}}^{dual} = f_{\text{fuse}}((m_{sub}, y_{\text{rank}}^{sub}), ( m_{com}, y_{\text{rank}}^{com})),
 \end{equation}
-where the ranking score $\hat{r}_{i}^{dual}$ of each item $i$ in this output list $\mathbf{\hat{r}}^{dual}$ is computed as a weighted sum of the item's positions in the two input lists:
+where the ranking score $\hat{r}_{i}^{dual}$ of each item $i$ in this output list $\hat{\mathbf{r}}^{dual}$ is computed as a weighted sum of the item's positions in the two input lists:
 \begin{equation}
     \hat{r}_{i}^{dual} = m_{sub}\cdot\text{index}(i, y_{\text{rank}}^{sub}) + m_{com}\cdot\text{index}(i, y_{\text{rank}}^{com}), 
 \end{equation}
 where $\text{index}(i,\cdot)$ returns the rank position of item $i$ within a given list. This personalized fusion strategy allows the agent to balance substitute-based and complement-based reasoning in accordance with the inferred user intent, without incurring additional LLM inference overhead.
-The output list $\mathbf{\hat{r}}^{dual}$ is further fused with the item list from general reranking:
+The output list $\hat{\mathbf{r}}^{dual}$ is further fused with the item list from general reranking:
 \begin{equation}\label{eq_agentdr:regfuse}
-    \mathbf{\hat{r}}^{final} = f_{\text{fuse}}((1, y_{\text{rank}}^{dual}), (m_{reg}, y_{\text{rank}}^{reg})),
+    \hat{\mathbf{r}}^{final} = f_{\text{fuse}}((1, y_{\text{rank}}^{dual}), (m_{reg}, y_{\text{rank}}^{reg})),
 \end{equation}
-where $y_{\text{rank}}^{dual}$ denotes the item list sorted by ranking scores in $\mathbf{\hat{r}}^{dual}$. The final recommendation output consists of the top-$k'$ items ranked by their scores in $\mathbf{\hat{r}}^{final}$. By incorporating the broader user preference profile as a form of regularization in the reranking process, the agent achieves a more robust recommendation strategy, particularly when relational cues among items are weak or absent.
+where $y_{\text{rank}}^{dual}$ denotes the item list sorted by ranking scores in $\hat{\mathbf{r}}^{dual}$. The final recommendation output consists of the top-$k'$ items ranked by their scores in $\hat{\mathbf{r}}^{final}$. By incorporating the broader user preference profile as a form of regularization in the reranking process, the agent achieves a more robust recommendation strategy, particularly when relational cues among items are weak or absent.
 
 
 \subsection{Details of Prompts}\label{app:prompts} 
@@ -228,10 +233,10 @@ Summarize the user's preference based on the historical items this user purchase
 \begin{tabularx}{\linewidth}{X}
 \toprule
 \textbf{[Instruction]}\\
-According to the historical items purchased by a user, generate \emph{20} \emph{substitutes} of these items under \emph{Electronics} on \emph{Amazon}.\\[0.4em]
+According to the historical items purchased by a user, generate \emph{$c$} \emph{substitutes} of these items under \emph{Electronics} on \emph{Amazon}.\\[0.4em]
 \textbf{[Historical Items]}\\
 \{item\_descriptions\}\\[0.4em]
-The output must be one list of item titles in length of \emph{20}, separated by lines.\\
+The output must be one list of item titles in length of \emph{$c$}, separated by lines.\\
 \bottomrule
 \end{tabularx}
 \end{promptbox}
@@ -302,12 +307,12 @@ The output must be one single word in \{Yes, No\}.\\
 \begin{tabularx}{\linewidth}{X}
 \toprule
 \textbf{[Instruction]}\\
-According to the user profile, rank top-\emph{20} items this user may prefer from the candidate item list, from higher to lower probability.\\[0.4em]
+According to the user profile, rank top-\emph{$k'$} items this user may prefer from the candidate item list, from higher to lower probability.\\[0.4em]
 \textbf{[User Profile]}\\
 \{user\_profile\}\\[0.4em]
 \textbf{[Candidate Item List in format of (ID, description)]}\\
 \{(item\_IDs, item\_descriptions)\}\\[0.4em]
-The output must be a list of candidate item IDs with length of \emph{20}, with items separated by lines.\\
+The output must be a list of candidate item IDs with length of \emph{$k'$}, with items separated by lines.\\
 \bottomrule
 \end{tabularx}
 \end{promptbox}
@@ -320,12 +325,12 @@ The output must be a list of candidate item IDs with length of \emph{20}, with i
 \begin{tabularx}{\linewidth}{X}
 \toprule
 \textbf{[Instruction]}\\
-Rank top-\emph{20} items from the candidate item list based on their similarity to the target item list, from higher to lower similarity.\\[0.4em]
+Rank top-\emph{$k'$} items from the candidate item list based on their similarity to the target item list, from higher to lower similarity.\\[0.4em]
 \textbf{[Target Item List ordered by priority]}\\
 \{item\_descriptions\}\\[0.4em]
 \textbf{[Candidate Item List in format of (ID, description)]}\\
 \{(item\_IDs, item\_descriptions)\}\\[0.4em]
-The output must be a list of candidate item IDs with length of \emph{20}, with items separated by lines.\\
+The output must be a list of candidate item IDs with length of \emph{$k'$}, with items separated by lines.\\
 \bottomrule
 \end{tabularx}
 \end{promptbox}
@@ -334,8 +339,11 @@ The output must be a list of candidate item IDs with length of \emph{20}, with i
 
 
 
+% Keep the dataset-statistics float from drifting above the prompt tables that
+% precede it in the source, which previously made Table 8 appear after Table 9.
+\FloatBarrier
 \section{Experiment}
-Through our extensive empirical analysis, we aim to address the following research questions. 
+Through our extensive empirical analysis, we aim to address the following research questions.
 \begin{itemize}[left=0pt]
     \item \textbf{RQ1:} How does AgentDR perform in full-ranking recommendation compared to other baselines?
     \item \textbf{RQ2:} Does incorporating LLM-based reasoning modules improve the semantic alignment of recommended items with user intent?
@@ -392,17 +400,17 @@ Both tools and recommendation baselines are pretrained on the first $(n-k)$ item
 Following the previous works~\cite{agentcf, iagent}, we also compare AgentDR with language-based approaches:
 \begin{enumerate}[left=0pt, label=\textbf{(\arabic*)}, start=7]
     \item \textbf{BM25}~\cite{bm25} ranks candidates according to their textual similarity with user historical interactions.
-    \item \textbf{LLMRanker}~\cite{llmrank} uses the LLM as a zero-shot ranker, considering user sequential interaction histories as conditions.
+    \item \textbf{LLMRank}~\cite{llmrank} uses the LLM as a zero-shot ranker, considering user sequential interaction histories as conditions.
 \end{enumerate}
 In addition to these language-based baselines, 
 we compare AgentDR against recommendation tools integrated with Retrieval-Augmented Generation (RAG). 
-Specifically, the LLM is prompted to generate the top 20 items from the 50 candidates retrieved by each tool, 
+Specifically, the LLM is prompted to generate the top $k'$ items from the 50 candidates retrieved by each tool,
 conditioned on the user’s behavior sequence. 
-The same hallucination filtering mechanism from Sec.~\ref{sec:dualrerank} is applied for fair comparison. 
+The same hallucination filtering mechanism from Section~\ref{sec:dualrerank} is applied for fair comparison. 
 These baselines are represented as \textbf{(9)-(11) \boldmath RAG$_{\mathit{G/S/M}}$} for LightGCN, SASRec and SimpleX, respectively. 
 Since most prior LLM-agent works~\cite{agentcf, recmind, interecagent, agent4rec, recagent, iagent} are unable to rank all items in datasets, we exclude them from the comparison table instead of reporting trivially low full-ranking performance.
 \subsubsection{Evaluation Metrics}
-Recall@\{10,20\} and NDCG@\{10,20\} are adopted for ranking performance evaluation. Additionally, we propose a novel metric that measures the semantic vicinity of the predicted item list to the ground-truth item in the following Sec.~\ref{sec:vdcg}.
+Recall@\{10,20\} and NDCG@\{10,20\} are adopted for ranking performance evaluation. Additionally, we propose a novel metric that measures the semantic vicinity of the predicted item list to the ground-truth item in the following Section~\ref{sec:vdcg}.
 
 \subsubsection{Implementation Details}
 Since most item titles in the three grocery datasets used in experiments are self-explainable, we use titles as textual descriptions of items and remove all the items without titles. For each dataset, users' interactions are chronologically organized based on timestamps to construct user behavior sequences. Since our framework delegates full-ranking sequential recommendation tasks to existing models, we follow the same data preprocessing strategy in previous works~\cite{LightGCN, sasrec, simplex} to remove cold-start users and items.
@@ -410,14 +418,14 @@ Since most item titles in the three grocery datasets used in experiments are sel
 The recommendation tools are pretrained on the first $(n-k)$ items of each user’s interaction sequence $\mathbf{s}_{[:-k]}$, following the standard training protocol in recommendation where models learn from early interactions and are evaluated on their ability to predict future behaviors. This setup ensures consistency across tools and enables fair performance comparison between our framework and other recommendation baselines.
 A grid search is applied for searching learning rates $\alpha, \beta$ and $\gamma$ in \{1e-3, 5e-3, 1e-2, 5e-2, 1e-1\}. 
 To mitigate overfitting, each learning rate is multiplied by a decay factor of 0.8 after every optimization epoch. The number of historical items $c$ used for substitute and complement generation is set to 10. Following the training scheme in sequential recommendation, the number of target items $k$ is set to 1 during optimization. Since the evaluation metrics consider at most top 20 items, the number of reranking candidates $k'$ is fixed at 20. All experiments are conducted using the Phi-4 language model, deployed locally with vLLM on eight Tesla V100 GPUs, each with 32 GB of VRAM. The temperature is set to 0 to ensure deterministic outputs.
-Aside from the complexity of the recommendation tools described in Sec.~\ref{sec:rectools}, the quantized version of a single Phi-4 model requires less than 12 GB of VRAM. Following prior LLM-agent works~\cite{agentcf, recagent, interecagent}, we train the recommendation tools on the entire training set, and randomly sample 160 agents for optimization on each dataset.
+Aside from the complexity of the recommendation tools described in Section~\ref{sec:rectools}, the quantized version of a single Phi-4 model requires less than 12 GB of VRAM. Following prior LLM-agent works~\cite{agentcf, recagent, interecagent}, we train the recommendation tools on the entire training set, and randomly sample 160 agents for optimization on each dataset.
 
 \subsection{Cost Analysis}
 The total LLM API calls in AgentDR consist of three parts: generation, agent optimization, and reranking. 
-Generation (Eq.~\ref{eq_agentdr:gen_prof}, Eq.~\ref{eq_agentdr:gen_sub} and Eq.~\ref{eq_agentdr:gen_com})
-and reranking (Eq.~\ref{eq_agentdr:gen_rerank}, Eq.~\ref{eq_agentdr:rerank_sub}, and Eq.~\ref{eq_agentdr:rerank_com}) contain 6 calls per user. 
-Each epoch in agent optimization contains 3 calls (Eq.~\ref{eq_agentdr:tool_cmpr}, Eq.~\ref{eq_agentdr:scdcm} and Eq.~\ref{eq_agentdr:intentdcm}) per user.
-Hence, the total number of calls is $6n + 3nt$ where $n$ and $t$ are the numbers of users and epochs, respectively.
+Generation (Eq.~(\ref{eq_agentdr:gen_prof}), Eq.~(\ref{eq_agentdr:gen_sub}) and Eq.~(\ref{eq_agentdr:gen_com}))
+and reranking (Eq.~(\ref{eq_agentdr:gen_rerank}), Eq.~(\ref{eq_agentdr:rerank_sub}), and Eq.~(\ref{eq_agentdr:rerank_com})) contain 6 calls per user. 
+Each epoch in agent optimization contains 3 calls (Eq.~(\ref{eq_agentdr:tool_cmpr}), Eq.~(\ref{eq_agentdr:scdcm}) and Eq.~(\ref{eq_agentdr:reglearn})) per user.
+Hence, the total number of calls is $6|\mathcal{U}| + 3|\mathcal{U}|T_{\text{opt}}$, where $|\mathcal{U}|$ is the number of users and $T_{\text{opt}}$ is the number of optimization epochs.
 With all the agent memory updated, AgentDR takes less than 1 second to generate the final ranking list for each user.
 We acknowledge that LLM-based agents generally have higher inference latency than embedding-based recommendation models, but they are still practical for offline ranking or secondary-stage recommendation pipelines.
 
@@ -443,13 +451,13 @@ The output must be a list of integers. Each score must be between 0 (very unrela
 \captionof{table}{Prompts in AgentDR for VDCG evaluation.}
 \label{app:tab:vdcg}
 
-Specifically, we prompt the LLM to rate how well each item in the recommended list aligns with the ground-truth item in terms of relevance, usefulness, and user interest. The rating scale ranges from 0 to 9, where 0 indicates an entirely unrelated item, and 9 represents a perfect semantic match between the item descriptions. The prompts for VDCG evaluation is shown in Table~\ref{app:tab:vdcg}.
-These ratings are treated as relevance scores to compute the DCG~\cite{dcg} for the list. For normalization, we divide by a customized ideal DCG, calculated from a synthetic ideal list of scores: $[p, p/2, ..., p/2^l]$, where $p$ is the maximum relevance score minus 1, and 
+Specifically, we prompt the LLM to rate how well each item in the recommended list aligns with the ground-truth item in terms of relevance, usefulness, and user interest. The rating scale ranges from 0 to 9, where 0 indicates an entirely unrelated item, and 9 represents a perfect semantic match between the item descriptions. The prompts for VDCG evaluation are shown in Table~\ref{app:tab:vdcg}.
+These ratings are treated as relevance scores to compute the DCG~\cite{dcg} for the list. For normalization, we divide by a customized ideal DCG, calculated from a synthetic ideal list of scores: $[p_{\max}, p_{\max}/2, \dots, p_{\max}/2^{l}]$, where $p_{\max}$ is the maximum relevance score minus 1, and
 $l$ is the length of the list. This ideal score distribution reflects the empirical tendency of the LLM to assign higher scores to only a few semantic-related items, following an approximately exponential decay. VDCG thus captures both the semantic vicinity and ranking quality of the predicted list with respect to the user's true intent.
 
 \subsection{RQ1: Ranking Performance Comparison}
 
-\begin{table*}[]
+\begin{table}[]
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{l rrrr @{\hspace{1.5em}} rrrr @{\hspace{1.5em}} rrrr}
 \toprule
@@ -487,7 +495,7 @@ Improv.   & 33.50\% & 6.67\% & 2.98\% & 7.34\%
 \bottomrule
 \end{tabular}%
 }\caption{Overall performance comparison of AgentDR with baselines.}\label{tab_agentdr:overall}
-\end{table*}
+\end{table}
 
 % previous version
 % \vspace{-3mm}
@@ -515,7 +523,7 @@ Improv.   & 33.50\% & 6.67\% & 2.98\% & 7.34\%
 % \end{tabular}
 % }
 % \vspace{-3mm}
-% \end{table*}
+% \end{table}
 
 Performance comparison between AgentDR and other baselines are shown in Table~\ref{tab_agentdr:overall}. The best and second-best performances are in boldface and underlined. We have the following observations:
 \begin{itemize}[left=0pt]
@@ -529,7 +537,7 @@ Performance comparison between AgentDR and other baselines are shown in Table~\r
 The VDCG comparison is presented in Table~\ref{tab_agentdr:vdcg}. Compared to the ranking-based evaluation results in Table~\ref{tab_agentdr:overall}, RAG-based methods demonstrate a much more pronounced advantage in VDCG over the base recommenders. Given their overall lower recall, this advantage primarily stems from the stronger semantic vicinity of their recommended item lists to user interests. This demonstrates that the world knowledge embedded in LLMs can be effectively harnessed to generate semantically meaningful recommendations aligned with user intent, which is especially valuable when the target item is difficult to predict from historical behavior.
 Similarly, language-only methods such as BM25 and LLMRank achieve competitive VDCG scores despite poor recall and NDCG performance, especially in the Electronics and Sports where item descriptions tend to be longer and more semantically distinguishable. In contrast, the relatively low VDCG scores of interaction-based recommenders in these datasets reveal a limitation not captured by standard recall or NDCG metrics. In real-world e-commercial services, a lack of semantic relevance in recommended lists may undermine user trust more severely than occasional misses. Addressing this gap, AgentDR actively reasons over implicit item-item relations, resulting in the highest overall semantic and ranking alignment, as reflected by its VDCG.
 
-In Fig.~\ref{fig_agentdr:vdcg}, we further examine the contribution of the LLM-based reasoning modules to VDCG by progressively removing them from the ranking refinement and agent optimization stages. The VDCG gap between AgentDR with and without the reranking modules highlights their importance in enhancing the semantic alignment between recommended item lists and user preferences. Notably, tool comparison consistently improves VDCG, as it increases the weight of the recommendation tool that produces the most semantically relevant item list during agent optimization.
+In Figure~\ref{fig_agentdr:vdcg}, we further examine the contribution of the LLM-based reasoning modules to VDCG by progressively removing them from the ranking refinement and agent optimization stages. The VDCG gap between AgentDR with and without the reranking modules highlights their importance in enhancing the semantic alignment between recommended item lists and user preferences. Notably, tool comparison consistently improves VDCG, as it increases the weight of the recommendation tool that produces the most semantically relevant item list during agent optimization.
 
 % \usepackage{booktabs}
 
@@ -602,7 +610,7 @@ Improv.   & 39.25\% & 26.53\% & 25.90\% & 15.21\% & -0.20\% & -5.76\% \\
 \subsection{RQ3: Aggregation Strategy Analysis}
 ~\label{sec:ensemble}
 
-\subsubsection{Setup} The ranking comparison in Eq.~\ref{eq_agentdr:rankcmpr} is a simple quantitative reflection mechanism to adjust RecTool weights for personalized tool suitability.  This component is flexible and can be replaced with alternative learning-based ensemble methods.  For instance, we can train a learnable vector $\mathbf{v}\in \mathbb{R}^{1 \times |\mathcal{T}|}$ as adaptive tool weights for all users. This learnable vector is then list-wise multiplied by the ranking score lists $\hat{\mathbf{r}}_\mathcal{T}\in \mathbb{R}^{|\mathcal{T}| \times |\mathcal{I}|}$ of each user to obtain the aggregated ranking score list $\hat{\mathbf{r}}'\in\mathbb{R}^{1\times|\mathcal{I}|}$. Supervised training is performed using ground-truth target items in training set, with a hinge loss as the objective. To integrate this with the original framework, we normalize this $\hat{\mathbf{r}}'$ and $\hat{\mathbf{r}}$ from Eq.~\ref{eq_agentdr:aggrank} and add them as an updated $\hat{\mathbf{r}}$ for the following reranking.
+\subsubsection{Setup} The ranking comparison in Eq.~(\ref{eq_agentdr:rankcmpr}) is a simple quantitative reflection mechanism to adjust RecTool weights for personalized tool suitability.  This component is flexible and can be replaced with alternative learning-based ensemble methods.  For instance, we can train a learnable vector $\mathbf{v}\in \mathbb{R}^{1 \times |\mathcal{T}|}$ as adaptive tool weights for all users. This learnable vector is then list-wise multiplied by the ranking score lists $\hat{\mathbf{r}}_\mathcal{T}\in \mathbb{R}^{|\mathcal{T}| \times |\mathcal{I}|}$ of each user to obtain the aggregated ranking score list $\hat{\mathbf{r}}'\in\mathbb{R}^{1\times|\mathcal{I}|}$. Supervised training is performed using ground-truth target items in training set, with a hinge loss as the objective. To integrate this with the original framework, we normalize this $\hat{\mathbf{r}}'$ and $\hat{\mathbf{r}}$ from Eq.~(\ref{eq_agentdr:aggrank}) and add them as an updated $\hat{\mathbf{r}}$ for the following reranking.
 
 \subsubsection{Results} Table~\ref{tab_agentdr:ensemble} reports the performance of various ensemble strategies, both with and without all LLM-based reasoning modules from AgentDR. The original ranking comparison mechanism and the alternative linear model described above are denoted as \textit{RC} and \textit{LR}, respectively. Additionally, we explore MLP with and without attention mechanisms to capture inter-tool dependencies, as alternatives to the original ranking comparison. These variants are denoted as \textit{Att} and \textit{MLP} in the table. 
 The results demonstrate that the proposed reasoning modules consistently provide significant benefits across different ensemble strategies. Although AgentDR equipped with the simplest ranking comparison mechanism already surpasses most baselines in Table~\ref{tab_agentdr:overall}, substituting it with more expressive ensemble methods yields up to a 13.56$\%$ improvement in NDCG. This performance gain comes at the cost of increased computational complexity during backpropagation. Among the evaluated methods, the MLP with an attention mechanism achieves the best overall performance when integrated into AgentDR, which has the the highest number of learnable parameters. We leave the exploration of potential improvement from integrating more advanced ensemble methods in the future work.
@@ -674,7 +682,7 @@ Ensemble: Att
 % For fair comparison, we use the original ranking comparison as quantitative comparison module.
 % The ranking comparison is used as quantitative comparison module.
 \subsubsection{Tool Comparison and Dual S\&C Reranking}
-We investigate the contribution of the proposed tool comparison and dual S\&C reranking modules, denoted as \textit{T} and \textit{Dual S\&C}, respetively. We also explore the effect of replacing dual S\&C by a mutually exclusive substitute or complement reranking based on intent memory of each user, denoted as \textit{S/C}. The general reranking module is excluded from this study. The results are shown in Fig.~\ref{fig_agentdr:ablation}. We observe that tool comparison improves performance in most settings, while it may degrade performance on Instacart. In this dataset, the semantic differences between the grocery food lists recommended by different tools are less pronounced, providing weaker signals for LLM-based tool selection. Moreover, the dual S\&C reranking consistently outperforms reranking based on either substitutes or complements alone across all settings, highlighting the advantage of a more comprehensive reranking strategy.
+We investigate the contribution of the proposed tool comparison and dual S\&C reranking modules, denoted as \textit{T} and \textit{Dual S\&C}, respetively. We also explore the effect of replacing dual S\&C by a mutually exclusive substitute or complement reranking based on intent memory of each user, denoted as \textit{S/C}. The general reranking module is excluded from this study. The results are shown in Figure~\ref{fig_agentdr:ablation}. We observe that tool comparison improves performance in most settings, while it may degrade performance on Instacart. In this dataset, the semantic differences between the grocery food lists recommended by different tools are less pronounced, providing weaker signals for LLM-based tool selection. Moreover, the dual S\&C reranking consistently outperforms reranking based on either substitutes or complements alone across all settings, highlighting the advantage of a more comprehensive reranking strategy.
 
 \begin{figure}[]
     \begin{subfigure}{0.3\textwidth}
@@ -701,7 +709,7 @@ We investigate the contribution of the proposed tool comparison and dual S\&C re
 \end{figure}
 
 \subsubsection{General Reranking}
-The general reranking module in Sec.~\ref{sec:genrerank} refines recommendation lists based on summarized user preferences, independent of substitution and complementarity signals. In Table~\ref{tab_agentdr:genrerank}, we compare the performance of AgentDR with and without this module under different reranking settings. The results show that general reranking consistently improves performance in most cases, and all best results across the three datasets are achieved with this module enabled, confirming the importance of general preference signals in complementing intent-specific reasoning. Since the corresponding intent identification module in Eq.~\ref{eq_agentdr:reglearn} accounts for one-third of all inference calls during agent optimization, it can be optionally deactivated to save computational resources in this flexible agent framework, without sacrificing the general preference signals. In such cases, $m_{reg}$ is set as a constant regularization coefficient shared across all users in the dataset.
+The general reranking module in Section~\ref{sec:genrerank} refines recommendation lists based on summarized user preferences, independent of substitution and complementarity signals. In Table~\ref{tab_agentdr:genrerank}, we compare the performance of AgentDR with and without this module under different reranking settings. The results show that general reranking consistently improves performance in most cases, and all best results across the three datasets are achieved with this module enabled, confirming the importance of general preference signals in complementing intent-specific reasoning. Since the corresponding intent identification module in Eq.~(\ref{eq_agentdr:reglearn}) accounts for one-third of all inference calls during agent optimization, it can be optionally deactivated to save computational resources in this flexible agent framework, without sacrificing the general preference signals. In such cases, $m_{reg}$ is set as a constant regularization coefficient shared across all users in the dataset.
 
 \begin{table}
 \resizebox{0.65\textwidth}{!}{%
@@ -767,6 +775,8 @@ T+Dual S\&C
 \section{Chapter Summary}
 In this chapter, we propose a novel LLM-based agent framework, AgentDR, for full-ranking recommendation. 
 It leverages the reasoning capabilities of LLMs to delegate the full-ranking task to multiple recommendation tools in a personalized manner. Furthermore, the commonsense world knowledge of the LLM is utilized to infer user intent regarding substitutes and complements, which is a challenging aspect for traditional models to capture effectively for recommendation enhancement. 
-Extensive experiments are conducted with a proposed LLM-based evaluation metric VDCG to evaluate both semantic relevance and ordering correctness of recommendation results. 
-Similar to ERLSC, a limitation of this framework is that substitution and complementarity relationships are more prevalent in domains like groceries than in others such as movies or music. 
+Extensive experiments are conducted with a proposed LLM-based evaluation metric VDCG to evaluate both semantic relevance and ordering correctness of recommendation results.
+We extend this tool learning perspective in PRTA~\cite{prta}, where a reflection mechanism lets the agent assess which recommendation tools serve each user best from user profiles and ranked candidates.
+Similar to ERLSC, a limitation of this framework is that substitution and complementarity relationships are more prevalent in domains like groceries than in others such as movies or music.
+The reasoning modules also depend on the particular LLM queried, and the evaluation protocol replays historical interactions offline, which cannot observe how tool selection would drift as a catalog evolves or how the agent would behave when its available tools disagree.
 

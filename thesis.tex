@@ -57,10 +57,71 @@
 \newtheorem{definition}[theorem]{Definition}
 
 % Hyperref
-\usepackage[pdfusetitle]{hyperref}
+% hidelinks removes the coloured/boxed frames around links while keeping the
+% links themselves active, which is what the UIC Thesis Manual expects for a
+% printed-quality PDF.
+\usepackage[pdfusetitle,hidelinks]{hyperref}
 
 \usepackage{booktabs}
 \usepackage{pifont}
+
+% \FloatBarrier, used to keep floats inside the section that declares them.
+\usepackage{placeins}
+
+% \Needspace, used by the Vita to keep a section heading on the same page as the
+% entries that follow it.  Guarded because LaTeXML has no binding for needspace,
+% and an undefined \Needspace would render as red error text in the EPUB.
+\iflatexml\else\usepackage{needspace}\fi
+
+% ---------------------------------------------------------------------------
+% Unambiguous float identifiers.
+% amsbook resets the figure and table counters in every chapter but prints them
+% without a chapter prefix, which produces several "Figure 1"/"Table 1" entries
+% in the lists of figures and tables.  Adding the chapter prefix makes every
+% identifier unique (Figure 2.1, Table 5.2, ...) and, after \appendix, yields
+% Figure A.1 / Table A.1.  Equation numbering is left untouched.
+% ---------------------------------------------------------------------------
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+
+% A small amount of emergency stretch lets TeX widen the interword spacing on
+% the few lines it cannot otherwise break, instead of letting them run into the
+% margin.  This changes spacing only, never the text itself.
+\emergencystretch=30pt
+
+% ---------------------------------------------------------------------------
+% Stable running heads.
+% amsbook derives the running head from \sectionmark, i.e. from the *last* mark
+% on the page.  A section that starts near the bottom of a page therefore
+% overrides the head for text belonging to the previous section.  Suppressing
+% the section marks leaves the chapter mark from \chaptermark, which is stable.
+% ---------------------------------------------------------------------------
+\makeatletter
+\let\uic@ps@headings\ps@headings
+\renewcommand{\ps@headings}{%
+  \uic@ps@headings
+  \let\sectionmark\@gobble
+  \let\subsectionmark\@gobble
+  \let\subsubsectionmark\@gobble
+}
+\AtBeginDocument{\pagestyle{headings}}
+\makeatother
+
+% ---------------------------------------------------------------------------
+% Lists of figures and tables.
+% amsbook reserves 1.5pc for the float identifier, which is too narrow once the
+% chapter prefix is added and the number reaches two digits ("6.10").  The wider
+% field below removes those overfull boxes, and the small \emergencystretch lets
+% long captions break without running into the page number.
+% ---------------------------------------------------------------------------
+\makeatletter
+\renewcommand{\l@figure}{\@tocline{0}{3pt plus2pt}{0pt}{2.4pc}{}}
+\let\l@table\l@figure
+\let\uic@listoffigures\listoffigures
+\renewcommand{\listoffigures}{\begingroup\emergencystretch=3em\uic@listoffigures\endgroup}
+\let\uic@listoftables\listoftables
+\renewcommand{\listoftables}{\begingroup\emergencystretch=3em\uic@listoftables\endgroup}
+\makeatother
 
 
 \usepackage[most]{tcolorbox}
@@ -133,43 +194,63 @@
 
 %The following is best practice if distributing both an inaccessible PDF and accessible EPUB file.
 \chapter*{Accessibility Statement}
+\begin{sloppypar}
 \noindent
-An accessible EPUB version of this document is available at \url{https://github.com/mdyfrank/thesis_epub/blob/main/docs/thesis.epub}.
+An accessible EPUB version of this document is available at
+\url{https://github.com/mdyfrank/thesis_epub/blob/main/docs/thesis.epub}.
+\end{sloppypar}
 
 
 
-\chapter*{Acknowledgment}
-I am sincerely thankful to my advisor, Prof.~Philip S. Yu, for his constant support and
-guidance during my time at the University of Illinois Chicago. His dedication to fostering a
-culture of innovation and curiosity has greatly enriched my research experience. Working under
-his mentorship has been an invaluable opportunity that has shaped both my professional growth
-and my personal perspective.
+\chapter*{Acknowledgments}
+My deepest thanks go to my advisor, Prof.~Philip S. Yu. Across my years at the University of
+Illinois Chicago he gave me the freedom to choose my own problems and the honesty to tell me
+when a direction was not working. Much of what I understand about finding a question worth
+years of effort, and about recognizing when an answer is not yet ready, I learned from him.
 
-I am deeply grateful to my committee members, Prof.~Xinhua Zhang, Prof.~Sourav Medya,
-Dr.~Zhiwei Liu, and Dr.~Liangwei Yang, for their dedication, generous time, and thoughtful
-feedback throughout their service.
+I thank Prof.~Xinhua Zhang, Prof.~Sourav Medya, Dr.~Zhiwei Liu, and Dr.~Liangwei Yang for
+serving on my committee. The hours they set aside for this work, and the questions they raised
+about it, made its argument clearer than I could have made it alone.
 
-I would also like to express my gratitude to my managers, Dr.~Edward W. Huang and
-Dr.~Yan Gao, and to my mentors, Dr.~Jiangshu Du, Dr.~Nurendra Choudhary, and Dr.~Fan Yang,
-for their guidance and encouragement during my internships at Amazon. Their insights and
-steady support played a significant role in my development in this field.
+My two internships at Amazon showed me what recommendation research looks like at industrial
+scale. For that I thank my managers, Dr.~Edward W. Huang and Dr.~Yan Gao, my mentors,
+Dr.~Jiangshu Du, Dr.~Nurendra Choudhary, and Dr.~Fan Yang, and the Amazon Scholars I worked
+with there, Prof.~Danai Koutra and Prof.~Jia Liu. They took my half-formed ideas seriously and
+were generous with their own.
 
-My thanks also go to my collaborators, Dr.~Chen Wang, Dr.~Xiaolong Liu, Weizhi Zhang,
-Yibo Wang, Prof.~Hao Peng, Prof.~Danai Koutra, and Prof.~Jia Liu, for the opportunity to work
-and exchange ideas together. The shared experiences, thought-provoking discussions, and
-moments of discovery have been among the most memorable and impactful parts of this journey.
+I have been fortunate in the people I worked alongside. Dr.~Chen Wang, Dr.~Xiaolong Liu,
+Weizhi Zhang, Yibo Wang, and Prof.~Hao Peng shared their thinking freely, pushed back on mine
+when it needed pushing, and made the slow stretches of this work far better company.
 
-Lastly, and most importantly, I would like to thank my parents, Hong Fu and Lin Yang, for
-their unwavering support and their belief in my decisions, and to thank my grandmother,
-Zhen Tang, the very first teacher in my life.
+Finally, I thank my parents, Hong Fu and Lin Yang, who trusted my decisions long before there
+was any evidence that they would work out, and my grandmother, Zhen Tang, the very first
+teacher in my life. She raised me from childhood, and the habits of study she settled in me
+then are the ones I still work by.
 
+% Preliminary-page order follows the UIC Graduate College Thesis Manual:
+% Title Page, Accessibility Statement, Acknowledgments, Contribution of Authors,
+% Table of Contents, List of Tables, List of Figures, List of Abbreviations,
+% Summary.
 \input{sections/other/3_preface}
 
+% amsbook's \@starttoc writes the toc entry for each list without first
+% creating an anchor, so the bookmark inherits the anchor of the preceding
+% chapter and points at the wrong page.  Breaking the page and then issuing
+% \phantomsection gives each list a fresh anchor on the page it starts on.
+% The table of contents gets no automatic bookmark at all, so one is added.
+\clearpage
+\iflatexml\else\pdfbookmark[0]{\contentsname}{uic:toc}\fi
 \tableofcontents
-\listoffigures
+
+\clearpage
+\iflatexml\else\phantomsection\fi
 \listoftables
 
-% \chapter*{List of Abbreviations}
+\clearpage
+\iflatexml\else\phantomsection\fi
+\listoffigures
+
+\input{sections/other/5_abbreviations}
 
 \input{sections/other/4_summary}
 
@@ -180,42 +261,39 @@ Zhen Tang, the very first teacher in my life.
 
 \doublespacing %other options are \onehalfspacing or \singlespacing
 \input{sections/1_Introduction/index}
-% \chapter{Introduction}
-% \section{Dissertation Outline}
-% In the digital era, recommender systems (RecSys) play a crucial role in helping users discover relevant items across online platforms. By modeling historical user–item interactions, RecSys learns user preferences and provides personalized recommendations. However, these interactions are inherently sparse due to limited user exploration and the extremely large candidate item space. Such sparsity remains a fundamental challenge that limits recommendation accuracy and robustness, especially when relying solely on observed interactions.
-
-% To better capture collaborative signals, graph learning has become a dominant paradigm in RecSys, where users and items are organized into a bipartite interaction structure for information propagation. While graph-based models effectively leverage interaction data, modeling only pairwise connections remains insufficient under sparse settings. To address this limitation, this thesis explores the integration of complementary information sources into recommendation.
-% Inspired by the idea of leveraging multiple forms of knowledge simultaneously, we investigate two primary directions, as well as their integration, to enhance personalized recommendation.
-
-% First, we introduce additional relations and attributes into graph learning. Beyond conventional bipartite graphs that model only pairwise user–item interactions, we study hypergraph learning to capture higher-order relations and complex dependencies among multiple entities. Hypergraphs connect multiple nodes within a single hyperedge, allowing the incorporation of side information and structured relations beyond direct interactions. By modeling richer structural patterns, we enhance representation learning and alleviate sparsity issues in RecSys.
-
-% Second, we incorporate prior knowledge from large language models (LLMs) into recommendation. Traditional embedding-based graph models rely on fixed-length vector representations, which may fail to preserve the full semantic richness of textual descriptions and world knowledge. Recent advances in LLMs demonstrate strong capabilities in understanding semantic relations and functional roles of items derived from large-scale text corpora. In this thesis, we leverage LLMs to inject semantic priors and reasoning ability into RecSys, while retaining graph models as efficient tools for interaction modeling. Graph learning captures collaborative and structural patterns, whereas LLM reasoning contributes high-level semantic understanding, forming a complementary framework for personalization.
-
-% This thesis explores the challenges and opportunities of integrating graph learning and LLM reasoning to enhance RecSys. Compared with direct user–item interactions that provide explicit preference signals, auxiliary relations, structured side information, and LLM-based prior knowledge can be heterogeneous, multi-sourced, and partially misaligned with recommendation objectives. By addressing these challenges properly, we demonstrate significant improvements in recommendation performance. The detailed introduction for the work presented is as follows.
-
-
-
 \input{sections/2_UPRTH/index}
 \input{sections/3_IHP/index}
 \input{sections/4_GLTA/index}
 \input{sections/5_ERLSC/index}
 \input{sections/6_AgentDR/index}
 \input{sections/7_conclusion/index}
+
+\singlespacing
+
+% ---------------------------------------------------------------------------
+% Back matter.  The UIC template places the appendices before the reference
+% list and requires the Vita to be the final item in the document, so the order
+% here is: Appendix, Bibliography, Vita.
+% ---------------------------------------------------------------------------
 \appendix
 
 \input{sections/other/appendix}
 
-
+% \backmatter comes before the bibliography rather than after it.  Without it,
+% amsbook is still in appendix mode and prefixes the unnumbered bibliography
+% heading with "Appendix" in the table of contents.
 \backmatter
-\singlespacing
 
 \iflatexml
   % EPUB/HTML build: LaTeXML's biblatex support is limited, so use classic BibTeX.
+  \renewcommand{\bibname}{BIBLIOGRAPHY}
   \bibliographystyle{plain}
   \bibliography{thesis}
 \else
-  \printbibliography
+  \printbibliography[title={BIBLIOGRAPHY}]
 \fi
+
+\input{sections/other/vita}
 
 
 \end{document}

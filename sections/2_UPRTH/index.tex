@@ -1,7 +1,9 @@
 \chapter{Hypergraph Learning for Relation Modeling in Recommendation}~\label{chpt:uprth}
 (This chapter was previously published as ``Unified Pretraining for Recommendation via Task Hypergraphs"~\cite{uprth} in \textit{Proceedings of the 17th ACM International Conference on Web Search and Data Mining}, pp. 891 - 900. 2024. [doi:10.1145/3616855.3635811])
+
 \section{Introduction}
-Multitask pretraining has gained significant attention in the field of RecSys. On the one hand, since users and items are usually tied with unique IDs in each dataset for recommendation, the prior knowledge obtained by pretraining on only user-item interactions in a dataset can hardly be transferred to other downstream datasets where IDs are different. On the other hand, if pretraining and finetuning are performed on user-item interactions in the same dataset, the model has a high risk of memorizing the specific patterns and distributions of the pretraining data and being affected by the overfitting problem.
+As outlined in Chapter~\ref{intro}, user-item interactions alone are too sparse to support robust personalization, so this chapter follows the first direction of this dissertation and models auxiliary relations and attributes as hyperedges, allowing heterogeneous signals beyond pairwise interactions to be integrated into a single pretraining framework.
+Multitask pretraining has gained considerable attention in the field of RecSys. On the one hand, since users and items are usually tied with unique IDs in each dataset for recommendation, the prior knowledge obtained by pretraining on only user-item interactions in a dataset can hardly be transferred to other downstream datasets where IDs are different. On the other hand, if pretraining and finetuning are performed on user-item interactions in the same dataset, the model has a high risk of memorizing the specific patterns and distributions of the pretraining data and being affected by the overfitting problem.
 On the contrary, when a model is pretrained on multiple related tasks simultaneously, it is exposed to diverse contextual cues for personalized recommendation. As a result, the model is encouraged to discover relevant commonalities and underlying structures across various tasks, leading to improved generalization capabilities and robust representations.
 
 Previous works applying multitask pretraining for recommendation rely on language models to capture contextual information from text. P5~\cite{p5} converts all data, such as user-item interactions, item metadata, and user reviews, to natural language sequences and then pretrains on a Transformer~\cite{transformer} model that produces target responses according to textual inputs. Analogously, M6-Rec~\cite{m6rec} converts all tasks in RecSys into language understanding and language generation, and leverages a generative pretrained language model M6~\cite{m6} to predict user preferences as plain texts. These pretraining frameworks based on language models can unify various subtasks and exploit abundant semantics inside the training corpora for recommendation.
@@ -22,18 +24,18 @@ To adaptively learn the degrees of relevance between each auxiliary task and the
 Additionally, this TA layer directly transmits task-specific knowledge of users and items in auxiliary tasks to the recommendation task during multitask pretraining, which encourages the framework to capture task-specific nuances to avoid overgeneralization. 
 The main contributions of UPRTH are summarized as follows:
 \begin{itemize}[left=0pt]
-    \item  We design a novel framework UPRTH, a model-agnostic unified pretraining framework based on hypergraph learning for recommendation. To the best of our knowledge, this is the first attempt toward unified multitask pretraining for recommendation, achieved by generalizing all pretext tasks to task hypergraphs.
+    \item  We design UPRTH, a model-agnostic unified multitask pretraining framework that generalizes heterogeneous pretext tasks as task hypergraphs for recommendation.
     \item We devise a novel TA layer to harness the knowledge from each pretext task, which discriminatively learns the degrees of relevance between each auxiliary task and the target recommendation task during pretraining.
-    \item We conduct extensive experiments on three real-world datasets. The significant improvement of UPRTH on all datasets indicates its superiority as a pretraining framework for recommendation.
+    \item We conduct extensive experiments on three real-world datasets. The consistent improvement of UPRTH on all datasets indicates its effectiveness as a pretraining framework for recommendation.
 \end{itemize}
 
-\section{Related works}
+\section{Related Work}
 \subsection{Hypergraph Learning for Recommendation}
 The application of hypergraph learning has proven successful in various graph-based tasks~\cite{feng19, gao22}. Consequently, researchers have also explored the application of hypergraphs in RecSys, recognizing their ability to capture complex high-order dependencies through hyperedge-node connections~\cite{hgcncc, hccf, dhcf, gtgs}.
-Thanks to the flexibility of hyperedge construction, some previous works leverage hypergraph learning to integrate contextual information in addition to user-item interaction history for personalized recommendation. MRH~\cite{mrh} constructs hyperedges among users, music, and music tags to create a hypergraph for music recommendation. MHCN~\cite{mhcn} introduces a multi-channel hypergraph convolutional network that leverages high-order user-user relations to enhance social recommendation. To the best of our knowledge, no previous method has applied hypergraph to unify various pretext tasks during pretraining.
+Thanks to the flexibility of hyperedge construction, some previous works leverage hypergraph learning to integrate contextual information in addition to user-item interaction history for personalized recommendation. MRH~\cite{mrh} constructs hyperedges among users, music, and music tags to create a hypergraph for music recommendation. MHCN~\cite{mhcn} introduces a multi-channel hypergraph convolutional network that leverages high-order user-user relations to enhance social recommendation. Unlike prior methods, UPRTH uses hypergraphs to unify heterogeneous pretext tasks within a shared pretraining framework.
 
 \subsection{Graph Neural Networks with Pretraining}
-Graph Neural Networks (GNNs) have garnered significant attention due to the prevalence of graph-structured data in various domains. In order to enhance learning effectiveness on graphs, researchers have delved into the exploration of pretraining GNNs using unlabeled graph data. 
+Graph Neural Networks (GNNs) have garnered considerable attention due to the prevalence of graph-structured data in various domains. In order to enhance learning effectiveness on graphs, researchers have delved into the exploration of pretraining GNNs using unlabeled graph data. 
 GCC~\cite{gcc} applies contrastive learning to capture the universal topological properties across multiple networks. 
 GPPT~\cite{gppt} leverages a graph prompting function to enhance the reliability and efficiency of pretrained GNNs. 
 GPT-GNN~\cite{gptgnn} introduces an attributed graph generation task in pretraining to capture the semantic properties of the graph.
@@ -51,17 +53,17 @@ Compared to these methods, our proposed framework is model-agnostic and only req
 
 \section{Preliminaries}
 \subsection{Recommendation Task}
-Given two disjoint node sets, including a user set $\mathcal{U}$ and an item set $\mathcal{I}$, and the interactive edges, i.e., user-item edges $E_{\mathcal{U},\mathcal{I}}$, an interaction graph is defined as $\textit{G}=(V,E)$ where $V = \mathcal{U} \cup \mathcal{I}$. A personalized recommendation task  $t_{rec}$ for a user $u$ is to predict a ranking list of items $\{i_1, i_2, \dots, i_m\}$, with which this user has no interactions in the graph $\textit{G}$.
+Given two disjoint node sets, including a user set $\mathcal{U}$ and an item set $\mathcal{I}$, and the interactive edges, i.e., user-item edges $E_{\mathcal{U},\mathcal{I}}$, an interaction graph is defined as $G=(V,E)$ where $V = \mathcal{U} \cup \mathcal{I}$. A personalized recommendation task  $t_{rec}$ for a user $u$ is to predict a ranking list of items $\{i_1, i_2, \dots, i_m\}$, with which this user has no interactions in the graph $G$.
 
 \subsection{Auxiliary Graph-based Pretext Task}
-Within an auxiliary pretext task set $T$, for a specific task $t\in T$, given an additional node property set $A$ or an additional edge set $E_{t}$ associated with the task-related node set $V_t\subseteq V$, an auxiliary graph-based pretext task is to predict the value of property $a_t\in A_t$ for an unlabeled node $v_t$, or the unobserved edge $e_t$ in the auxiliary graph $\textit{G}_t=(V_t,E_t)$.
+Within an auxiliary pretext task set $T$, for a specific task $t\in T$, given an additional node property set $A$ or an additional edge set $E_{t}$ associated with the task-related node set $V_t\subseteq V$, an auxiliary graph-based pretext task is to predict the value of property $a_t\in A_t$ for an unlabeled node $v_t$, or the unobserved edge $e_t$ in the auxiliary graph $G_t=(V_t,E_t)$.
 
 
-\subsection{Task hypergraph}
-Given a pretext task $t$ which is $t_{rec}$ or an auxiliary pretext task $t\in T$, the task hypergraph is denoted as $\mathcal{H}_t=(V_t,\mathcal{E}_t)$, where $V_t$ are nodes related to the specific task in the interaction graph $\textit{G}$ and $\mathcal{E}_t$ are task-specific hyperedges. An incidence matrix $\mathbf{H}^{\mathbf{v}}_{t}\in\{0,1\}^{|V_t|\times|\mathcal{E}_t|}$ is used to represent connections among the related nodes.
+\subsection{Task Hypergraph}
+Given a pretext task $t$ which is $t_{rec}$ or an auxiliary pretext task $t\in T$, the task hypergraph is denoted as $\mathcal{H}_t=(V_t,\mathcal{E}_t)$, where $V_t$ are nodes related to the specific task in the interaction graph $G$ and $\mathcal{E}_t$ are task-specific hyperedges. An incidence matrix $\mathbf{H}^{\mathbf{v}}_{t}\in\{0,1\}^{|V_t|\times|\mathcal{E}_t|}$ is used to represent connections among the related nodes.
 In other words, we leverage hyperedges to represent associations among task-related nodes in each pretext task. 
 
-\subsection{Hypergraph Encoder}
+\subsection{Hypergraph Encoder}\label{sec_uprth:hgconv}
 The hypergraph encoder in our framework consists of hypergraph convolution layers, each of which is formulated as:
 \begin{equation}\label{eq_encoder}
 \begin{aligned}
@@ -69,12 +71,12 @@ The hypergraph encoder in our framework consists of hypergraph convolution layer
 &=(\mathbf{D}^{\mathbf{v}}_{t})^{-1}\mathbf{H}^{\mathbf{v}}_{t}\cdot(\mathbf{B}^{\mathbf{v}}_{t})^{-1}(\mathbf{H}^{\mathbf{v}}_{t})^\top\mathbf{E}^{\mathbf{v}}_{t},
 \end{aligned}
 \end{equation}
-where $\mathbf{E}^{\mathbf{v}}_{t}$ and $\mathbf{E'}^{\mathbf{v}}_{t}$ are input and output embeddings of task-related node set $V_t$ for a certain pretext task $t$ in a hypergraph convolution layer, $\mathbf{H}^{\mathbf{v}}_{t}$ is the incidence matrix of the task hypergraph, $\mathbf{E}^{\mathbf{\epsilon}}_{t}$ denotes the hyperedge embeddings, $\mathbf{D}^{\mathbf{v}}_{t}$ is the degree matrix of hyperedges and $\mathbf{B}^{\mathbf{v}}_{t}$ is the degree matrix of nodes for normalization.  
+where $\mathbf{E}^{\mathbf{v}}_{t}$ and $\mathbf{E'}^{\mathbf{v}}_{t}$ are input and output embeddings of task-related node set $V_t$ for a certain pretext task $t$ in a hypergraph convolution layer, $\mathbf{H}^{\mathbf{v}}_{t}$ is the incidence matrix of the task hypergraph, $\mathbf{E}^{\mathbf{\epsilon}}_{t}$ denotes the hyperedge embeddings, $\mathbf{D}^{\mathbf{v}}_{t}$ is the degree matrix of nodes and $\mathbf{B}^{\mathbf{v}}_{t}$ is the degree matrix of hyperedges for normalization.  
 
-\section{Proposed framework: UPRTH}
-In this section, we present the proposed UPRTH framework for unified pretraining. The illustration of UPRTH is demonstrated in Figure~\ref{fig:UPRTH}. We start by introducing all the embeddings to be pretrained in this framework. Thereafter, we define three types of pretext tasks and explain how to construct the task hypergraph corresponding to each type of task. Specifically, we adopt a TA layer to learn the relevance between each auxiliary task and the recommendation task, and then disciminatively integrate the prior knowledge from pretext tasks to the pretrained embeddings. Our framework can be easily extended to other graph-based tasks besides recommendation by replacing the target recommendation task. We leave this extension to the future work.
+\section{Proposed Framework: UPRTH}
+In this section, we present the proposed UPRTH framework for unified pretraining. The illustration of UPRTH is demonstrated in Figure~\ref{fig:UPRTH}. We start by introducing all the embeddings to be pretrained in this framework. Thereafter, we define three types of pretext tasks and explain how to construct the task hypergraph corresponding to each type of task. Specifically, we adopt a TA layer to learn the relevance between each auxiliary task and the recommendation task, and then discriminatively integrate the prior knowledge from pretext tasks to the pretrained embeddings. Our framework can be easily extended to other graph-based tasks besides recommendation by replacing the target recommendation task. We leave this extension to the future work.
 \subsection{Embedding Layer}
-We maintain an embedding layer $\mathbf{E}\in \mathbb{R}^{d\times(|{\mathcal{U}}|+|\mathcal{I}|)}$, where $d$ is the feature dimension and columns represent all trainable embeddings for users and items during pretraining. We denote the initial user embedding as $\mathbf{E}^{\mathbf{u}}_{t_{rec}}$, and the initial item embedding as $\mathbf{E}^{\mathbf{i}}_{t_{rec}}$. By using the pretrained embeddings $\mathbf{E}^{\mathbf{u}}_{t_{rec}}$ and $\mathbf{E}^{\mathbf{i}}_{t_{rec}}$, prior knowledge learned from the pretraining phase can be leveraged when building a downstream recommendation model.
+We maintain an embedding layer $\mathbf{E}\in \mathbb{R}^{(|{\mathcal{U}}|+|\mathcal{I}|)\times d}$, where $d$ is the feature dimension and rows represent all trainable embeddings for users and items during pretraining. We denote the initial user embedding as $\mathbf{E}^{\mathbf{u}}_{t_{rec}}$, and the initial item embedding as $\mathbf{E}^{\mathbf{i}}_{t_{rec}}$. By using the pretrained embeddings $\mathbf{E}^{\mathbf{u}}_{t_{rec}}$ and $\mathbf{E}^{\mathbf{i}}_{t_{rec}}$, prior knowledge learned from the pretraining phase can be leveraged when building a downstream recommendation model.
 
 \begin{figure}[]
 \centering
@@ -86,25 +88,25 @@ We maintain an embedding layer $\mathbf{E}\in \mathbb{R}^{d\times(|{\mathcal{U}}
 \subsection{Task Hypergraph Construction}
 For the purpose of a unified architecture to handle various pretext tasks, we first generalize each pretext task to the format of a corresponding task hypergraph. A toy example is shown in Figure~\ref{fig:construction}. Compared to a graph where edges only connect two nodes, the advantage of a hypergraph where hyperedges can simultaneously connect multiple nodes lies in its ability to represent complex relationships. In multitask pretraining, the association among task-related nodes in each pretext task is diverse. Thus, we design a task hypergraph for each pretext task, in order to express these associations in different pretext tasks in a unified format of hyperedges for further hypergraph learning. 
 
-Without loss of generality, we categorize all pretext tasks into three types: \textit{Recommendation}, \textit{Relation Prediction}, and \textit{Attribute Prediction}. Then we propose the construction of the hypergraph corresponding to each type as follows:
+Without loss of generality, we categorize all pretext tasks into three types, namely \textit{Recommendation}, \textit{Relation Prediction}, and \textit{Attribute Prediction}. Then we propose the construction of the hypergraph corresponding to each type as follows:
 \begin{itemize}
     \item \textbf{Recommendation}. Recommendation is to predict an unobserved relation between users and items, including purchasing, clicking, viewing or other user-item interactions. In this case, we let each type of node be the hyperedges to connect the other type of nodes. For example, if multiple users purchase an item, a hyperedge is constructed to connect them simultaneously. Two incident matrices $\mathbf{H}^{\mathbf{u}}_{t_{rec}}\in\{0,1\}^{|\mathcal{U}|\times|\mathcal{I}|}$ and $\mathbf{H}^{\mathbf{i}}_{t_{rec}}\in\{0,1\}^{|\mathcal{I}|\times|\mathcal{U}|}$ are used to represent the hyperedge connection in such tasks.
-    \item \textbf{Relation Prediction}. The tasks belonging to this type are to predict an unobserved relation among nodes with the same type, such as whether a substitution relation exists between item nodes. In this type of task, we let the homogeneous relation itself be the hyperedge. For example, items that are substitutions of a target item are connected by a hyperedge. And the incidence matrix for this hypergraph is $\mathbf{H}^{\mathbf{i}}_{t}\in\{0,1\}^{|\mathcal{I}|\times|\mathcal{E}^{\mathbf{i}}_{t}|}$ where $|\mathcal{E}^{\mathbf{i}}_{t}|$ represents the number of substitution relations.
+    \item \textbf{Relation Prediction}. The tasks belonging to this type are to predict an unobserved relation among nodes with the same type, such as whether a substitution relation exists between item nodes. In this type of task, we let the homogeneous relation itself be the hyperedge. For example, items that are substitutions of a target item are connected by a hyperedge. The incidence matrix for this hypergraph is $\mathbf{H}^{\mathbf{i}}_{t}\in\{0,1\}^{|\mathcal{I}|\times|\mathcal{E}^{\mathbf{i}}_{t}|}$ where $|\mathcal{E}^{\mathbf{i}}_{t}|$ represents the number of substitution relations.
     \item \textbf{Attribute Prediction}. In this type of task, we let each type of attribute be the hyperedge to connect the nodes with such a type of attribute. For example, in a category classification task, items belonging to the same category are connected by one hyperedge. For the attributes whose values are continuous, such as ratings of items, we quantize those values to certain discrete magnitudes. The incidence matrix is denoted by $\mathbf{H}^{\mathbf{u}}_{t}\in\{0,1\}^{|\mathcal{U}|\times|A_t|}$ or $\mathbf{H}^{\mathbf{i}}_{t}\in\{0,1\}^{|\mathcal{I}|\times|A_t|}$, where $|A_t|$ is the number of possible values of the attribute to predict in the task $t$.
 \end{itemize}
 Both relation prediction and attribute prediction contain more fine-grained pretext tasks, such as friend recommendation and rating prediction.
 For all three types of pretext tasks, hyperedges are leveraged to connect homogeneous nodes in our construction of task hypergraphs. In this way, users or items with specific commonalities corresponding to this task are connected by one hyperedge for a certain task. Henceforth, we can effectively capture collaborative signals among users and items from different pretext tasks through hypergraph learning.
 
 
-\begin{figure*}[]
+\begin{figure}[]
   \centering
     \includegraphics[width=\linewidth]{sections/2_UPRTH/Figures/HyperPretrain.pdf}
   \caption{The framework of UPRTH with the proposed TA layer.}
   \label{fig:UPRTH}
-\end{figure*}
+\end{figure}
 
 \subsection{Transitional Attention Layer}
-To leverage multiple pretext tasks to improve the performance of the target recommendation task, it is important to adaptively learn the degrees of relevance between each auxiliary pretext task and the target recommendation task during pretraining. In this way, the model can identify which tasks provide significant insights that are crucial for the recommendation task. Hence, we propose a Transitional Attention (TA) Layer to ensure that the model allocates appropriate attention to each task based on its relevance, thereby enabling effective knowledge transfer during pretraining. The illustration is in Figure~\ref{fig:UPRTH}(b). Next, we present the calculation details of a TA layer that discriminatively transfers knowledge from item-related auxiliary pretext tasks to the recommendation task by pretraining user embeddings. For simplicity, we use $T$ to represent the set of item-related auxiliary tasks in this section. And we denote the output user embedding as $\mathbf{e'}^{u}_{t_{rec}}$ to distinguish it from the input user embedding $\mathbf{e}^{u}_{t_{rec}}$ only for this section.
+To leverage multiple pretext tasks to improve the performance of the target recommendation task, it is important to adaptively learn the degrees of relevance between each auxiliary pretext task and the target recommendation task during pretraining. In this way, the model can identify which tasks provide the insights that are crucial for the recommendation task. Hence, we propose a Transitional Attention (TA) Layer to ensure that the model allocates appropriate attention to each task based on its relevance, thereby enabling effective knowledge transfer during pretraining. The illustration is in Figure~\ref{fig:UPRTH}(b). Next, we present the calculation details of a TA layer that discriminatively transfers knowledge from item-related auxiliary pretext tasks to the recommendation task by pretraining user embeddings. For simplicity, we use $T$ to represent the set of item-related auxiliary tasks in this section. We denote the output user embedding as $\mathbf{e'}^{u}_{t_{rec}}$ to distinguish it from the input user embedding $\mathbf{e}^{u}_{t_{rec}}$ only for this section.
 
 \subsubsection{Hyperedge Initialization}
 Following the construction of the task hypergraph for the recommendation task, in Figure~\ref{fig:UPRTH}(b)\textcircled{1}, we use item hyperedges to connect users and initialize those hyperedges by aggregating users' preferences as below:
@@ -114,32 +116,32 @@ Following the construction of the task hypergraph for the recommendation task, i
 where $\mathbf{e}^{\epsilon}_{t_{rec}}$ denotes temporary embedding of the hyperedge $\epsilon$, $\mathcal{N}_\epsilon$ is the set of users connected by this hyperedge, and $\mathbf{e}^{u^*}_{t_{rec}}$ is the embedding of those users as input of the $l$-th TA layer.
 $\mathbf{e}^{\epsilon}_{t_{rec}}$ represents the preferences of users who are connected by this hyperedge.  
 
-\subsubsection{Task-specific Feature Transition}
+\subsubsection{Task-Specific Feature Transition}
 In this step, we first calculate the attention between the users' preferences and the task-specific item features from each auxiliary pretext task. Then we generate task-aware hyperedge embeddings accordingly. Inspired by self-attention mechanism~\cite{transformer}, 
 % with the aggregated users' preferences denoted by hyperedge embeddings $\mathbf{t}_\epsilon$, 
 the attention is calculated based on the hyperedge embedding and the task-specific item embedding for item $i$ from each auxiliary pretext task:
 \begin{equation}\label{eq_attention}
 \begin{aligned}
-    \mathbf{a}^{\epsilon}_{t} &= \sigma(\sum_{t \in T}\alpha^{i}_{t}\cdot\mathbf{e}^{i}_{t}),\\
-    \alpha^{i}_{t} &= \frac{\text{exp}(\mathbf{e}^{\epsilon}_{t_{rec}}\cdot\mathbf{e}^{i}_{t}/\sqrt{d})}
-    {\sum_{t^* \in T}\text{exp}(\mathbf{e}^{\epsilon}_{t_{rec}}\cdot\mathbf{e}^{i}_{t^*}/\sqrt{d})}, 
+    \mathbf{a}^{\epsilon} &= \tanh(\sum_{t \in T}\alpha^{i}_{t}\cdot\mathbf{e}^{i}_{t}),\\
+    \alpha^{i}_{t} &= \frac{\exp(\mathbf{e}^{\epsilon}_{t_{rec}}\cdot\mathbf{e}^{i}_{t}/\sqrt{d})}
+    {\sum_{t^* \in T}\exp(\mathbf{e}^{\epsilon}_{t_{rec}}\cdot\mathbf{e}^{i}_{t^*}/\sqrt{d})},
 \end{aligned}
 \end{equation}
-where $\mathbf{a}^{\epsilon}_{t}$ is the task-aware hyperedge embedding. Embeddings $\mathbf{e}^{i}_{t}$ and $\mathbf{e}^{i}_{t^*}$ are embeddings of item node $i$ in auxiliary pretext tasks $t$ and $t^*$, respectively. 
+where $\mathbf{a}^{\epsilon}$ is the task-aware hyperedge embedding. Embeddings $\mathbf{e}^{i}_{t}$ and $\mathbf{e}^{i}_{t^*}$ are embeddings of item node $i$ in auxiliary pretext tasks $t$ and $t^*$, respectively. 
 Attention $\alpha^{i}_{t}$ represents the attention of the connected users, who are interested in this item, on its certain feature reflected by each task.
-And $\sigma$ is \textit{tanh()} as the activation function. 
-Next, we fuse $\mathbf{a}^{\epsilon}_{t}$ with $\mathbf{e}^{\epsilon}_{t_{rec}}$ by addition:
+The hyperbolic tangent $\tanh(\cdot)$ is used as the activation function.
+Next, we fuse $\mathbf{a}^{\epsilon}$ with $\mathbf{e}^{\epsilon}_{t_{rec}}$ by addition:
 \begin{equation}\label{eq_transition}
-    \mathbf{q}^{\epsilon}_{t} = \mathbf{e}^{\epsilon}_{t_{rec}} + \gamma\mathbf{a}^{\epsilon}_{t},
+    \mathbf{q}^{\epsilon} = \mathbf{e}^{\epsilon}_{t_{rec}} + \gamma\mathbf{a}^{\epsilon},
 \end{equation}
-where $\mathbf{q}^{\epsilon}_{t}$ is the fused hyperedge embedding, and $\gamma$ is a scalar hyper-parameter to control the transition intensity. This step is demonstrated in \textcircled{2} of Figure~\ref{fig:UPRTH}(b).  
+where $\mathbf{q}^{\epsilon}$ is the fused hyperedge embedding, and $\gamma$ is a scalar hyper-parameter to control the transition intensity. This step is demonstrated in \textcircled{2} of Figure~\ref{fig:UPRTH}(b).  
 
-\subsubsection{Node update} We update the user embedding by aggregating the fused embeddings from all its connected hyperedges.
+\subsubsection{Node Update} We update the user embedding by aggregating the fused embeddings from all its connected hyperedges.
 For a target user $u$, the aggregation step is formulated as follows:
 \begin{equation}\label{eq_update}
-    \mathbf{e'}^{u}_{t_{rec}}= \frac{1}{|\mathcal{N}_u|}\sum_{\epsilon\in\mathcal{N}_u}\mathbf{q}^{\epsilon}_{t},
+    \mathbf{e'}^{u}_{t_{rec}}= \frac{1}{|\mathcal{N}_u|}\sum_{\epsilon\in\mathcal{N}_u}\mathbf{q}^{\epsilon},
 \end{equation}
-where $\mathbf{e'}^{u_{out}}_{t_{rec}}$ denotes the output user embedding, $\mathcal{N}_u$ is the set of hyperedges connected to this user, and $\mathbf{q}^{\epsilon}_{t}$ is the fused embedding of its connected hyperedges from Eq.~(\ref{eq_transition}).
+where $\mathbf{e'}^{u}_{t_{rec}}$ denotes the output user embedding, $\mathcal{N}_u$ is the set of hyperedges connected to this user, and $\mathbf{q}^{\epsilon}$ is the fused embedding of its connected hyperedges from Eq.~(\ref{eq_transition}).
 This step is demonstrated in Figure~\ref{fig:UPRTH}(b)\textcircled{3}.
 
 \subsubsection{TA Layer in Matrix Form}
@@ -148,8 +150,8 @@ To offer a holistic view, we formulate the matrix form of the transitional atten
 \begin{aligned}
     \mathbf{E'}^{\mathbf{u}}_{t_{rec}}
     &= \text{TA}(\mathbf{E}^{\mathbf{u}}_{t_{rec}},\mathbf{H}^{\mathbf{u}}_{t_{rec}},\mathbf{E}^{\mathbf{i}}_{t})
-    =(\mathbf{D}^{\mathbf{u}}_{t_{rec}})^{-1}\mathbf{H}^{\mathbf{u}}_{t_{rec}}\cdot\mathbf{Q}^{\mathbf{\epsilon}}_{t}\\ 
-    \mathbf{Q}^{\mathbf{\epsilon}}_{t}&= (\mathbf{E}^{\mathbf{\epsilon}}_{t_{rec}} + \gamma\cdot\sigma(\text{Softmax}(\frac{\mathbf{E}^{\mathbf{\epsilon}}_{t_{rec}}\mathbf{E}^{\mathbf{i}}_{t}}{\sqrt{d}})\mathbf{E}^{\mathbf{i}}_{t})),\\
+    =(\mathbf{D}^{\mathbf{u}}_{t_{rec}})^{-1}\mathbf{H}^{\mathbf{u}}_{t_{rec}}\cdot\mathbf{Q}^{\mathbf{\epsilon}}\\ 
+    \mathbf{Q}^{\mathbf{\epsilon}}&= (\mathbf{E}^{\mathbf{\epsilon}}_{t_{rec}} + \gamma\cdot\tanh(\text{softmax}(\frac{\mathbf{E}^{\mathbf{\epsilon}}_{t_{rec}}(\mathbf{E}^{\mathbf{i}}_{t})^\top}{\sqrt{d}})\mathbf{E}^{\mathbf{i}}_{t})),\\
     \mathbf{E}^{\mathbf{\epsilon}}_{t_{rec}} &= (\mathbf{B}^{\mathbf{u}}_{t_{rec}})^{-1}(\mathbf{H}^{\mathbf{u}}_{t_{rec}})^\top\mathbf{E}^{\mathbf{u}}_{t_{rec}},
 \end{aligned}
 \end{equation}
@@ -162,9 +164,9 @@ We conduct prediction and optimization for different tasks depending on their ty
 \end{equation}
 where $\mathbf{e}^{u}_{t_{rec}}$ and $\mathbf{e}^{i}_{t_{rec}}$ are user and item embeddings output by the last TA layer. We apply the alignment loss~\cite{auloss} to optimize the recommendation:
 \begin{equation}
-\mathcal{L}_{rec}=\sum\limits_{(u,i)\in \mathcal{D}_r} ||\mathbf{e}^{u}_{t_{rec}}-\mathbf{e}^{i}_{t_{rec}}||^{2},
+\mathcal{L}_{rec}=\sum\limits_{(u,i)\in \mathcal{D}_r} \|\mathbf{e}^{u}_{t_{rec}}-\mathbf{e}^{i}_{t_{rec}}\|^{2},
 \end{equation}
-where $\mathcal{D}_r=\{(u,i)|i\in \textit{G}^{+}_{u}\}$ is the user-item interaction data for pretraining. 
+where $\mathcal{D}_r=\{(u,i)|i\in G^{+}_{u}\}$ is the user-item interaction data for pretraining. 
 
 For homogenous relation and node attribute prediction, since hyperedges represent relations and attributes, we use the inner product between the node embedding and the corresponding hyperedge embedding as the prediction score:
 \begin{equation}
@@ -173,9 +175,9 @@ For homogenous relation and node attribute prediction, since hyperedges represen
 where $\mathbf{e}_{(v,t)}$ and $\mathbf{e}^{\epsilon}_{t}$ are the task-related node embedding and the hyperedge embedding for a specific auxiliary pretext task $t$, as calculated in Eq.~(\ref{eq_encoder}).
 Then we adopt the pairwise Bayesian Personalized Ranking (BPR) loss~\cite{BPR} to optimize the prediction:
 \begin{equation}
-\mathcal{L}_{t}=\sum\limits_{(v,\epsilon,\epsilon')\in \mathcal{D}_a} -\log\sigma(\hat{y}^{(v,\epsilon)}_{t}-\hat{y}^{(v,\epsilon')}_{t}),
+\mathcal{L}_{t}=\sum\limits_{(v,\epsilon,\epsilon')\in \mathcal{D}_a} -\log\sigma({y}^{(v,\epsilon)}_{t}-{y}^{(v,\epsilon')}_{t}),
 \end{equation}
-where $\mathcal{D}_a=\{(v,\epsilon,\epsilon')|\epsilon\in \textit{G}^{+}_{a}, \epsilon'\in \textit{G}_{a}\backslash\textit{G}^{+}_{a}\}$ is the pretraining data for each auxiliary pretext task. 
+where $\mathcal{D}_a=\{(v,\epsilon,\epsilon')|\epsilon\in G^{+}_{a}, \epsilon'\in G_{a}\backslash G^{+}_{a}\}$ is the pretraining data for each auxiliary pretext task. 
 
 Finally, we jointly optimize the recommendation pretext task and the auxiliary pretext tasks as follows:
 \begin{equation}
@@ -187,12 +189,12 @@ Adam~\cite{Adam} is chosen as the optimizer.
 The trainable parameters of UPRTH are only the initial user and item embeddings, i.e., $\Theta=\{\mathbf{E}^{\mathbf{u}}_{t_{rec}}\cup\mathbf{E}^{\mathbf{i}}_{t_{rec}}\}$. In other words, the complexity of encoding task hypergraphs is $\mathcal{O}(|V|^2)$ as the standard matrix factorization~\cite{LightGCN}. Without additional trainable parameters, the proposed TA layer with the softmax dot-product attention takes $\mathcal{O}(|V|^2)$. Thus, the model complexity is $\mathcal{O}(|V|^2)$, which is as efficient as the matrix factorization.
 
 \section{Experiment}
-\subsection{Experimental Setup}
+\subsection{Experiment Settings}
 \subsubsection{Datasets} 
-We conduct experiments on three real-world datasets: XMarket-CN,  XMarket-MX, and Steam. 
-XMarket\footnote{\url{https://xmrec.github.io/}} is a publicly available large-scale dataset obtained from Amazon. We use the data from China and Mexico for our experiments. For these two datasets, XMarket-CN and XMarket-MX, item categories and average rating of items are predicted as node attributes in auxiliary pretext tasks. And items bought together are regarded as items in complementary relations, which are predicted as homogeneous edges. In addition, substitute relations between items compared together are predicted as homogeneous edges for XMarket-MX.
+We conduct experiments on three real-world datasets, namely XMarket-CN, XMarket-MX, and Steam.
+XMarket\footnote{\url{https://xmrec.github.io/}} is a publicly available large-scale dataset obtained from Amazon. We use the data from China and Mexico for our experiments. For these two datasets, XMarket-CN and XMarket-MX, item categories and average rating of items are predicted as node attributes in auxiliary pretext tasks. Items bought together are regarded as items in complementary relations, which are predicted as homogeneous edges. In addition, substitute relations between items compared together are predicted as homogeneous edges for XMarket-MX.
 Steam~\cite{steam} includes users' transaction records on the Steam online game store. Categories, publishers of the games, and groups of users are used for attribute prediction in auxiliary pretext tasks. Friendships among users are predicted as homogeneous edges.
-The statistics of three datasets are shown in Table \ref{tab:dataset}. 
+The statistics of three datasets are shown in Table~\ref{tab:dataset}.
 For Steam and XMarket-CN, we randomly select $80\%$ of user-item interactions for training in both pretraining and finetuning and the remaining $20\%$ for testing in finetuning. 
 For XMarket-MX, the split ratio is $70\%$ for training and $30\%$ for testing. 
 % We further split the $30\%$ validation set from the training set for hyperparameter tuning.
@@ -215,14 +217,14 @@ Dataset               & XMarket-CN & XMarket-MX & Steam  \\ \hline
 \end{table}
 
 \subsubsection{Baselines}
-As UPRTH is a pretraining framework, we compare the performances of graph-based recommendation models with and without using user and item embeddings pretrained by UPRTH, including LGCN~\cite{LightGCN}, GCN~\cite{GCN16}, DirectAU~\cite{auloss}, UltraGCN~\cite{ultragcn}, HGNN~\cite{feng19}, HCCF~\cite{hccf} and DHCF~\cite{dhcf}.
+As UPRTH is a pretraining framework, we compare the performance of graph-based recommendation models with and without using user and item embeddings pretrained by UPRTH, including LightGCN~\cite{LightGCN}, GCN~\cite{GCN16}, DirectAU~\cite{auloss}, UltraGCN~\cite{ultragcn}, HGNN~\cite{feng19}, HCCF~\cite{hccf} and DHCF~\cite{dhcf}.
 We also compare UPRTH with the following pretraining baselines:
 \begin{itemize}[leftmargin=*]
     \item \textbf{GCC}~\cite{gcc}. This self-supervised pretraining framework leverages contrastive learning with random walks to capture structure information in graphs.
     \item \textbf{SGL-PreRec}. In SGL-Pre~\cite{sgl}, edge drop as data augmentation is used for contrastive learning in pretraining. To further differentiate it from GCC, we jointly pretrain the model via both the contrastive learning task loss and the recommendation task.
     \item \textbf{AttriMask}~\cite{weihua20}. This method applies GNN to obtained node embeddings and then adds a linear model to predict masked attributes during pretraining.
 \end{itemize}
-In finetuning of pretraining baselines and UPRTH, we deploy one hypergraph convolution layer to encode user and item embeddings on the hypergraph of the recommendation task, and use BPR loss for optimization. Our source code and the three datasets are released online \footnote{https://github.com/mdyfrank/UPRTH}.
+In finetuning of pretraining baselines and UPRTH, we deploy one hypergraph convolution layer to encode user and item embeddings on the hypergraph of the recommendation task, and use BPR loss for optimization. Our source code and the three datasets are released online.\footnote{\url{https://github.com/mdyfrank/UPRTH}}
 
 \begin{table}[!ht]
 \resizebox{\textwidth}{!}{
@@ -238,24 +240,24 @@ HCCF       & 0.0023          & 0.0038          & 0.0008          & 0.0012       
 DHCF       & 0.0033          & 0.0047          & 0.0022          & 0.0026          & 0.0139          & 0.0230          & 0.0073          & 0.0097          & 0.1214          & 0.1959          & 0.0566          & 0.0753          \\ \hline
 GCC        & 0.0112          & 0.0177          & 0.0068          & 0.0086          & 0.0229          & 0.0318          & 0.0146          & 0.0169          & 0.1147          & 0.1833          & 0.0565          & 0.0738          \\
 SGL-PreRec & 0.0036          & 0.0079          & 0.0014          & 0.0025          & 0.0102          & 0.0153          & 0.0058          & 0.0071          & 0.1120          & 0.1796          & 0.0537          & 0.0708          \\
-AttriMask  & \underline{0.0387}    & \underline{0.0693}    & \underline{0.0179}    & \underline{0.0261}    & \underline{0.0500}    & \underline{0.0748}    & \underline{0.0261}    & \underline{0.0327}    & \underline{0.1398}    & \underline{0.2247}    & \underline{0.0714}    & \underline{0.0929}    \\ \hline
+AttriMask  & \uline{0.0387}    & \uline{0.0693}    & \uline{0.0179}    & \uline{0.0261}    & \uline{0.0500}    & \uline{0.0748}    & \uline{0.0261}    & \uline{0.0327}    & \uline{0.1398}    & \uline{0.2247}    & \uline{0.0714}    & \uline{0.0929}    \\ \hline
 UPRTH       & \textbf{0.0801} & \textbf{0.1093} & \textbf{0.0428} & \textbf{0.0506} & \textbf{0.0822} & \textbf{0.0966} & \textbf{0.0574} & \textbf{0.0612} & \textbf{0.1721} & \textbf{0.2704} & \textbf{0.0841} & \textbf{0.1088} \\ \hline
-Improv.    & 106.98\%        & 57.72\%         & 139.11\%        & 93.87\%         & 64.40\%         & 29.14\%         & 119.92\%        & 87.16\%         & 13.07\%         & 23.10\%         & 17.79\%         & 17.12\%         \\ \hline
+Improv.    & 106.98\%        & 57.72\%         & 139.11\%        & 93.87\%         & 64.40\%         & 29.14\%         & 119.92\%        & 87.16\%         & 23.10\%         & 20.34\%         & 17.79\%         & 17.12\%         \\ \hline
 \end{tabular}}
 \caption{Overall performance comparison of UPRTH with baselines.}\label{tab_1}
 \end{table}
 
 \subsubsection{Evaluation Metrics}
-We evaluate the pretraining framework by ranking the test items with all non-interacted users during finetuning. Recall$@ \{10,20\}$ and NDCG$@\{10,20\}$ are adopted as evaluation metrics. 
+We evaluate the pretraining framework by ranking all non-interacted items for each test user during finetuning. Recall$@ \{10,20\}$ and NDCG$@\{10,20\}$ are adopted as evaluation metrics. 
 
-\subsection{Overall Performance Comparison}
+\subsection{Overall Performance}
 We show overall comparison results in Table~\ref{tab_1}. The best and second-best results are
 in boldface and underlined respectively. We summarize the following key observations:
 \begin{itemize}[leftmargin=*]
     \item The proposed UPRTH framework achieves the best results and outperforms all the baseline pretraining frameworks in the three datasets. 
-    We hypothesize these large stable gains result from the abundant and balanced contextual information learned from unified pretext tasks.
+    We hypothesize that these consistent gains result from the abundant and balanced contextual information learned from unified pretext tasks.
     \item Pretraining frameworks achieve better performance than recommendation models without pretraining in most cases. However, pretraining based on only user-item interactions sometimes degrades the performance. Besides sparse data providing limited prior knowledge during pretraining, we believe that overfitting caused by optimizing the same recommendation objective in both pretraining and finetuning also leads to performance degradation.
-    \item Among the three baseline pretraining frameworks, AttriMask which additionally considers attributes in pretraining is better than GCC and SGL-PreRec in all datasets. This justifies the necessity of capturing contextual cues besides user-item interactions in pretraining. Compared with it, UPRTH realizes unification across various pretext tasks so it obtains the capacity to transfer knowledge from a wider range of tasks in pretraining, which is a more comprehensive framework.
+    \item Among the three baseline pretraining frameworks, AttriMask, which additionally considers attributes in pretraining, is better than GCC and SGL-PreRec in all datasets. This justifies the necessity of capturing contextual cues besides user-item interactions in pretraining. Compared with it, UPRTH realizes unification across various pretext tasks so it obtains the capacity to transfer knowledge from a wider range of tasks in pretraining, which is a more comprehensive framework.
 \end{itemize}
 
 \begin{table}[ht]
@@ -281,10 +283,10 @@ DHCF                     & 0.0033         & 0.0022        & 0.0139         & 0.0
 \caption{Performance of recommendation models with and without embeddings from UPRTH.}\label{tab_2}
 \end{table}
 
-Next, we show the performance of baseline recommendation models with and without leveraging pretrained embeddings from UPRTH in Table~\ref{tab_2}. The results indicate that all recommendation models benefit from embeddings pretrained by UPRTH, especially in the XMarket-CN and XMarket-MX datasets with sparser user-item interactions. It indicates our framework with high generalization can adapt well to various downstream recommendation models, showing robustness and flexibility in its pretrained embeddings. The benefit on sparse datasets reflects that unified multitask pretraining efficiently addresses the issue of data sparsity in the recommendation task.
+Next, we show the performance of baseline recommendation models with and without leveraging pretrained embeddings from UPRTH in Table~\ref{tab_2}. The results indicate that all recommendation models benefit from embeddings pretrained by UPRTH, especially in the XMarket-CN and XMarket-MX datasets with sparser user-item interactions. It indicates that our framework can adapt well to various downstream recommendation models, showing robustness and flexibility in its pretrained embeddings. The benefit on sparse datasets reflects that unified multitask pretraining efficiently addresses the issue of data sparsity in the recommendation task.
 \subsection{Ablation Study}
-\subsubsection{Unification on Pretext Tasks.}
-We compare the performance of UPRTH and its variant without unified pretext tasks on the three datasets in Figure~\ref{fig:UnifyAblation}. In the variant Without unified pretext tasks, relations are still predicted as hyperedges in relation prediction tasks, but attributes are predicted via applying one linear layer followed by a softmax activation function on node embeddings output by hypergraph encoders. We can observe that the performance is consistently improved by a unified pretraining framework on all three datasets. We attribute this improvement to the complete transfer of prior knowledge from our unified multitask pretraining.
+\subsubsection{Unification on Pretext Tasks}
+We compare the performance of UPRTH and its variant without unified pretext tasks on the three datasets in Figure~\ref{fig:UnifyAblation}. In the variant without unified pretext tasks, relations are still predicted as hyperedges in relation prediction tasks, but attributes are predicted via applying one linear layer followed by a softmax activation function on node embeddings output by hypergraph encoders. We can observe that the performance is consistently improved by a unified pretraining framework on all three datasets. We attribute this improvement to the complete transfer of prior knowledge from our unified multitask pretraining.
 Given that no linear transformation is included in hypergraph encoders, and the prediction of hyperedges is directly calculated based on the node embeddings, prior knowledge from a pretext task is completely preserved in node embeddings and transferred to the downstream recommendation task. Thus, we believe UPRTH is a concise and efficient design to unify pretext tasks.
 \begin{figure}[ht]
     \begin{subfigure}{0.32\textwidth}
@@ -307,19 +309,19 @@ Given that no linear transformation is included in hypergraph encoders, and the 
   \label{fig:UnifyAblation}
 \end{figure}
 
-\subsubsection{Transitional Attention Layer Settings.}
-To verify the effectiveness of TA, we demonstrate the performance of UPRTH and three other variants in Table~\ref{tab:ta}: (a) UH w/o TA. In this setting, embeddings output by hypergraph encoders are directly used to calculate ranking scores of user-item pairs; (b) UH-sum. Instead of calculating the attention of the hyperedge embedding on node embeddings from different auxiliary tasks, the sum of the hyperedge embedding and those node embeddings are used as the fused hyperedge embedding for further node update; (c) UH-concat. Same as UPRTH-sum, but we concatenate node embeddings from different auxiliary tasks and transform it to an embedding whose dimension is the same as the hyperedge embedding by a linear layer, and then add it to the hyperedge embedding as the fused hyperedge embedding.
+\subsubsection{Transitional Attention Layer Settings}
+To verify the effectiveness of TA, we demonstrate the performance of UPRTH and three other variants in Table~\ref{tab:ta}: (a) UPRTH w/o TA. In this setting, embeddings output by hypergraph encoders are directly used to calculate ranking scores of user-item pairs; (b) UPRTH-sum. Instead of calculating the attention of the hyperedge embedding on node embeddings from different auxiliary tasks, the sum of the hyperedge embedding and those node embeddings are used as the fused hyperedge embedding for further node update; (c) UPRTH-concat. Same as UPRTH-sum, but we concatenate node embeddings from different auxiliary tasks and transform it to an embedding whose dimension is the same as the hyperedge embedding by a linear layer, and then add it to the hyperedge embedding as the fused hyperedge embedding.
 
-We observe that UPRTH performs the best on three datasets. This justifies the superiority of UPRTH with TA layers which discriminatively integrates information from auxiliary tasks to recommendation. The poor performance of UH-concat verifies the negative impact brought by the additional linear transformation in pretraining. UH-sum performs better than UH w/o TA in three datasets, which indicates the necessity of considering contextual information from other tasks in the pretext recommendation task. However, UH-sum ignores the different relevance between each auxiliary task and recommendation, so it is worse than UPRTH.
+We observe that UPRTH performs best on all three datasets. This justifies the design of UPRTH with TA layers, which discriminatively integrate information from auxiliary tasks to recommendation. The poor performance of UPRTH-concat verifies the negative impact brought by the additional linear transformation in pretraining. UPRTH-sum performs better than UPRTH w/o TA in three datasets, which indicates the necessity of considering contextual information from other tasks in the pretext recommendation task. However, UPRTH-sum ignores the different relevance between each auxiliary task and recommendation, so it is worse than UPRTH.
 \begin{table}[ht]
 \resizebox{0.7\textwidth}{!}{%
 \begin{tabular}{l|cccccc}
 \hline
 Dataset & \multicolumn{2}{c}{XMarket-CN}      & \multicolumn{2}{c}{XMarket-MX}     & \multicolumn{2}{c}{Steam}         \\ \hline
 Metric    & R@10   & N@10   & R@10   & N@10   & R@10   & N@10   \\ \hline
-UH w/o TA  & 0.0744 & 0.0411 & 0.0798 & 0.0548 & 0.1645 &0.0795 \\
-UH-sum  & 0.0770 & 0.0413 & 0.0818 & 0.0547 & 0.1690 & 0.0825 \\
-UH-concat & 0.0800 & 0.0424 & 0.0796 & 0.0470 & 0.1235 & 0.0599 \\
+UPRTH w/o TA  & 0.0744 & 0.0411 & 0.0798 & 0.0548 & 0.1645 &0.0795 \\
+UPRTH-sum  & 0.0770 & 0.0413 & 0.0818 & 0.0547 & 0.1690 & 0.0825 \\
+UPRTH-concat & 0.0800 & 0.0424 & 0.0796 & 0.0470 & 0.1235 & 0.0599 \\
 \hline
 UPRTH    & \textbf{0.0801} & \textbf{0.0428} & \textbf{0.0822} & \textbf{0.0574} & \textbf{0.1721} & \textbf{0.0841} \\ \hline
 \end{tabular}%
@@ -352,11 +354,11 @@ As aforementioned, UPRTH applies alignment loss in pretraining and BPR loss in f
 \caption{Performance of UPRTH w.r.t. objective functions in pretraining and finetuning.}\label{tab:loss}
 \end{table}
 
-\subsection{Cold-start Recommendation}
+\subsection{Cold-Start Recommendation}
 As an inductive framework, UPRTH has the capability of handling the cold-start problem by leveraging contextual information from auxiliary tasks.
 We conduct an analysis regarding the ability of UPRTH to tackle users who have no historical user-item interactions in both pretraining and finetuning. We randomly select a certain ratio of user nodes as cold-start users and remove all user-item edges connected to them. The embeddings of cold-start users are obtained by feeding them with the removed edges to the downstream encoder during only inference. For comparison, we report testing recall of UPRTH, AttriMask and UPRTH without auxiliary pretext tasks. The results are shown in Figure~\ref{fig:inductive_user}. 
 
-We observe that UPRTH and AttriMask perform better than UPRTH without auxiliary tasks, which verifies the significance of contextual information from multitask pretraining in cold-start recommendation. UPRTH outperforms AttriMask in most cases since more diverse contextual cues are captured for recommending items to cold-start users by unified multitask pretraining. Additionally, we observe that sometimes the performance on cold-start users is even better than the average performance on all users shown in Table~\ref{tab_1}, such as cold-start user ratio $r=20\%$ in Steam dataset. We hypothesize that when cold-start users are pretrained with only social relations, such as user-user and user-group hyperedges, UPRTH can well leverage user similarity for recommendation without the noise in the user-item interaction information.
+We observe that UPRTH and AttriMask perform better than UPRTH without auxiliary tasks, which verifies the importance of contextual information from multitask pretraining in cold-start recommendation. UPRTH outperforms AttriMask in most cases since more diverse contextual cues are captured for recommending items to cold-start users by unified multitask pretraining. Additionally, we observe that sometimes the performance on cold-start users is even better than the average performance on all users shown in Table~\ref{tab_1}, such as cold-start user ratio $r=20\%$ in the Steam dataset. We hypothesize that when cold-start users are pretrained with only social relations, such as user-user and user-group hyperedges, UPRTH can well leverage user similarity for recommendation without the noise in the user-item interaction information.
 \begin{figure}[t]
     \begin{subfigure}{\textwidth}
     \centering
@@ -384,12 +386,11 @@ We observe that UPRTH and AttriMask perform better than UPRTH without auxiliary 
 \subsection{Performance Curves Analysis}
 To verify that the pretrained embeddings with prior knowledge transferred from various pretext tasks can benefit downstream recommendation, we conduct analyses of testing performance curves with and without embeddings pretrained by UPRTH. For the downstream model, we choose the one-layer hypergraph convolution encoder used in UPRTH, denoted as HyperConv, with BPR loss for recommendation. Performances of SGL-PreRec, GCC and AttriMask are shown for comparison. The result indicates that UPRTH and AttriMask, which leverage contextual information besides user-item interactions from pretraining, outperform the other baselines. Compared with AttriMask, UPRTH discriminatively learns from various pretext tasks with a unified multitask framework, leading to more comprehensive and informative pretrained embeddings for downstream recommendation.
 
-\begin{figure}[ht]\label{fig:training_curve}
-
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\textwidth]{sections/2_UPRTH/TrainingCurve/curvexmrec_mx.pdf}
-    
   \caption{Performance curves of UPRTH and other baselines.}
+  \label{fig:training_curve}
 \end{figure}
 
 \section{Chapter Summary}

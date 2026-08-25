@@ -1,7 +1,22 @@
 
-\chapter{ACM Author’s Reuse Rights}
+\chapter{ACM Author's Reuse Rights}
 
 
 Authors can reuse any portion of their own work in a new work of their own (and no fee is expected) as long as a citation and DOI pointer to the Version of Record in the ACM Digital Library are included.
 
-Authors can include partial or complete papers of their own (and no fee is expected) in a dissertation as long as citations and DOI pointers to the Versions of Record in the ACM Digital Library are included. Authors can use any portion of their own work in presentations and in the classroom (and no fee is expected).~\footnote{https://authors.acm.org/author-resources/author-rights}
+Authors can include partial or complete papers of their own (and no fee is expected) in a dissertation as long as citations and DOI pointers to the Versions of Record in the ACM Digital Library are included. Authors can use any portion of their own work in presentations and in the classroom (and no fee is expected).\footnote{\url{https://authors.acm.org/author-resources/author-rights}}
+
+
+\chapter{Use of Generative AI and Language Models}
+
+Pretrained and generative language models serve as computational components and sources of semantic knowledge in this dissertation. Chapter~\ref{chpt:uprth} does not use a language model in its proposed method. Chapters~\ref{chpt:ihp} through~\ref{chpt:agentdr} incorporate language models in different roles, as described below.
+
+In Chapter~\ref{chpt:ihp}, PLMs are used as text encoders. Node descriptions and textual task instructions are encoded into semantic representations that guide prompt-based hypergraph pretraining. The experiments compare several pretrained text encoders, with MiniLM used as the sentence encoder in the reported IHP framework.
+
+In Chapter~\ref{chpt:glta}, a quantized LLaMA-2-7B model is used as a frozen language-model backbone. Its pretrained token space supports graph-language token alignment, and the model is used to generate profile and prediction tokens from item descriptions. The resulting token representations are incorporated into ID-grounded item prediction through the GLTA and GLLM components described in that chapter.
+
+In Chapter~\ref{chpt:erlsc}, Phi-4 is queried to assess mutually exclusive substitute and complement relations between item pairs. These assessments are used to calculate relation-composition statistics and initialize hyperedge weights in ERLSC. The language-model outputs are therefore treated as model-generated semantic signals within the proposed recommendation method.
+
+In Chapter~\ref{chpt:agentdr}, Phi-4 is also used as the language-model component of AgentDR. It is prompted to summarize user profiles, generate substitute and complement candidates, compare recommendation tools, infer user intent, rerank catalog-grounded candidate items, and assess semantic vicinity for the VDCG evaluation. Conventional recommendation tools remain responsible for scalable full-catalog retrieval, while the language model operates on the bounded inputs described in the chapter.
+
+During preparation of this dissertation, Claude Opus 5 was used solely to assist with language editing and LaTeX formatting adjustments. It was not used to generate experimental data or results, alter the research methodology, invent citations, or determine the scientific conclusions of the dissertation. I reviewed and confirmed every AI-assisted modification and take full responsibility for the final text, analysis, and formatting.
