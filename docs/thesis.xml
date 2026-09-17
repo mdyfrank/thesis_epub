@@ -46,7 +46,7 @@
   <creator role="author">
     <personname><!--  %Leave the following for metadata -->Mingdai Yang</personname>
   </creator>
-  <date name="Date:" role="creation">August 25, 2026</date>
+  <date name="Date:" role="creation">September 17, 2026</date>
 <!--  %This is UIC requirement, the title page is (i) -->  <chapter xml:id="Chx1">
     <title>Accessibility Statement</title>
     <para class="ltx_noindent" xml:id="Chx1.p1">
@@ -20666,7 +20666,7 @@ These ratings are treated as relevance scores to compute the DCG <cite class="l
                 </tr>
                 <tr>
                   <td align="left" border="bb" thead="row">Improv.</td>
-                  <td align="right" border="bb">33.50%</td>
+                  <td align="right" border="bb">31.57%</td>
                   <td align="right" border="bb">6.67%</td>
                   <td align="right" border="bb">2.98%</td>
                   <td align="right" border="bb">7.34%</td>
@@ -20722,11 +20722,11 @@ These ratings are treated as relevance scores to compute the DCG <cite class="l
                 <tag role="typerefnum">1st item</tag>
               </tags>
               <para xml:id="Ch6.S5.I4.i1.p1">
-                <p>AgentDR exhibits superior performance across all datasets. Even compared with more advanced and complex recommendation methods such as DiffRec, it has up to <Math mode="inline" tex="33.5\%" text="33.5percent" xml:id="Ch6.S5.I4.i1.p1.m1">
+                <p>AgentDR exhibits superior performance across all datasets. Even compared with more advanced and complex recommendation methods such as DiffRec, it has up to <Math mode="inline" tex="31.6\%" text="31.6percent" xml:id="Ch6.S5.I4.i1.p1.m1">
                     <XMath>
                       <XMApp>
                         <XMTok meaning="percent" role="POSTFIX">%</XMTok>
-                        <XMTok meaning="33.5" role="NUMBER">33.5</XMTok>
+                        <XMTok meaning="31.6" role="NUMBER">31.6</XMTok>
                       </XMApp>
                     </XMath>
                   </Math> improvement in recall and up to <Math mode="inline" tex="28.4\%" text="28.4percent" xml:id="Ch6.S5.I4.i1.p1.m2">
