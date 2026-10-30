@@ -46,7 +46,7 @@
   <creator role="author">
     <personname><!--  %Leave the following for metadata -->Mingdai Yang</personname>
   </creator>
-  <date name="Date:" role="creation">September 17, 2026</date>
+  <date name="Date:" role="creation">October 30, 2026</date>
 <!--  %This is UIC requirement, the title page is (i) -->  <chapter xml:id="Chx1">
     <title>Accessibility Statement</title>
     <para class="ltx_noindent" xml:id="Chx1.p1">
@@ -85,6 +85,9 @@ was any evidence that they would work out, and my grandmother, Zhen Tang, the ve
 teacher in my life. She raised me from childhood, and the habits of study she settled in me
 then are the ones I still work by.</p>
     </para>
+    <para xml:id="Chx2.p6">
+      <p align="right">MY</p>
+    </para>
   </chapter>
   <chapter xml:id="Chx3">
     <title>Contribution of Authors</title>
@@ -112,11 +115,11 @@ then are the ones I still work by.</p>
       <title>Contents</title>
     </TOC>
     <pagination role="newpage"/>
-    <TOC lists="lot" scope="global">
+<!--  %**** thesis.tex Line 250 **** -->    <TOC lists="lot" scope="global">
       <title>List of Tables</title>
     </TOC>
     <pagination role="newpage"/>
-<!--  %**** thesis.tex Line 250 **** -->    <TOC lists="lof" scope="global">
+    <TOC lists="lof" scope="global">
       <title>List of Figures</title>
     </TOC>
   </chapter>
@@ -21514,9 +21517,9 @@ It leverages LLMs to infer functional relations between items and integrates the
       <para xml:id="Ch7.S3.p8">
         <p>If these problems can be addressed, user-owned recommendation agents may represent a meaningful step toward giving users greater control over how information is filtered and recommended, and toward mitigating practical concerns associated with platform-centric RecSys, such as data privacy risks and information cocoons. It is our hope that the ideas explored in this dissertation will inspire future research toward RecSys that not only understand user preferences, but also reason about information in a way that better serves users in an increasingly complex digital ecosystem.</p>
       </para>
-<!--  %__ 
+<!--  %**** thesis.tex Line 275 **** 
+     %__ 
      %Back matter.  The UIC template places the appendices before the reference 
-     %**** thesis.tex Line 275 **** 
      %list and requires the Vita to be the final item in the document, so the order 
      %here is: Appendix, Bibliography, Vita. 
      %__ -->    </section>
