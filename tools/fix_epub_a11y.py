@@ -27,6 +27,11 @@ XHTML / OPF:
                                         TOC links are qualified with the file
                                         name.
 
+It also repairs one layout fault that is not an ACE check. LaTeXML renders
+\resizebox as a fixed-size box with the table absolutely positioned and scaled
+inside it, so in a reading system a scaled table overflows upward over the text
+before it (see unscale_tables). That fix is applied to the EPUB only.
+
 Usage:  python3 tools/fix_epub_a11y.py docs/thesis.epub [docs/index.html ...]
 """
 
@@ -166,6 +171,41 @@ def qualify_toc_hrefs(text, self_name):
     return head + nav + tail
 
 
+# LaTeXML renders \resizebox as an outer box with a fixed height in pt and the
+# content inside it position:absolute from its bottom edge, scaled by a
+# transform. The box is sized for LaTeXML's own row height, so with a reading
+# system's font a scaled table grows upward over the text before it. Each such
+# wrapper is returned to normal flow at the table's natural size, and scrolls
+# sideways when the screen is narrower than the table. Only plain translate and
+# scale wrappers inside table floats are matched, so a rotation or a scaled
+# figure keeps LaTeXML's rendering.
+TABLE_FLOAT = re.compile(r'<figure id="[^"]*" class="ltx_table\b[^"]*">.*?</figure>', re.S)
+SCALED_WRAPPER = re.compile(
+    r'(<div class="[^"]*\bltx_transformed_outer" style=")[^"]*'
+    r'("><span class="ltx_transformed_inner" style=")'
+    r'transform:translate\([^)]*\) scale\([^)]*\) ;'
+)
+FLOW_OUTER = "display:block;max-width:100%;overflow-x:auto;"
+FLOW_INNER = "position:static;"
+
+
+def unscale_tables(text):
+    """Return every scaled table wrapper to normal document flow."""
+    count = 0
+
+    def fix_float(m):
+        nonlocal count
+        new, n = SCALED_WRAPPER.subn(
+            r"\g<1>" + FLOW_OUTER + r"\g<2>" + FLOW_INNER, m.group(0))
+        count += n
+        return new
+
+    text = TABLE_FLOAT.sub(fix_float, text)
+    if count:
+        print("  unscale: returned %d scaled tables to document flow" % count)
+    return text
+
+
 def patch_xhtml(text, self_name=None):
     """Fix language, nav semantics and heading order in a LaTeXML XHTML file."""
     text = fix_toc_order(text)
@@ -246,7 +286,9 @@ def patch_epub(path):
                     new = patch_xhtml(
                         data.decode("utf-8"),
                         self_name=os.path.basename(info.filename),
-                    ).encode("utf-8")
+                    )
+                    # EPUB only: docs/index.html is left as LaTeXML wrote it.
+                    new = unscale_tables(new).encode("utf-8")
                     if new != data:
                         changed.append(info.filename)
                     data = new
