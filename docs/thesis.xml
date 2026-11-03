@@ -46,7 +46,7 @@
   <creator role="author">
     <personname><!--  %Leave the following for metadata -->Mingdai Yang</personname>
   </creator>
-  <date name="Date:" role="creation">October 30, 2026</date>
+  <date name="Date:" role="creation">November 3, 2026</date>
 <!--  %This is UIC requirement, the title page is (i) -->  <chapter xml:id="Chx1">
     <title>Accessibility Statement</title>
     <para class="ltx_noindent" xml:id="Chx1.p1">
@@ -6447,7 +6447,7 @@ We conduct an analysis regarding the ability of UPRTH to tackle users who have n
         <title><tag close=". ">2.5.6</tag>Performance Curves Analysis</title>
         <toctitle><tag close=" ">2.5.6</tag>Performance Curves Analysis</toctitle>
         <para xml:id="Ch2.S5.SS6.p1">
-          <p>To verify that the pretrained embeddings with prior knowledge transferred from various pretext tasks can benefit downstream recommendation, we conduct analyses of testing performance curves with and without embeddings pretrained by UPRTH. For the downstream model, we choose the one-layer hypergraph convolution encoder used in UPRTH, denoted as HyperConv, with BPR loss for recommendation. Performances of SGL-PreRec, GCC and AttriMask are shown for comparison. The result indicates that UPRTH and AttriMask, which leverage contextual information besides user-item interactions from pretraining, outperform the other baselines. Compared with AttriMask, UPRTH discriminatively learns from various pretext tasks with a unified multitask framework, leading to more comprehensive and informative pretrained embeddings for downstream recommendation.</p>
+          <p>To verify that the pretrained embeddings with prior knowledge transferred from various pretext tasks can benefit downstream recommendation, we conduct analyses of testing performance curves with and without embeddings pretrained by UPRTH, as shown in Figure <ref labelref="LABEL:fig:training_curve"/>. For the downstream model, we choose the one-layer hypergraph convolution encoder used in UPRTH, denoted as HyperConv, with BPR loss for recommendation. Performances of SGL-PreRec, GCC and AttriMask are shown for comparison. The result indicates that UPRTH and AttriMask, which leverage contextual information besides user-item interactions from pretraining, outperform the other baselines. Compared with AttriMask, UPRTH discriminatively learns from various pretext tasks with a unified multitask framework, leading to more comprehensive and informative pretrained embeddings for downstream recommendation.</p>
         </para>
         <figure inlist="lof" labels="LABEL:fig:training_curve" placement="ht" xml:id="Ch2.F5">
           <tags>
