@@ -27,14 +27,19 @@ XHTML / OPF:
                                         TOC links are qualified with the file
                                         name.
 
-It also repairs one layout fault that is not an ACE check. LaTeXML renders
+It also repairs two layout faults that are not ACE checks. LaTeXML renders
 \resizebox as a fixed-size box with the table absolutely positioned and scaled
 inside it, so in a reading system a scaled table overflows upward over the text
-before it (see unscale_tables). That fix is applied to the EPUB only.
+before it (see unscale_tables). It draws a tcolorbox as a fixed-size SVG whose
+content overflows onto the text after it (see unbox_svg_pictures). Content wider
+than a narrow or paginated page spills onto neighbouring text, so wide blocks
+get horizontal scrollers and LaTeXML.css gains a few layout rules (see
+wrap_wide_blocks and LAYOUT_CSS). These fixes are applied to the EPUB only.
 
 Usage:  python3 tools/fix_epub_a11y.py docs/thesis.epub [docs/index.html ...]
 """
 
+import bisect
 import os
 import re
 import shutil
@@ -206,6 +211,217 @@ def unscale_tables(text):
     return text
 
 
+# LaTeXML draws a tcolorbox (the thesis's promptbox) as an inline SVG of fixed
+# width and height: filled background paths plus one foreignObject that holds
+# the content with overflow visible. With a reading system's font the content
+# outgrows that box and runs over the captions and text that follow. Each such
+# box becomes an ordinary block with the same background colour, which grows
+# with its content. Only pictures made of unstroked background paths and a
+# single foreignObject are matched, so a real drawing keeps LaTeXML's SVG.
+SVG_BOX = re.compile(
+    r'<span class="ltx_inline-block">\s*(<svg\b[^>]*\bclass="ltx_picture"[^>]*>.*?</svg>)\s*</span>', re.S)
+FO_CONTENT = re.compile(
+    r'<span[^>]*\bclass="ltx_foreignobject_content">(.*)</span>\s*</span>\s*</foreignObject>', re.S)
+BOX_STYLE = ("display:block;background-color:%s;border-radius:0.3em;"
+             "padding:0.4em 0.6em;margin:0.5em 0;overflow-x:auto;")
+
+
+def unbox_svg_pictures(text):
+    """Replace fixed-size SVG content boxes with blocks in normal flow."""
+    count = 0
+
+    def fix(m):
+        nonlocal count
+        svg = m.group(1)
+        paths = re.findall(r"<path\b[^>]*>", svg)
+        fills = set(re.findall(r'fill="(#[0-9A-Fa-f]{6})"', svg)) - {"#000000"}
+        content = FO_CONTENT.search(svg)
+        if (svg.count("<foreignObject") != 1 or len(fills) != 1 or not content
+                or not all("stroke:none" in p for p in paths)):
+            return m.group(0)
+        inner = re.sub(r'<table class="(ltx_tabular[^"]*)">',
+                       r'<table class="\1" style="width:100%">', content.group(1), count=1)
+        # a div is only valid where the box sits directly in a block container
+        opened = text.rfind("<", 0, m.start())
+        tag = "div" if text.startswith("<div", opened) else "span"
+        # keep the picture's id so no link target disappears
+        pid = re.search(r'\bid="([^"]+)"', svg[:svg.find(">")])
+        idattr = ' id="%s"' % pid.group(1) if pid else ""
+        count += 1
+        return '<%s%s class="ltx_promptbox" style="%s">%s</%s>' % (
+            tag, idattr, BOX_STYLE % fills.pop(), inner, tag)
+
+    text = SVG_BOX.sub(fix, text)
+    if count:
+        print("  unbox: returned %d fixed-size SVG boxes to document flow" % count)
+    return text
+
+
+# Content wider than the text column (a long display equation, a wide table)
+# runs past the column edge. Paginated reading systems lay pages out as CSS
+# columns, so that overflow lands on the text of the neighbouring page. Display
+# equations and any table not already inside a scrolling wrapper get one, so
+# they scroll sideways within the column instead.
+SCROLL_STYLE = "display:block;max-width:100%;overflow-x:auto;"
+# Formula ink can reach a few px past the equation table; padding (offset by
+# equal negative margins, so the layout does not move) keeps it inside the
+# scroller, which then needs no vertical scrollbar.
+EQN_SCROLL_STYLE = SCROLL_STYLE + "overflow-y:hidden;padding:0.35em 0;margin:-0.35em 0;"
+EQN_TABLE = re.compile(r'<table\b[^>]*\bclass="[^"]*\bltx_eqn_table\b[^"]*"[^>]*>.*?</table>', re.S)
+TABULAR_OPEN = re.compile(r'<table\b[^>]*\bclass="ltx_tabular\b')
+
+
+def wrap_wide_blocks(text):
+    """Give display equations and unwrapped tables a horizontal scroller."""
+    n_eqn = 0
+
+    def eqn(m):
+        nonlocal n_eqn
+        if text[:m.start()].endswith('<div class="ltx_eqn_scroll" style="%s">' % EQN_SCROLL_STYLE):
+            return m.group(0)
+        n_eqn += 1
+        return '<div class="ltx_eqn_scroll" style="%s">%s</div>' % (EQN_SCROLL_STYLE, m.group(0))
+
+    text = EQN_TABLE.sub(eqn, text)
+
+    out, pos, n_tab = [], 0, 0
+    for m in TABULAR_OPEN.finditer(text):
+        if m.start() < pos:
+            continue                                   # inside a table already copied
+        if text.count("<table", 0, m.start()) != text.count("</table>", 0, m.start()):
+            continue                                   # nested in another table
+        before = text[max(0, m.start() - 300):m.start()]
+        if re.search(r'ltx_transformed_inner" style="[^"]*">\s*$|ltx_promptbox"[^>]*>\s*$'
+                     r'|class="ltx_table_scroll"[^>]*>\s*$', before):
+            continue                                   # already scrolls (or is a prompt box)
+        depth, i = 0, m.start()
+        while True:                                    # find the matching </table>
+            o, c = text.find("<table", i), text.find("</table>", i)
+            if o != -1 and o < c:
+                depth, i = depth + 1, o + 6
+            else:
+                depth, i = depth - 1, c + 8
+                if depth == 0:
+                    break
+        out.append(text[pos:m.start()])
+        out.append('<div class="ltx_table_scroll" style="%s">%s</div>' % (SCROLL_STYLE, text[m.start():i]))
+        pos = i
+        n_tab += 1
+    text = "".join(out) + text[pos:]
+    if n_eqn or n_tab:
+        print("  scroll: wrapped %d display equations and %d tables" % (n_eqn, n_tab))
+    return text
+
+
+# Inline MathML cannot line-break, so a long formula in running text overflows
+# a phone-width page. Formulas of 15 or more tokens get an inline scroller
+# (styled in LAYOUT_CSS to keep the text baseline). Formulas inside tables are
+# skipped: their tables already scroll.
+INLINE_MATH = re.compile(r'<math\b[^>]*\bdisplay="inline"[^>]*>.*?</math>', re.S)
+MATH_TOKEN = re.compile(r"<m(?:i|n|o|text|s)\b")
+LONG_MATH_TOKENS = 15
+
+
+def wrap_long_inline_math(text):
+    """Let long inline formulas scroll instead of running off the page."""
+    opens = [m.start() for m in re.finditer(r"<table\b", text)]
+    closes = [m.start() for m in re.finditer(r"</table>", text)]
+    count = 0
+
+    def fix(m):
+        nonlocal count
+        depth = bisect.bisect(opens, m.start()) - bisect.bisect(closes, m.start())
+        if depth or len(MATH_TOKEN.findall(m.group(0))) < LONG_MATH_TOKENS:
+            return m.group(0)
+        if text[:m.start()].endswith('<span class="ltx_math_scroll">'):
+            return m.group(0)
+        count += 1
+        return '<span class="ltx_math_scroll">%s</span>' % m.group(0)
+
+    text = INLINE_MATH.sub(fix, text)
+    if count:
+        print("  scroll: wrapped %d long inline formulas" % count)
+    return text
+
+
+# A list label wider than a bullet ("2021-2026", "RQ1.", "(4)") sits in the
+# 1.5em LaTeXML reserves, and the item text, an inline-block as wide as the
+# whole item, is pushed past the right edge. Such items are marked so that
+# LAYOUT_CSS lays label and text side by side with the text taking only the
+# remaining width. Bullet items, and items holding more than one block, are
+# left as they are.
+LIST_ITEM = re.compile(r'<li\b[^>]*\bclass="ltx_item"[^>]*>')
+
+
+def mark_wide_labels(text):
+    """Mark list items whose label is wider than a bullet."""
+    out, pos, count = [], 0, 0
+    for m in LIST_ITEM.finditer(text):
+        depth, i = 1, m.end()
+        while depth:                                   # the matching </li>
+            o, c = text.find("<li", i), text.find("</li>", i)
+            if o != -1 and o < c:
+                depth, i = depth + 1, o + 3
+            else:
+                depth, i = depth - 1, c + 5
+        body = text[m.end():i - 5]
+        tag = re.match(r'\s*<span class="ltx_tag ltx_tag_item">(.*?)</span>\s*(<div\b[^>]*\bclass="ltx_para\b)', body, re.S)
+        if not tag:
+            continue
+        label = re.sub(r"<[^>]+>", "", tag.group(1)).strip()
+        if label in ("", "•"):
+            continue
+        d, j = 0, tag.start(2)                         # the para must be the last child
+        while True:
+            o, c = body.find("<div", j), body.find("</div>", j)
+            if o != -1 and o < c:
+                d, j = d + 1, o + 4
+            else:
+                d, j = d - 1, c + 6
+                if d == 0:
+                    break
+        if body[j:].strip() or "ltx_item_widelabel" in m.group(0):
+            continue
+        out.append(text[pos:m.start()])
+        out.append(m.group(0).replace('class="ltx_item"', 'class="ltx_item ltx_item_widelabel"', 1))
+        pos = m.end()
+        count += 1
+    text = "".join(out) + text[pos:]
+    if count:
+        print("  lists: %d items with wide labels laid out side by side" % count)
+    return text
+
+
+# Appended to the EPUB's LaTeXML.css. Images are limited to the column (with
+# height:auto so they keep their aspect ratio; LaTeXML caps sub-figure images
+# at a fixed width without it, which distorts them and makes three panels
+# wider than a phone page). Equation numbers get their own width instead of a
+# zero-width cell that lets them sit on top of the formula. Words and URLs too
+# long for the column may break rather than run onto the next page.
+LAYOUT_CSS_MARK = "/* fix_epub_a11y: keep wide content inside the page */"
+LAYOUT_CSS = LAYOUT_CSS_MARK + """
+body { overflow-wrap: break-word; }
+img.ltx_graphics, .ltx_flex_figure img.ltx_graphics { max-width: 100%; height: auto; }
+.ltx_eqn_eqno { max-width: none; }
+.ltx_math_scroll { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden;
+  padding: 0.3em 0; margin: -0.3em 0; vertical-align: middle; }
+@supports (baseline-source: first) {
+  .ltx_math_scroll { vertical-align: baseline; baseline-source: first; }
+}
+.ltx_itemize .ltx_item.ltx_item_widelabel, .ltx_enumerate .ltx_item.ltx_item_widelabel {
+  display: flex; align-items: baseline; column-gap: 0.33em; white-space: normal; }
+.ltx_item.ltx_item_widelabel > .ltx_tag { flex: none; }
+.ltx_item.ltx_item_widelabel > .ltx_tag + .ltx_para { display: block; flex: 1 1 auto; min-width: 0; }
+"""
+
+
+def patch_css(text):
+    if LAYOUT_CSS_MARK in text:
+        return text
+    print("  css: appended layout rules")
+    return text.rstrip("\n") + "\n\n" + LAYOUT_CSS
+
+
 def patch_xhtml(text, self_name=None):
     """Fix language, nav semantics and heading order in a LaTeXML XHTML file."""
     text = fix_toc_order(text)
@@ -288,7 +504,15 @@ def patch_epub(path):
                         self_name=os.path.basename(info.filename),
                     )
                     # EPUB only: docs/index.html is left as LaTeXML wrote it.
-                    new = unscale_tables(new).encode("utf-8")
+                    for step in (unscale_tables, unbox_svg_pictures, wrap_wide_blocks,
+                                 wrap_long_inline_math, mark_wide_labels):
+                        new = step(new)
+                    new = new.encode("utf-8")
+                    if new != data:
+                        changed.append(info.filename)
+                    data = new
+                elif os.path.basename(low) == "latexml.css":
+                    new = patch_css(data.decode("utf-8")).encode("utf-8")
                     if new != data:
                         changed.append(info.filename)
                     data = new
